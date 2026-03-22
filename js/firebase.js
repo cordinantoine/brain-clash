@@ -96,3 +96,22 @@ function fl(path, callback) {
     if (iv) clearInterval(iv);
   };
 }
+
+// ── NETTOYAGE : supprimer les salles de plus de 2 heures ──
+// Appelé automatiquement à chaque création de partie
+async function cleanOldRooms() {
+  try {
+    const rooms = await fg("rooms");
+    if (!rooms || typeof rooms !== "object") return;
+    const now = Date.now();
+    const maxAge = 2 * 60 * 60 * 1000; // 2 heures
+    const promises = [];
+    for (const code in rooms) {
+      const room = rooms[code];
+      if (room && room.ts && (now - room.ts) > maxAge) {
+        promises.push(fd(`rooms/${code}`));
+      }
+    }
+    if (promises.length) await Promise.all(promises);
+  } catch(e) {}
+}
