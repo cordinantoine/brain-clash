@@ -96,6 +96,8 @@ function Create(step) {
 }
 
 async function doCreate() {
+  // Nettoyage automatique des anciennes salles (>2h)
+  cleanOldRooms();
   const themes = CD.themes.length ? CD.themes : ["culture"];
   const code   = genCode();
   // L'hôte NE JOUE PAS — il n'est pas dans players[]
@@ -325,7 +327,7 @@ function drawScore(room, gs, isFinal) {
   const ranked = gs.players.map((p,i)=>({name:p,score:gs.scores[i],i})).sort((a,b)=>b.score-a.score);
   const rows   = ranked.map((p,rank)=>`<div class="glass su" style="padding:12px 15px;display:flex;align-items:center;gap:11px;animation-delay:${rank*.07}s;border-radius:15px;${rank===0&&isFinal?`border-color:${t.accent};background:${t.accent}10`:""}"><div style="width:38px;height:38px;border-radius:50%;flex-shrink:0;background:${rank===0?`linear-gradient(135deg,${t.dark},${t.accent})`:COL[p.i%8].bg+"44"};display:flex;align-items:center;justify-content:center;font-size:.95rem">${isFinal?(rank===0?"🥇":rank===1?"🥈":rank===2?"🥉":rank+1):rank+1}</div><div style="flex:1;font-weight:700;color:${p.name===ME?"white":"rgba(255,255,255,.8)"}">${p.name}${p.name===ME?" (vous)":""}</div><div style="font-weight:900;font-size:1.35rem;color:${rank===0?t.accent:"rgba(255,255,255,.6)"}">${p.score}</div></div>`).join("");
   R(`<div class="sc" style="max-width:430px;margin:0 auto;padding:20px;gap:12px"><div class="float" style="text-align:center"><div style="font-size:3rem">${isFinal?"🏆":"📊"}</div><h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-top:4px">${isFinal?"Victoire !":"Scores"}</h2>${isFinal?`<p style="color:${t.accent};font-weight:700;margin-top:3px">🎉 ${ranked[0].name} remporte la partie !</p>`:`<p style="color:rgba(255,255,255,.38);font-size:.82rem;margin-top:2px">Prochain round dans quelques secondes…</p>`}</div><div style="width:100%;display:flex;flex-direction:column;gap:8px">${rows}</div>${isFinal?`<button class="btn" id="bH" style="background:linear-gradient(135deg,${t.dark},${t.accent});color:white;padding:13px 28px">🏠 Retour à l'accueil</button>`:""}</div>`);
-  if (isFinal) on("bH","click",()=>{ if(STOP)STOP(); Home(); });
+  if (isFinal) on("bH","click",()=>{ if(STOP)STOP(); if(HOST && CODE) fd(`rooms/${CODE}`); Home(); });
 }
 
 // ════════════════════════════════════════════
