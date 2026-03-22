@@ -1,0 +1,36 @@
+/* ════════════════════════════════════════
+   questions/sport.js — Sport
+   30 questions
+   ════════════════════════════════════════ */
+QUESTIONS.sport = [
+  {q:"Combien de joueurs y a-t-il sur le terrain par équipe au football ?",a:["9","10","11","12"],c:2,f:""},
+  {q:"Dans quel sport joue-t-on le tournoi de Wimbledon ?",a:["Tennis","Badminton","Squash","Ping-pong"],c:0,f:""},
+  {q:"Dans quel sport évolue Michael Jordan ?",a:["Baseball","Basket-ball","Football américain","Hockey"],c:1,f:""},
+  {q:"Dans quel sport utilise-t-on un ballon ovale ?",a:["Football","Rugby","Handball","Water-polo"],c:1,f:""},
+  {q:"Combien de points vaut un panier à trois points au basket-ball ?",a:["1","2","3","4"],c:2,f:""},
+  {q:"Combien de joueurs composent une équipe de basket-ball sur le terrain ?",a:["4","5","6","7"],c:1,f:""},
+  {q:"Dans quel sport est célèbre Usain Bolt ?",a:["Natation","Athlétisme","Cyclisme","Football"],c:1,f:""},
+  {q:"Combien de trous comporte un parcours classique de golf ?",a:["9","12","18","24"],c:2,f:""},
+  {q:"Dans quel sport pratique-t-on le Tour de France ?",a:["Marathon","Cyclisme","Triathlon","Ski"],c:1,f:""},
+  {q:"Dans quel sport est célèbre Roger Federer ?",a:["Tennis","Golf","Squash","Badminton"],c:0,f:""},
+  {q:"Dans quel sport marque-t-on un 'touchdown' ?",a:["Baseball","Football américain","Rugby","Handball"],c:1,f:""},
+  {q:"Dans quel sport est célèbre Lionel Messi ?",a:["Rugby","Football","Tennis","Basket"],c:1,f:""},
+  {q:"Quel pays a remporté la FIFA World Cup 2018 ?",a:["Allemagne","Brésil","France","Argentine"],c:2,f:""},
+  {q:"Dans quel sport joue-t-on la Coupe Stanley ?",a:["Hockey sur glace","Baseball","Basket","Football américain"],c:0,f:""},
+  {q:"Combien de joueurs y a-t-il dans une équipe de rugby à XV sur le terrain ?",a:["13","14","15","16"],c:2,f:""},
+  {q:"Dans quel sport est célèbre Michael Phelps ?",a:["Natation","Water-polo","Plongeon","Triathlon"],c:0,f:""},
+  {q:"Combien de joueurs y a-t-il dans une équipe de handball sur le terrain ?",a:["6","7","8","9"],c:1,f:""},
+  {q:"Dans quel sport pratique-t-on un 'home run' ?",a:["Cricket","Baseball","Softball","Hockey"],c:1,f:""},
+  {q:"Quelle compétition rassemble les meilleurs athlètes du monde tous les 4 ans ?",a:["Jeux Olympiques","Coupe du Monde","Jeux du Commonwealth","Universiades"],c:0,f:""},
+  {q:"Dans quel sport joue-t-on la Ryder Cup ?",a:["Golf","Tennis","Cricket","Polo"],c:0,f:""},
+  {q:"Dans quel sport utilise-t-on un tatami ?",a:["Judo","Boxe","Escrime","Lutte"],c:0,f:""},
+  {q:"Quelle est la durée d'un match de football (hors prolongations) ?",a:["80 minutes","90 minutes","100 minutes","120 minutes"],c:1,f:""},
+  {q:"Dans quel sport utilise-t-on une raquette et un volant ?",a:["Tennis","Badminton","Squash","Ping-pong"],c:1,f:""},
+  {q:"Combien de joueurs y a-t-il dans une équipe de volley-ball sur le terrain ?",a:["5","6","7","8"],c:1,f:""},
+  {q:"Dans quel sport joue-t-on la Coupe Davis ?",a:["Tennis","Badminton","Squash","Ping-pong"],c:0,f:""},
+  {q:"Dans quel sport pratique-t-on le Tour de France ?",a:["Marathon","Cyclisme","Triathlon","Ski"],c:1,f:""},
+  {q:"Dans quel sport utilise-t-on une planche et une vague ?",a:["Ski nautique","Surf","Planche à voile","Kayak"],c:1,f:""},
+  {q:"Combien de joueurs composent une équipe de baseball sur le terrain ?",a:["7","8","9","10"],c:2,f:""},
+  {q:"Dans quel sport est célèbre Serena Williams ?",a:["Tennis","Golf","Athlétisme","Natation"],c:0,f:""},
+  {q:"Quelle compétition détermine le champion du monde de football ?",a:["UEFA Champions League","FIFA World Cup","Copa América","UEFA Euro"],c:1,f:""},
+];
