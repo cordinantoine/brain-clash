@@ -1,7 +1,7 @@
 /* ════════════════════════════════════════
    questions/culture.js — Culture Générale
-   Pour ajouter une question, copie ce format :
-   { q:"Question ?", a:["A","B","C","D"], c:2, f:"Anecdote" }
+   100 questions
+   { q:"Question ?", a:["A","B","C","D"], c:2, f:"" }
    c = index de la bonne réponse (0=A 1=B 2=C 3=D)
    ════════════════════════════════════════ */
 QUESTIONS.culture = [
@@ -46,9 +46,8 @@ QUESTIONS.culture = [
   {q:"Qui a composé La Flûte enchantée ?",a:["Beethoven","Mozart","Bach","Schubert"],c:1,f:""},
   {q:"Quel est le fleuve le plus long du monde ?",a:["Amazone","Nil","Yangtsé","Mississippi"],c:1,f:""},
   {q:"Quelle est la formule chimique de l'eau ?",a:["HO","H2O","H3O","OH2"],c:1,f:""},
-  {q:"Qui a peint La Joconde ?",a:["Michel-Ange","Raphaël","Leonard de Vinci","Botticelli"],c:2,f:""},
+  {q:"Qui a peint La Joconde ?",a:["Michel-Ange","Raphaël","Léonard de Vinci","Botticelli"],c:2,f:""},
   {q:"Quel pays a remporté le plus de Coupes du Monde de football ?",a:["Allemagne","Argentine","Brésil","France"],c:2,f:""},
-  {q:"Combien d'heures dure une journée sur Mars (environ) ?",a:["20h","24h30","36h","48h"],c:1,f:""},
   {q:"Quel est l'os le plus long du corps humain ?",a:["Tibia","Humérus","Fémur","Radius"],c:2,f:""},
   {q:"Dans quelle ville se trouve la Tour Eiffel ?",a:["Lyon","Marseille","Bordeaux","Paris"],c:3,f:""},
   {q:"Qui a écrit Les Misérables ?",a:["Émile Zola","Gustave Flaubert","Victor Hugo","Alexandre Dumas"],c:2,f:""},
@@ -66,4 +65,43 @@ QUESTIONS.culture = [
   {q:"Quelle est la monnaie du Japon ?",a:["Yuan","Won","Yen","Ringgit"],c:2,f:""},
   {q:"Quel est le sport le plus pratiqué au monde ?",a:["Basketball","Tennis","Football","Cricket"],c:2,f:""},
   {q:"Dans quelle ville se trouve le Colisée ?",a:["Athènes","Istanbul","Rome","Carthage"],c:2,f:""},
+  {q:"Combien d'heures dure une journée sur Mars (environ) ?",a:["20h","24h30","36h","48h"],c:1,f:""},
+  {q:"Quel est le nombre de couleurs dans l'arc-en-ciel ?",a:["5","6","7","8"],c:2,f:""},
+  {q:"Quelle est la capitale de l'Australie ?",a:["Sydney","Melbourne","Canberra","Perth"],c:2,f:""},
+  {q:"Qui a écrit L'Odyssée ?",a:["Sophocle","Homère","Virgile","Platon"],c:1,f:""},
+  {q:"Quel pays a construit le premier chemin de fer ?",a:["France","États-Unis","Allemagne","Royaume-Uni"],c:3,f:""},
+  {q:"Quelle est la plus longue muraille jamais construite ?",a:["Mur d'Hadrien","Grande Muraille de Chine","Mur de Berlin","Mur d'Antonin"],c:1,f:""},
+  {q:"Combien de grammes y a-t-il dans un kilogramme ?",a:["10","100","1000","10000"],c:2,f:""},
+  {q:"Quel animal est le symbole de l'Australie ?",a:["Koala","Kangourou","Émeu","Wallaby"],c:1,f:""},
+  {q:"Quelle planète possède les anneaux les plus visibles ?",a:["Jupiter","Uranus","Neptune","Saturne"],c:3,f:""},
+  {q:"Qui a écrit Crime et Châtiment ?",a:["Léon Tolstoï","Anton Tchekhov","Fiodor Dostoïevski","Ivan Tourgueniev"],c:2,f:""},
+  {q:"Dans quel pays se trouve Machu Picchu ?",a:["Mexique","Colombie","Pérou","Bolivie"],c:2,f:""},
+  {q:"Quelle est la capitale du Brésil ?",a:["Rio de Janeiro","São Paulo","Brasilia","Salvador"],c:2,f:""},
+  {q:"Quel est l'élément chimique dont le symbole est 'O' ?",a:["Or","Osmium","Oxygène","Ozone"],c:2,f:""},
+  {q:"Combien de planètes y a-t-il dans le système solaire ?",a:["7","8","9","10"],c:1,f:""},
+  {q:"Quel célèbre scientifique a découvert la gravité selon la légende de la pomme ?",a:["Albert Einstein","Galilée","Isaac Newton","Nikola Tesla"],c:2,f:""},
+  {q:"Quelle est la capitale de la Russie ?",a:["Saint-Pétersbourg","Moscou","Kiev","Minsk"],c:1,f:""},
+  {q:"Quel est le plus grand océan du monde ?",a:["Atlantique","Indien","Arctique","Pacifique"],c:3,f:""},
+  {q:"Qui a réalisé la chapelle Sixtine ?",a:["Léonard de Vinci","Raphaël","Michel-Ange","Botticelli"],c:2,f:""},
+  {q:"Quelle est la capitale du Mexique ?",a:["Guadalajara","Cancún","Mexico","Monterrey"],c:2,f:""},
+  {q:"Combien de secondes y a-t-il dans une heure ?",a:["360","3600","600","6000"],c:1,f:""},
+  {q:"Quel est le gaz le plus abondant dans l'atmosphère terrestre ?",a:["Oxygène","Dioxyde de carbone","Azote","Argon"],c:2,f:""},
+  {q:"Qui a fondé Microsoft ?",a:["Steve Jobs","Mark Zuckerberg","Bill Gates","Elon Musk"],c:2,f:""},
+  {q:"Dans quel pays se trouve le Taj Mahal ?",a:["Pakistan","Bangladesh","Inde","Sri Lanka"],c:2,f:""},
+  {q:"Quel est le plus grand reptile du monde ?",a:["Anaconda","Crocodile marin","Varan de Komodo","Python réticulé"],c:1,f:""},
+  {q:"Quelle est la monnaie de la Chine ?",a:["Yen","Won","Yuan","Ringgit"],c:2,f:""},
+  {q:"Qui a écrit Don Quichotte ?",a:["Lope de Vega","Miguel de Cervantes","Francisco de Quevedo","Tirso de Molina"],c:1,f:""},
+  {q:"Quel est le nom du premier satellite artificiel lancé dans l'espace ?",a:["Apollo","Spoutnik","Explorer","Vostok"],c:1,f:""},
+  {q:"Dans quel pays se trouve la ville d'Amsterdam ?",a:["Belgique","Allemagne","Pays-Bas","Danemark"],c:2,f:""},
+  {q:"Quel écrivain français a écrit Vingt Mille Lieues sous les mers ?",a:["Victor Hugo","Alexandre Dumas","Jules Verne","Guy de Maupassant"],c:2,f:""},
+  {q:"Combien de joueurs composent une équipe de basketball sur le terrain ?",a:["4","5","6","7"],c:1,f:""},
+  {q:"Quelle est la capitale de l'Argentine ?",a:["Santiago","Lima","Montevideo","Buenos Aires"],c:3,f:""},
+  {q:"Quel est le plus grand pays d'Afrique par superficie ?",a:["Congo","Soudan","Algérie","Libye"],c:2,f:""},
+  {q:"Qui a fondé Apple ?",a:["Bill Gates","Steve Jobs","Mark Zuckerberg","Jeff Bezos"],c:1,f:""},
+  {q:"Quelle est la devise de la France ?",a:["Honneur et Patrie","Liberté Égalité Fraternité","Dieu et Mon Droit","Un pour tous tous pour un"],c:1,f:""},
+  {q:"Dans quel pays se trouve la ville de Séoul ?",a:["Chine","Japon","Corée du Nord","Corée du Sud"],c:3,f:""},
+  {q:"Combien de côtés a un octogone ?",a:["6","7","8","9"],c:2,f:""},
+  {q:"Qui a peint Le Cri ?",a:["Vincent van Gogh","Edvard Munch","Gustav Klimt","Paul Gauguin"],c:1,f:""},
+  {q:"Quelle est la capitale de l'Inde ?",a:["Mumbai","Kolkata","Chennai","New Delhi"],c:3,f:""},
+  {q:"Quel est le plus petit os du corps humain ?",a:["Péroné","Étrier","Radius","Coccyx"],c:1,f:""},
 ];
