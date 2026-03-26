@@ -181,13 +181,13 @@ const THEMES = {
 };
 
 const RT = [
-  { id:"buzzer", name:"Buzzer Rapide",    icon:"⚡", desc:"Le plus rapide à buzzer ET correct gagne +100 pts !" },
-  { id:"steal",  name:"Vol de Points",    icon:"😈", desc:"Bonne réponse → volez 50 pts !" },
-  { id:"chrono", name:"Contre la Montre", icon:"⏱️", desc:"Tout le monde répond. Classement par rapidité !" },
-  { id:"carton", name:"Carton Rouge",     icon:"🟥", desc:"Bonne réponse → donnez un carton !" },
-  { id:"patate", name:"Patate Chaude",    icon:"🥔", desc:"Répondez avant que la patate explose !" },
-  { id:"qcm",    name:"QCM Classique",    icon:"📝", desc:"Tout le monde répond. Bonne réponse = points." },
-  { id:"orage",  name:"Orage de Points",  icon:"⚡", desc:"60 secondes de questions rapides !" },
+  { id:"qcm",    name:"QCM Classique",        icon:"📝", desc:"Tout le monde répond. Bonne réponse = points." },
+  { id:"buzzer", name:"Buzzer Rapide",         icon:"⚡", desc:"Le plus rapide à buzzer ET donner la bonne réponse gagne des points !" },
+  { id:"chrono", name:"Contre la Montre",      icon:"⏱️", desc:"Tout le monde répond. Classement par rapidité !" },
+  { id:"steal",  name:"Vol de Points",         icon:"😈", desc:"Tous répondent ! Le premier correct vole des points." },
+  { id:"patate", name:"Patate Chaude",         icon:"🥔", desc:"Une bombe aléatoire à chaque question !" },
+  { id:"carton", name:"Tir à la Carabine",     icon:"🎯", desc:"Tous répondent ! Le premier correct tire sur un ballon !" },
+  { id:"orage",  name:"Orage de Points",       icon:"⚡", desc:"60 secondes de questions rapides !" },
 ];
 
 const COLORS = ['#ef4444','#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899','#14b8a6','#f97316'];
@@ -395,7 +395,7 @@ function watchGame() {
     MY_INDEX = toArr(gs.players).indexOf(ME);
     setAccent(room.theme || 'culture');
 
-    const key = [gs.phase, gs.roundIdx, gs.qIdx, gs.buzzed, gs.revealed, gs.pickTarget, gs.patateHolder||''].join('-');
+    const key = [gs.phase, gs.roundIdx, gs.qIdx, gs.buzzed, gs.revealed, gs.pickTarget, gs.patateHolder||'', gs.chronoRanking?'r':'', JSON.stringify(gs.result||{})].join('-');
     if (key === LAST_KEY) return;
     LAST_KEY = key;
 
@@ -412,13 +412,21 @@ function updateHeader(room, gs) {
   G('hdr-round-name').textContent = r ? `${r.icon} ${r.name}` : '';
   G('hdr-round-name').style.color = accent;
   G('hdr-round-desc').textContent = r ? r.desc : '';
-  startTimer(gs);
+  startTimer(gs, room);
 }
 
-function startTimer(gs) {
+function startTimer(gs, room) {
   if (TIMER_IV) clearInterval(TIMER_IV);
   const el = G('hdr-timer');
   if (!gs.timerStart || !gs.timerDur || gs.revealed) { el.textContent = '—'; el.classList.remove('urgent'); return; }
+  // Pause timer display when someone buzzed (except chrono where everyone answers)
+  const rType = room ? room.rounds[gs.roundIdx] : '';
+  if (gs.buzzed && rType !== 'chrono') {
+    const frozen = gs._buzzerTimeRemaining || Math.max(0, Math.round(gs.timerDur - (Date.now() - gs.timerStart) / 1000));
+    el.textContent = frozen + 's';
+    el.classList.remove('urgent');
+    return;
+  }
   const tick = () => {
     const left = Math.max(0, Math.round(gs.timerDur - (Date.now() - gs.timerStart) / 1000));
     el.textContent = left + 's';
@@ -453,8 +461,25 @@ function renderState(room, gs) {
   if (gs.phase === 'final') { renderFinal(gs); return; }
   if (gs.phase !== 'question') return;
 
-  // Résultat révélé
+  // Chrono: show ranking after reveal
+  if (gs.revealed && gs.result && rType === 'chrono' && gs.chronoRanking) {
+    renderChronoRanking(gs);
+    return;
+  }
+
+  // Résultat révélé — check for pick target first (steal/carton)
   if (gs.revealed && gs.result) { renderResult(gs, q); return; }
+
+  // Pick target screen for steal/carton
+  if (gs.pickTarget && gs.buzzed === ME) {
+    renderPickTarget(room, gs);
+    return;
+  }
+  if (gs.pickTarget && gs.buzzed !== ME) {
+    showState('state-waiting');
+    G('waiting-text').textContent = `🎯 ${gs.buzzed} choisit sa cible…`;
+    return;
+  }
 
   // Éliminé
   if (isElim) {
@@ -463,8 +488,8 @@ function renderState(room, gs) {
     return;
   }
 
-  // QCM / Chrono / Orage — tout le monde répond directement
-  if (['qcm','chrono','orage'].includes(rType)) {
+  // QCM-style rounds: qcm, chrono, orage, steal, carton — tout le monde répond
+  if (['qcm','chrono','orage','steal','carton'].includes(rType)) {
     if (myAns !== undefined) {
       showState('state-waiting');
       G('waiting-text').textContent = '✅ Réponse envoyée ! En attente des autres…';
@@ -474,18 +499,18 @@ function renderState(room, gs) {
     return;
   }
 
-  // Patate
+  // Patate — bomb holder answers
   if (rType === 'patate') {
     if (gs.patateHolder === ME) {
       renderAnswers(gs, q);
     } else {
       showState('state-waiting');
-      G('waiting-text').textContent = `🥔 ${gs.patateHolder || '?'} a la patate…`;
+      G('waiting-text').textContent = `💣 ${gs.patateHolder || '?'} a la bombe…`;
     }
     return;
   }
 
-  // Buzzer / Steal / Elim / Carton
+  // Buzzer only
   const amBuzzer = gs.buzzed === ME;
   const buzzedOut = (gs.buzzedOut||[]).includes(ME);
 
@@ -497,23 +522,23 @@ function renderState(room, gs) {
   if (amBuzzer) { renderAnswers(gs, q); return; }
   if (gs.buzzed && !amBuzzer) {
     showState('state-waiting');
-    G('waiting-text').textContent = `🔔 ${gs.buzzed} répond…`;
+    G('waiting-text').textContent = `🔔 ${gs.buzzed} répond… (3s)`;
     return;
   }
 
-  // Afficher le bouton BUZZER
+  // Afficher le bouton BUZZER (only for buzzer round now)
   showState('state-buzz');
   const idx = players.indexOf(ME);
   const color = COLORS[idx % 8];
   G('buzz-inner').style.background = color;
   G('buzz-inner').style.borderRadius = '50%';
   G('buzz-btn').onclick = actBuzz;
-  const hints = { buzzer:'Sois le premier à buzzer !', steal:'Buzzez pour voler des points !', elim:'Buzzez pour éliminer quelqu\'un !', carton:'Buzzez pour donner un carton !' };
-  G('buzz-hint').textContent = hints[rType] || '';
+  G('buzz-hint').textContent = 'Sois le premier à buzzer !';
 }
 
 function renderAnswers(gs, q) {
   showState('state-answers');
+  G('answer-grid').style.gridTemplateColumns = '1fr 1fr';
   if (!q) return;
   const myAns = (gs.answers||{})[ME];
   const labels = ['A','B','C','D'];
@@ -576,6 +601,47 @@ function renderFinal(gs) {
     : `<span>${winner?.name}</span> remporte la partie !`;
 }
 
+function renderPickTarget(room, gs) {
+  showState('state-answers');
+  const players = toArr(gs.players);
+  const rType = room.rounds[gs.roundIdx] || '';
+  const roundElim = gs.roundElim || [];
+  const eligible = players.filter(p => p !== ME && !roundElim.includes(p));
+
+  let title = '';
+  if (rType === 'steal') title = '😈 À qui voler des points ?';
+  else if (rType === 'carton') title = '🎯 Sur qui tirer ?';
+
+  const balloons = gs.balloons || players.map(() => 3);
+  G('answer-grid').style.gridTemplateColumns = '1fr';
+  G('answer-grid').innerHTML = `<div style="text-align:center;font-weight:700;font-size:.9rem;margin-bottom:4px;grid-column:1/-1">${title}</div>` +
+    eligible.map(p => {
+      const pi = players.indexOf(p);
+      const color = COLORS[pi % 8];
+      const info = rType === 'carton'
+        ? `${'🎈'.repeat(balloons[pi])} (${balloons[pi]} ballons)`
+        : `${gs.scores[pi] || 0} pts`;
+      return `<button class="answer-btn" style="background:${color}22;border:2px solid ${color}88;flex-direction:row;justify-content:space-between;padding:14px 16px" onclick="actPick('${p}')">
+        <span style="font-weight:700;color:white">${p}</span>
+        <span style="font-size:.8rem;color:rgba(255,255,255,.7)">${info}</span>
+      </button>`;
+    }).join('');
+}
+
+function renderChronoRanking(gs) {
+  showState('state-scoreboard');
+  const ranking = toArr(gs.chronoRanking || []);
+  const medals = ['🥇','🥈','🥉'];
+  G('scoreboard-list').innerHTML = ranking.map((entry, rank) => `
+    <div class="scoreboard-row ${entry.name === ME ? 'me' : ''}">
+      <span class="scoreboard-rank">${medals[rank] || rank+1}</span>
+      <span class="scoreboard-name">${entry.name}${entry.name===ME?' (toi)':''}</span>
+      <span class="scoreboard-pts" style="color:${entry.correct ? '#4ade80' : '#f87171'}">${entry.pts > 0 ? '+'+entry.pts : entry.pts}</span>
+    </div>
+  `).join('');
+  G('scoreboard-list').insertAdjacentHTML('afterbegin', `<div style="text-align:center;font-size:.7rem;color:#4a5a7a;margin-bottom:6px">⏱️ Classement de la question</div>`);
+}
+
 // ════════════════════════════════════════════
 //  ACTIONS
 // ════════════════════════════════════════════
@@ -583,7 +649,9 @@ async function actBuzz() {
   const gs = await fg(`rooms/${CODE}/gameState`);
   if (!gs || gs.phase !== 'question' || gs.revealed || gs.buzzed) return;
   if ((gs.buzzedOut||[]).includes(ME) || (gs.roundElim||[]).includes(ME)) return;
-  await fp(`rooms/${CODE}`, { "gameState/buzzed": ME });
+  // Save remaining time for pause/resume
+  const timeRemaining = Math.max(1, Math.round(gs.timerDur - (Date.now() - gs.timerStart) / 1000));
+  await fp(`rooms/${CODE}`, { "gameState/buzzed": ME, "gameState/_buzzerTimeRemaining": timeRemaining });
 }
 
 async function actAnswer(ansIdx) {
@@ -591,6 +659,12 @@ async function actAnswer(ansIdx) {
   if (!gs || gs.phase !== 'question' || gs.revealed) return;
   if ((gs.answers||{})[ME] !== undefined) return;
   await fp(`rooms/${CODE}`, { [`gameState/answers/${ME}`]: { ansIdx, time: Date.now() } });
+}
+
+async function actPick(targetName) {
+  const gs = await fg(`rooms/${CODE}/gameState`);
+  if (!gs || !gs.pickTarget || gs.buzzed !== ME) return;
+  await fp(`rooms/${CODE}`, { "gameState/hostPick": targetName });
 }
 
 function goHome() {

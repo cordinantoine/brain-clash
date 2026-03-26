@@ -1,7 +1,7 @@
 /* ════════════════════════════════════════════
    rounds/qcm.js — QCM Classique
    Tout le monde répond, 20s chrono.
-   Bonne réponse = +200 pts.
+   Bonne réponse = base × 0.5 pts (dynamique).
    ════════════════════════════════════════════ */
 
 async function roundQCM_start(room, gs, rQs) {
@@ -23,11 +23,14 @@ async function roundQCM_end(room, gs, rQs) {
   const q = rQs[gs.roundIdx][gs.qIdx];
   const ans = gs.answers || {};
   const sc = [...gs.scores];
+  const N = gs.players.length;
+  const BASE = 50 * N;
+  const pts = Math.round(BASE * 0.5);
   const correct = [];
-  gs.players.forEach((p, i) => { if (ans[p] !== undefined && ans[p].ansIdx === q.c) { sc[i] += 200; correct.push(p); } });
+  gs.players.forEach((p, i) => { if (ans[p] !== undefined && ans[p].ansIdx === q.c) { sc[i] += pts; correct.push(p); } });
   const msg = correct.length
-    ? `✅ Bonne réponse : ${q.a[q.c]} — ${correct.join(", ")} marquent +200 pts !`
+    ? `✅ Bonne réponse : ${q.a[q.c]} — ${correct.join(", ")} marquent +${pts} pts !`
     : `❌ Personne ! Bonne réponse : ${q.a[q.c]}`;
-  await fp(`rooms/${CODE}`, { "gameState/revealed":true, "gameState/result":{ msg, pts:200, scorer:correct[0] || null }, "gameState/scores":sc });
+  await fp(`rooms/${CODE}`, { "gameState/revealed":true, "gameState/result":{ msg, pts, scorer:correct[0] || null }, "gameState/scores":sc });
   setTimeout(() => hostNextQ(room, gs, rQs), 3000);
 }

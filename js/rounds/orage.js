@@ -1,8 +1,10 @@
 /* ════════════════════════════════════════════
    rounds/orage.js — Orage de Points
    60 secondes de questions rapides.
-   +500 à +1500 pts par bonne réponse.
-   Mauvaise réponse = -150 pts.
+   1er correct : base × 1.5
+   2e correct : base × 1
+   3e+ correct : base × 0.5
+   Mauvaise réponse : -(base × 0.25)
    ════════════════════════════════════════════ */
 
 async function roundOrage_start(room, gs, rQs) {
@@ -32,17 +34,38 @@ async function roundOrage_end(room, gs, rQs) {
   const q = rQs[gs.roundIdx][gs.qIdx];
   const ans = gs.answers || {};
   const sc = [...gs.scores];
+  const N = gs.players.length;
+  const BASE = 50 * N;
+  const COEFF = [1.5, 1];
+  const DEFAULT_COEFF = 0.5;
+  const WRONG_COEFF = 0.25;
+
   const correct = Object.entries(ans).filter(([, { ansIdx }]) => ansIdx === q.c).sort((a, b) => a[1].time - b[1].time);
   const wrong   = Object.entries(ans).filter(([, { ansIdx }]) => ansIdx !== q.c);
+
   correct.forEach(([name], rank) => {
     const pi = gs.players.indexOf(name);
-    const base  = rank===0?1000:rank===1?750:500;
-    const speed = rank===0?500:rank===1?300:rank===2?200:0;
-    sc[pi] += (base + speed);
+    const coeff = rank < COEFF.length ? COEFF[rank] : DEFAULT_COEFF;
+    sc[pi] += Math.round(BASE * coeff);
   });
-  wrong.forEach(([name]) => { const pi = gs.players.indexOf(name); sc[pi] = Math.max(0, sc[pi] - 150); });
-  const topMsg = correct.length ? correct.slice(0, 2).map(([n], i) => `${n} +${i===0?1500:i===1?1050:500}pts`).join(", ") : "Personne !";
-  await fp(`rooms/${CODE}`, { "gameState/revealed":true, "gameState/result":{ msg:`⚡ ${topMsg}`, pts:correct.length?1500:0, scorer:correct[0]?.[0] || null }, "gameState/scores":sc });
+  wrong.forEach(([name]) => {
+    const pi = gs.players.indexOf(name);
+    sc[pi] = Math.max(0, sc[pi] - Math.round(BASE * WRONG_COEFF));
+  });
+
+  const topMsg = correct.length
+    ? correct.slice(0, 2).map(([n], i) => {
+        const coeff = i < COEFF.length ? COEFF[i] : DEFAULT_COEFF;
+        return `${n} +${Math.round(BASE * coeff)}pts`;
+      }).join(", ")
+    : "Personne !";
+
+  await fp(`rooms/${CODE}`, {
+    "gameState/revealed":true,
+    "gameState/result":{ msg:`⚡ ${topMsg}`, pts:correct.length ? Math.round(BASE * COEFF[0]) : 0, scorer:correct[0]?.[0] || null },
+    "gameState/scores":sc
+  });
+
   setTimeout(async () => {
     const cur = await fg(`rooms/${CODE}/gameState`); if (!cur) return;
     const orageElapsed = Date.now() - (cur.orageStart || Date.now());
