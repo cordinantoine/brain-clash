@@ -211,7 +211,7 @@ async function actAnswer(ansIdx) {
     await fp(`rooms/${CODE}`, { [`gameState/answers/${ME}`]:{ ansIdx, time:Date.now() } });
     if (HOST) {
       const upd=await fg(`rooms/${CODE}/gameState`);
-      const alive=gs.players.filter(p=>!(gs.roundElim||[]).includes(p));
+      const alive=toArr(gs.players).filter(p=>!toArr(gs.roundElim).includes(p));
       const allAnswered=Object.keys(upd.answers||{}).length>=alive.length;
 
       if (rType==="steal") {
@@ -308,7 +308,7 @@ function Watch(initialRoom) {
 
           // QCM-style rounds: chrono, qcm, orage
           if (["chrono","qcm","orage"].includes(rType)) {
-            const alive=gs.players.filter(p=>!(gs.roundElim||[]).includes(p));
+            const alive=toArr(gs.players).filter(p=>!toArr(gs.roundElim).includes(p));
             if(Object.keys(answers).length>=alive.length){
               if(HTIMER){clearTimeout(HTIMER);HTIMER=null;}
               if(rType==="chrono") roundChrono_end(room,gs,gs.rQs);
@@ -322,7 +322,7 @@ function Watch(initialRoom) {
           if (rType==="steal") {
             const q=gs.rQs[gs.roundIdx][gs.qIdx];
             const hasCorrect = Object.entries(answers).some(([, {ansIdx}]) => ansIdx===q.c);
-            const alive=gs.players.filter(p=>!(gs.roundElim||[]).includes(p));
+            const alive=toArr(gs.players).filter(p=>!toArr(gs.roundElim).includes(p));
             const allAnswered=Object.keys(answers).length>=alive.length;
             if (hasCorrect && !gs.pickTarget) {
               roundSteal_check(room,gs,gs.rQs); return;
@@ -334,8 +334,8 @@ function Watch(initialRoom) {
           // Carton QCM-style
           if (rType==="carton") {
             const q=gs.rQs[gs.roundIdx][gs.qIdx];
-            const hasCorrect = Object.entries(answers).some(([name, {ansIdx}]) => ansIdx===q.c && !(gs.roundElim||[]).includes(name));
-            const alive=gs.players.filter(p=>!(gs.roundElim||[]).includes(p));
+            const hasCorrect = Object.entries(answers).some(([name, {ansIdx}]) => ansIdx===q.c && !toArr(gs.roundElim).includes(name));
+            const alive=toArr(gs.players).filter(p=>!toArr(gs.roundElim).includes(p));
             const allAnswered=Object.keys(answers).length>=alive.length;
             if ((hasCorrect || allAnswered) && !gs.pickTarget) {
               roundCarton_check(room,gs,gs.rQs); return;
