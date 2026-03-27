@@ -13,6 +13,15 @@
    ════════════════════════════════════════════ */
 
 async function roundCarton_start(room, gs, rQs) {
+  // Check if only 1 (or 0) player alive — end round immediately
+  const balloons = gs.balloons || gs.players.map(() => room.cartonBallons || 3);
+  const roundElim = gs.roundElim || [];
+  const alive = gs.players.filter(p => !roundElim.includes(p));
+  if (alive.length <= 1) {
+    const done = await roundCarton_checkLastStanding(room, gs, rQs, balloons, roundElim, [...gs.scores]);
+    if (done) return;
+  }
+
   // Check if we've exhausted the question pool — regenerate if needed
   const pool = rQs[gs.roundIdx] || [];
   if (gs.qIdx >= pool.length) {
@@ -44,6 +53,11 @@ async function roundCarton_timeout(room, gs, rQs) {
     "gameState/revealed":true,
     "gameState/result":{ msg:`⏱️ Temps écoulé ! Bonne réponse : ${q.a[q.c]}\n${recap}`, pts:0, scorer:null }
   });
+  const alive = gs.players.filter(p => !(gs.roundElim||[]).includes(p));
+  if (alive.length <= 1) {
+    const done = await roundCarton_checkLastStanding(room, gs, rQs, balloons, gs.roundElim||[], [...gs.scores]);
+    if (done) return;
+  }
   setTimeout(() => roundCarton_nextQ(room, gs, rQs), 3500);
 }
 

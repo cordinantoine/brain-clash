@@ -97,6 +97,9 @@ function Create(step) {
 async function doCreate() {
   cleanOldRooms();
   const themes = CD.themes.length ? CD.themes : ["culture"];
+  // Sort rounds to match RT display order
+  const rtOrder = RT.map(r => r.id);
+  CD.rounds.sort((a, b) => rtOrder.indexOf(a) - rtOrder.indexOf(b));
   const code   = genCode();
   const room = {
     code, phase:"lobby",

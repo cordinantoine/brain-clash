@@ -12,13 +12,15 @@ async function roundPatate_start(room, gs, rQs) {
   const BASE = 50 * N;
   const manche = gs.patateManche || 0;
 
-  // 4 manches terminées → round fini
+  // 4 manches terminées → round fini, forcer passage au round suivant
   if (manche >= 4) {
+    const pool = rQs[gs.roundIdx] || [];
     await fp(`rooms/${CODE}`, {
       "gameState/phase":"question", "gameState/revealed":true,
+      "gameState/qIdx": pool.length,
       "gameState/result":{ msg:"🥔 Fin de la Patate Chaude !", pts:0, scorer:null }
     });
-    setTimeout(() => hostNextQ(room, gs, rQs), 3000);
+    setTimeout(() => hostNextQ(room, { ...gs, qIdx: pool.length - 1 }, rQs), 3000);
     return;
   }
 
@@ -70,7 +72,9 @@ async function roundPatate_start(room, gs, rQs) {
     setTimeout(async () => {
       await fp(`rooms/${CODE}`, { "gameState/patateExplosion":null });
       if (newManche >= 4) {
-        hostNextQ(room, { ...cur, scores:sc, patateManche:newManche }, rQs);
+        const pool = rQs[cur.roundIdx] || [];
+        await fp(`rooms/${CODE}`, { "gameState/qIdx": pool.length });
+        hostNextQ(room, { ...cur, scores:sc, patateManche:newManche, qIdx: pool.length - 1 }, rQs);
       } else {
         const upd = await fg(`rooms/${CODE}/gameState`);
         hostStartQ(room, { ...upd, patateManche:newManche, scores:sc }, rQs);
@@ -81,6 +85,8 @@ async function roundPatate_start(room, gs, rQs) {
 
 async function roundPatate_process(room, gs, rQs, isOk) {
   // NEVER clear HTIMER — the explosion timer keeps ticking!
+  // Guard: don't process if round is already over or explosion happened
+  if (gs.revealed || gs.patateExplosion || (gs.patateManche || 0) >= 4) return;
   const holder = gs.patateHolder || gs.buzzed;
 
   if (isOk) {
@@ -97,7 +103,7 @@ async function roundPatate_process(room, gs, rQs, isOk) {
     // Brief display then next question
     setTimeout(async () => {
       const cur = await fg(`rooms/${CODE}/gameState`);
-      if (!cur || cur.revealed) return;
+      if (!cur || cur.revealed || cur.patateExplosion || (cur.patateManche || 0) >= 4) return;
       await fp(`rooms/${CODE}`, { "gameState/result":null });
       const pool = rQs[cur.roundIdx] || [];
       const nextQ = (cur.qIdx + 1) % pool.length;
@@ -115,7 +121,7 @@ async function roundPatate_process(room, gs, rQs, isOk) {
 
     setTimeout(async () => {
       const cur = await fg(`rooms/${CODE}/gameState`);
-      if (!cur || cur.revealed) return;
+      if (!cur || cur.revealed || cur.patateExplosion || (cur.patateManche || 0) >= 4) return;
       await fp(`rooms/${CODE}`, { "gameState/result":null });
       const pool = rQs[cur.roundIdx] || [];
       const nextQ = (cur.qIdx + 1) % pool.length;
