@@ -1,45 +1,55 @@
 /* ════════════════════════════════════════════
-   rounds/patate.js — Patate Chaude
-   8 questions. Chaque question : une bombe assignée
-   aléatoirement à un joueur. Explose après 5-30s.
-   Bonne réponse = base × 0.25 pts.
-   Explosion = -(base × 0.4) pts.
+   rounds/patate.js — Patate Chaude v2
+   4 manches. Chaque manche : timer caché (15-45s).
+   Seul le porteur voit la question et peut répondre.
+   Bonne réponse = passe la patate (0 pts).
+   Mauvaise réponse = garde la patate, question suivante.
+   Explosion = -(base × 0.4) pts. Pas d'élimination.
    ════════════════════════════════════════════ */
 
 async function roundPatate_start(room, gs, rQs) {
   const N = gs.players.length;
   const BASE = 50 * N;
-  const alive = gs.players.filter(p => !(gs.roundElim || []).includes(p));
+  const manche = gs.patateManche || 0;
 
-  if (alive.length <= 1) {
-    // Round over
+  // 4 manches terminées → round fini
+  if (manche >= 4) {
     await fp(`rooms/${CODE}`, {
       "gameState/phase":"question", "gameState/revealed":true,
-      "gameState/result":{ msg:"💥 Fin de la Patate Chaude !", pts:0, scorer:null }
+      "gameState/result":{ msg:"🥔 Fin de la Patate Chaude !", pts:0, scorer:null }
     });
     setTimeout(() => hostNextQ(room, gs, rQs), 3000);
     return;
   }
 
-  // Random bomb holder for this question
-  const holder = alive[Math.floor(Math.random() * alive.length)];
-  // Random explosion delay between 5 and 30 seconds
-  const explodeDelay = Math.floor(Math.random() * 26 + 5) * 1000;
+  // Recycle questions if pool exhausted
+  const pool = rQs[gs.roundIdx] || [];
+  let qIdx = gs.qIdx;
+  if (qIdx >= pool.length) qIdx = qIdx % pool.length;
+
+  // Random holder
+  const holder = gs.players[Math.floor(Math.random() * gs.players.length)];
+
+  // Random hidden timer: 15-45 seconds
+  const explodeDelay = Math.floor(Math.random() * 31 + 15) * 1000;
   const explodeAt = Date.now() + explodeDelay;
 
   await fp(`rooms/${CODE}`, {
     "gameState/phase":"question", "gameState/buzzed":null, "gameState/buzzedOut":[],
     "gameState/answers":{}, "gameState/revealed":false, "gameState/result":null,
     "gameState/pickTarget":false, "gameState/hostPick":null,
-    "gameState/timerStart":Date.now(), "gameState/timerDur":30,
-    "gameState/patateHolder":holder, "gameState/patateExplodeAt":explodeAt
+    "gameState/timerStart":null, "gameState/timerDur":null,
+    "gameState/patateHolder":holder, "gameState/patateExplodeAt":explodeAt,
+    "gameState/patateManche":manche, "gameState/qIdx":qIdx
   });
 
-  // Set explosion timer
+  // Explosion timer
   if (HTIMER) { clearTimeout(HTIMER); HTIMER = null; }
   HTIMER = setTimeout(async () => {
     const cur = await fg(`rooms/${CODE}/gameState`);
-    if (!cur || cur.revealed || cur.phase !== "question") return;
+    if (!cur || cur.phase !== "question") return;
+    // Ignore if already revealed (shouldn't happen but safety)
+    if (cur.revealed) return;
 
     const sc = [...cur.scores];
     const loser = cur.patateHolder;
@@ -47,65 +57,72 @@ async function roundPatate_start(room, gs, rQs) {
     const losePts = Math.round(BASE * 0.4);
     if (hi >= 0) sc[hi] = Math.max(0, sc[hi] - losePts);
 
-    // Check if player should be eliminated (score <= 0)
-    const newRoundElim = [...(cur.roundElim || [])];
-    if (sc[hi] <= 0 && !newRoundElim.includes(loser)) newRoundElim.push(loser);
+    const newManche = (cur.patateManche || 0) + 1;
 
     await fp(`rooms/${CODE}`, {
       "gameState/revealed":true, "gameState/scores":sc,
-      "gameState/roundElim":newRoundElim,
-      "gameState/patateExplodeAt":null,
-      "gameState/result":{ msg:`💥 BOOM ! ${loser} explose ! -${losePts} pts`, pts:-losePts, scorer:loser }
+      "gameState/patateExplodeAt":null, "gameState/patateExplosion":true,
+      "gameState/result":{ msg:`💥 BOOM ! ${loser} explose ! -${losePts} pts`, pts:-losePts, scorer:loser },
+      "gameState/patateManche":newManche
     });
 
-    // After 2 seconds, move to next question
-    setTimeout(() => hostNextQ(room, { ...cur, scores:sc, roundElim:newRoundElim, patateExplodeAt:null }, rQs), 2000);
+    // After 2.5s: next manche or end round
+    setTimeout(async () => {
+      await fp(`rooms/${CODE}`, { "gameState/patateExplosion":null });
+      if (newManche >= 4) {
+        hostNextQ(room, { ...cur, scores:sc, patateManche:newManche }, rQs);
+      } else {
+        const upd = await fg(`rooms/${CODE}/gameState`);
+        hostStartQ(room, { ...upd, patateManche:newManche, scores:sc }, rQs);
+      }
+    }, 2500);
   }, explodeDelay);
 }
 
 async function roundPatate_process(room, gs, rQs, isOk) {
-  const N = gs.players.length;
-  const BASE = 50 * N;
-  const sc = [...gs.scores];
-  const pIdx = gs.players.indexOf(gs.buzzed);
+  // NEVER clear HTIMER — the explosion timer keeps ticking!
+  const holder = gs.patateHolder || gs.buzzed;
 
   if (isOk) {
-    const ptsWin = Math.round(BASE * 0.25);
-    sc[pIdx] += ptsWin;
+    // Pass potato to random other player
+    const others = gs.players.filter(p => p !== holder);
+    const newHolder = others[Math.floor(Math.random() * others.length)];
+
     await fp(`rooms/${CODE}`, {
-      "gameState/scores":sc,
-      "gameState/result":{ msg:`✅ ${gs.buzzed} a bon ! +${ptsWin} pts 🥔`, pts:ptsWin, scorer:gs.buzzed },
+      "gameState/result":{ msg:`✅ ${holder} passe la patate à ${newHolder} !`, pts:0, scorer:null },
+      "gameState/patateHolder":newHolder,
       "gameState/buzzed":null, "gameState/answers":{}, "gameState/buzzedOut":[]
     });
-    // Don't clear HTIMER — bomb keeps ticking!
-    // Move to next question after 1.5s but keep bomb timer
+
+    // Brief display then next question
     setTimeout(async () => {
       const cur = await fg(`rooms/${CODE}/gameState`);
       if (!cur || cur.revealed) return;
       await fp(`rooms/${CODE}`, { "gameState/result":null });
-      const qIdx = cur.qIdx + 1;
-      if (qIdx >= (rQs[cur.roundIdx] || []).length) {
-        // No more questions, just wait for bomb
-      } else {
-        await fp(`rooms/${CODE}`, { "gameState/qIdx":qIdx, "gameState/answers":{}, "gameState/buzzed":null, "gameState/revealed":false, "gameState/buzzedOut":[] });
-      }
-    }, 1500);
+      const pool = rQs[cur.roundIdx] || [];
+      const nextQ = (cur.qIdx + 1) % pool.length;
+      await fp(`rooms/${CODE}`, {
+        "gameState/qIdx":nextQ, "gameState/answers":{},
+        "gameState/buzzed":null, "gameState/revealed":false, "gameState/buzzedOut":[]
+      });
+    }, 1000);
   } else {
+    // Keep potato, next question
     await fp(`rooms/${CODE}`, {
-      "gameState/result":{ msg:`❌ ${gs.buzzed} a raté ! 🥔`, pts:0, scorer:null },
+      "gameState/result":{ msg:`❌ Raté ! ${holder} garde la patate !`, pts:0, scorer:null },
       "gameState/buzzed":null, "gameState/answers":{}, "gameState/buzzedOut":[]
     });
-    // Don't clear HTIMER — bomb keeps ticking!
+
     setTimeout(async () => {
       const cur = await fg(`rooms/${CODE}/gameState`);
       if (!cur || cur.revealed) return;
       await fp(`rooms/${CODE}`, { "gameState/result":null });
-      const qIdx = cur.qIdx + 1;
-      if (qIdx >= (rQs[cur.roundIdx] || []).length) {
-        // No more questions, wait for bomb
-      } else {
-        await fp(`rooms/${CODE}`, { "gameState/qIdx":qIdx, "gameState/answers":{}, "gameState/buzzed":null, "gameState/revealed":false, "gameState/buzzedOut":[] });
-      }
-    }, 1500);
+      const pool = rQs[cur.roundIdx] || [];
+      const nextQ = (cur.qIdx + 1) % pool.length;
+      await fp(`rooms/${CODE}`, {
+        "gameState/qIdx":nextQ, "gameState/answers":{},
+        "gameState/buzzed":null, "gameState/revealed":false, "gameState/buzzedOut":[]
+      });
+    }, 1000);
   }
 }

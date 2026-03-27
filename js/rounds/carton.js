@@ -3,7 +3,8 @@
    QCM-style : tous les joueurs répondent.
    Le premier correct choisit sur qui tirer (= retirer 1 ballon).
    Mauvaise réponse = perd 1 ballon soi-même.
-   0 ballon = éliminé de la manche.
+   0 ballon = éliminé. Pas de manches — une seule partie
+   continue jusqu'au dernier survivant.
    Points dynamiques :
      bonne réponse : base × 0.4
      ballon perdu (mauvaise rép) : -(base × 0.3)
@@ -12,6 +13,15 @@
    ════════════════════════════════════════════ */
 
 async function roundCarton_start(room, gs, rQs) {
+  // Check if we've exhausted the question pool — regenerate if needed
+  const pool = rQs[gs.roundIdx] || [];
+  if (gs.qIdx >= pool.length) {
+    const themes = room.themes && room.themes.length ? room.themes : [room.theme || "culture"];
+    rQs[gs.roundIdx] = getStaticQs(themes, 50);
+    gs.qIdx = 0;
+    await fp(`rooms/${CODE}`, { "gameState/rQs":rQs, "gameState/qIdx":0 });
+  }
+
   await fp(`rooms/${CODE}`, {
     "gameState/phase":"question", "gameState/buzzed":null, "gameState/buzzedOut":[],
     "gameState/answers":{}, "gameState/revealed":false, "gameState/result":null,
@@ -28,32 +38,37 @@ async function roundCarton_start(room, gs, rQs) {
 
 async function roundCarton_timeout(room, gs, rQs) {
   const q = rQs[gs.roundIdx][gs.qIdx];
-  // Build balloon recap
-  const balloons = gs.balloons || gs.players.map(() => room.balloonsPerPlayer || 3);
+  const balloons = gs.balloons || gs.players.map(() => room.cartonBallons || 3);
   const recap = gs.players.map((p, i) => `${p}: ${'🎈'.repeat(balloons[i])}${balloons[i] === 0 ? ' 💀' : ''}`).join('  ');
   await fp(`rooms/${CODE}`, {
     "gameState/revealed":true,
     "gameState/result":{ msg:`⏱️ Temps écoulé ! Bonne réponse : ${q.a[q.c]}\n${recap}`, pts:0, scorer:null }
   });
-  setTimeout(() => hostNextQ(room, gs, rQs), 3500);
+  setTimeout(() => roundCarton_nextQ(room, gs, rQs), 3500);
 }
 
-// Called when a correct answer is found among all players (first by time)
+// Move to next question within the same round (NOT hostNextQ which changes rounds)
+async function roundCarton_nextQ(room, gs, rQs) {
+  I_BUZZED = false; lastAnswerKey = "";
+  const qIdx = gs.qIdx + 1;
+  await fp(`rooms/${CODE}`, { "gameState/qIdx":qIdx, "gameState/chronoRanking":null });
+  const cur = await fg(`rooms/${CODE}/gameState`);
+  hostStartQ(room, { ...cur, qIdx }, rQs);
+}
+
 async function roundCarton_check(room, gs, rQs) {
   const q = rQs[gs.roundIdx][gs.qIdx];
   const ans = gs.answers || {};
   const N = gs.players.length;
   const BASE = 50 * N;
   const sc = [...gs.scores];
-  const balloons = [...(gs.balloons || gs.players.map(() => room.balloonsPerPlayer || 3))];
+  const balloons = [...(gs.balloons || gs.players.map(() => room.cartonBallons || 3))];
   const roundElim = [...(gs.roundElim || [])];
 
-  // Find the first correct answer
   const correct = Object.entries(ans)
     .filter(([name, { ansIdx }]) => ansIdx === q.c && !roundElim.includes(name))
     .sort((a, b) => a[1].time - b[1].time);
 
-  // Process all wrong answers: each loses 1 balloon
   const wrongPlayers = Object.entries(ans)
     .filter(([name, { ansIdx }]) => ansIdx !== q.c && !roundElim.includes(name));
 
@@ -72,20 +87,17 @@ async function roundCarton_check(room, gs, rQs) {
     const ptsWin = Math.round(BASE * 0.4);
     sc[gs.players.indexOf(winner)] += ptsWin;
 
-    // Check if there are valid targets (alive players other than the winner)
     const targets = gs.players.filter(p => p !== winner && !roundElim.includes(p));
 
     if (targets.length === 0) {
-      // No targets — just give points and continue
       await fp(`rooms/${CODE}`, {
         "gameState/revealed":true, "gameState/scores":sc, "gameState/balloons":balloons,
         "gameState/roundElim":roundElim,
         "gameState/result":{ msg:`✅ ${winner} a bon ! +${ptsWin} pts 🎯`, pts:ptsWin, scorer:winner }
       });
       const done = await roundCarton_checkLastStanding(room, gs, rQs, balloons, roundElim, sc);
-      if (!done) setTimeout(() => hostNextQ(room, { ...gs, balloons, roundElim, scores:sc }, rQs), 3500);
+      if (!done) setTimeout(() => roundCarton_nextQ(room, { ...gs, balloons, roundElim, scores:sc }, rQs), 3500);
     } else {
-      // Winner picks a target
       await fp(`rooms/${CODE}`, {
         "gameState/buzzed":winner,
         "gameState/pickTarget":true, "gameState/scores":sc, "gameState/balloons":balloons,
@@ -94,7 +106,6 @@ async function roundCarton_check(room, gs, rQs) {
       });
     }
   } else {
-    // No correct answer at all — just show wrong results + balloon recap
     if (HTIMER) { clearTimeout(HTIMER); HTIMER = null; }
     const wrongMsgs = wrongPlayers.map(([name]) => `${name} -1🎈`).join(', ');
     const recap = gs.players.map((p, i) => `${p}: ${'🎈'.repeat(balloons[i])}${balloons[i] === 0 ? ' 💀' : ''}`).join('  ');
@@ -104,7 +115,7 @@ async function roundCarton_check(room, gs, rQs) {
       "gameState/result":{ msg:`❌ Personne n'a bon ! ${wrongMsgs ? wrongMsgs : ''}\n${recap}`, pts:0, scorer:null }
     });
     const done = await roundCarton_checkLastStanding(room, gs, rQs, balloons, roundElim, sc);
-    if (!done) setTimeout(() => hostNextQ(room, { ...gs, balloons, roundElim, scores:sc }, rQs), 3500);
+    if (!done) setTimeout(() => roundCarton_nextQ(room, { ...gs, balloons, roundElim, scores:sc }, rQs), 3500);
   }
 }
 
@@ -116,27 +127,13 @@ async function roundCarton_checkLastStanding(room, gs, rQs, balloons, roundElim,
     const surv = alive[0] || null;
     const survPts = Math.round(BASE * 1.25);
     if (surv) { sc[gs.players.indexOf(surv)] += survPts; }
-    const cm = gs.cartonManche || 0;
-    const maxM = room.cartonR || 3;
     const recap = gs.players.map((p, i) => `${p}: ${'🎈'.repeat(balloons[i])}${balloons[i] === 0 ? ' 💀' : ''}`).join('  ');
     await fp(`rooms/${CODE}`, {
       "gameState/revealed":true, "gameState/scores":sc, "gameState/balloons":balloons, "gameState/roundElim":roundElim,
-      "gameState/result":{ msg:surv ? `🏆 ${surv} est le dernier debout ! +${survPts} pts\n${recap}` : `Manche terminée !\n${recap}`, pts:surv ? survPts : 0, scorer:surv }
+      "gameState/result":{ msg:surv ? `🏆 ${surv} est le dernier debout ! +${survPts} pts\n${recap}` : `Round terminé !\n${recap}`, pts:surv ? survPts : 0, scorer:surv }
     });
-    if (cm + 1 >= maxM) {
-      setTimeout(() => hostNextQ(room, { ...gs, balloons, roundElim, scores:sc }, rQs), 3500);
-    } else {
-      setTimeout(async () => {
-        const newBalloons = gs.players.map(() => room.balloonsPerPlayer || 3);
-        await fp(`rooms/${CODE}`, {
-          "gameState/cartonManche":cm+1, "gameState/balloons":newBalloons,
-          "gameState/roundElim":[], "gameState/buzzed":null, "gameState/buzzedOut":[],
-          "gameState/result":null
-        });
-        const cur = await fg(`rooms/${CODE}/gameState`);
-        hostStartQ(room, { ...cur, cartonManche:cm+1, balloons:newBalloons, roundElim:[] }, rQs);
-      }, 3500);
-    }
+    // Round is over — go to next round
+    setTimeout(() => hostNextQ(room, { ...gs, balloons, roundElim, scores:sc }, rQs), 3500);
     return true;
   }
   return false;
@@ -147,18 +144,17 @@ async function roundCarton_pick(room, gs, rQs, targetName) {
   const N = gs.players.length;
   const BASE = 50 * N;
   const tI = gs.players.indexOf(targetName);
-  const balloons = [...(gs.balloons || gs.players.map(() => room.balloonsPerPlayer || 3))];
+  const balloons = [...(gs.balloons || gs.players.map(() => room.cartonBallons || 3))];
   const roundElim = [...(gs.roundElim || [])];
 
-  // Remove 1 balloon from target
   balloons[tI] = Math.max(0, balloons[tI] - 1);
   sc[tI] = Math.max(0, sc[tI] - Math.round(BASE * 0.3));
   if (balloons[tI] <= 0 && !roundElim.includes(targetName)) roundElim.push(targetName);
 
   const recap = gs.players.map((p, i) => `${p}: ${'🎈'.repeat(balloons[i])}${balloons[i] === 0 ? ' 💀' : ''}`).join('  ');
   const shotMsg = balloons[tI] <= 0
-    ? `🎯 ${gs.buzzed} tire sur ${targetName} ! 💥 Plus de ballons — éliminé !`
-    : `🎯 ${gs.buzzed} tire sur ${targetName} ! -1🎈 (reste ${balloons[tI]})`;
+    ? `🎯 ${gs.buzzed} crève le dernier ballon de ${targetName} ! 💥 Éliminé !`
+    : `🎯 ${gs.buzzed} crève un ballon de ${targetName} ! 🎈 (reste ${balloons[tI]})`;
 
   await fp(`rooms/${CODE}`, {
     "gameState/revealed":true, "gameState/pickTarget":false, "gameState/scores":sc,
@@ -168,6 +164,6 @@ async function roundCarton_pick(room, gs, rQs, targetName) {
 
   const done = await roundCarton_checkLastStanding(room, gs, rQs, balloons, roundElim, sc);
   if (!done) {
-    setTimeout(() => hostNextQ(room, { ...gs, balloons, roundElim, scores:sc }, rQs), 3500);
+    setTimeout(() => roundCarton_nextQ(room, { ...gs, balloons, roundElim, scores:sc }, rQs), 3500);
   }
 }

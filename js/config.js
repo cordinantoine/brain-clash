@@ -28,7 +28,7 @@ const RT = [
   { id:"chrono", name:"Contre la Montre",      icon:"⏱️",  desc:"Tout le monde répond en même temps. Classement par rapidité !" },
   { id:"steal",  name:"Vol de Points",         icon:"😈",  desc:"Tous répondent ! Le premier correct vole des points à un adversaire." },
   { id:"patate", name:"Patate Chaude",         icon:"🥔",  desc:"Une bombe aléatoire à chaque question… elle explose et ça fait mal !" },
-  { id:"carton", name:"Tir à la Carabine",     icon:"🎯",  desc:"Tous répondent ! Le premier correct tire sur un ballon adverse. 0 ballon = éliminé !" },
+  { id:"carton", name:"Tir à la Carabine",     icon:"🎯",  desc:"Dernier survivant avec des ballons 🎈 gagne ! Bonne réponse → crevez un ballon adverse." },
   { id:"orage",  name:"Orage de Points",       icon:"⚡",  desc:"60 secondes de questions rapides ! Gros points en jeu !" },
 ];
 
@@ -58,7 +58,7 @@ let I_BUZZED = false;         // ai-je déjà buzzé cette question ?
 let lastAnswerKey = "";       // clé pour détecter les nouvelles réponses
 
 // ── Configuration d'une partie en cours de création ──
-let CD = { name:"", maxP:4, themes:[], rounds:[], cartonR:3, balloonsPerPlayer:3 };
+let CD = { name:"", maxP:4, themes:[], rounds:[], cartonBallons:3 };
 
 // ── Normalise un array Firebase (objet {0:..,1:..} → vrai array) ──
 const toArr = v => {

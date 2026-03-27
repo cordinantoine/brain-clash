@@ -4,7 +4,11 @@
    Contient uniquement la logique commune :
    hostLoadQ, hostStartQ, hostNextQ, Watch,
    actBuzz, actAnswer, actPick
+   + Système Ready avant chaque round
    ════════════════════════════════════════════ */
+
+let USED_QS = new Set();
+let _readyTimeout = null;
 
 async function hostLoadQ() {
   USED_QS = new Set();
@@ -16,47 +20,94 @@ async function hostLoadQ() {
   if (!players || players.length === 0) { alert("Aucun joueur n'a rejoint !"); return; }
 
   const rQs = {};
-  room.rounds.forEach((r, i) => { rQs[i] = getStaticQs(themes, 8); });
-  const balloons = players.map(() => room.balloonsPerPlayer || 3);
+  room.rounds.forEach((r, i) => {
+    if (r === "carton") rQs[i] = getStaticQs(themes, 50);
+    else if (r === "patate") rQs[i] = getStaticQs(themes, 40);
+    else rQs[i] = getStaticQs(themes, 8);
+  });
+  const balloons = players.map(() => room.cartonBallons || 3);
   const gs = {
     phase:"roundIntro", roundIdx:0, qIdx:0,
     rQs, players, scores:players.map(() => 0),
     lives:players.map(() => 3), balloons,
-    cartonManche:0, patateHolder:null, orageStart:null, patateExplodeAt:null,
+    cartonManche:0, patateHolder:null, patateManche:0,
+    orageStart:null, patateExplodeAt:null, patateExplosion:null,
     roundElim:[], buzzed:null, buzzedOut:[], answers:{},
     revealed:false, result:null, pickTarget:false,
     timerStart:Date.now() + 4000, timerDur:null, hostPick:null,
-    _buzzerTimeRemaining:null, chronoRanking:null
+    _buzzerTimeRemaining:null, chronoRanking:null,
+    ready:{}
   };
   await fs(`rooms/${CODE}/gameState`, gs);
   await fp(`rooms/${CODE}`, { phase:"playing", questionsReady:true });
   Watch({ ...room, phase:"playing", questionsReady:true, gameState:gs });
-  setTimeout(() => hostStartQ(room, gs, rQs), 4000);
+  // Wait for ready instead of fixed timeout
+  hostWaitReady(room, gs, rQs);
+}
+
+// ── Wait for all players to be ready, then countdown + start ──
+function hostWaitReady(room, gs, rQs) {
+  if (_readyTimeout) { clearTimeout(_readyTimeout); _readyTimeout = null; }
+  let started = false;
+
+  const checkReady = async () => {
+    if (started) return;
+    const cur = await fg(`rooms/${CODE}/gameState`);
+    if (!cur || cur.phase !== "roundIntro") return;
+    const readyCount = Object.keys(cur.ready || {}).length;
+    if (readyCount >= cur.players.length) {
+      started = true;
+      // All ready — launch countdown
+      await hostCountdownAndStart(room, cur, rQs);
+    }
+  };
+
+  // Poll every 500ms for ready state
+  const iv = setInterval(() => { if (started) { clearInterval(iv); return; } checkReady(); }, 500);
+
+  // Safety timeout: 30 seconds — start anyway
+  _readyTimeout = setTimeout(async () => {
+    if (started) return;
+    started = true;
+    clearInterval(iv);
+    const cur = await fg(`rooms/${CODE}/gameState`);
+    if (!cur || cur.phase !== "roundIntro") return;
+    await hostCountdownAndStart(room, cur, rQs);
+  }, 30000);
+}
+
+async function hostCountdownAndStart(room, gs, rQs) {
+  // Signal countdown phase
+  await fp(`rooms/${CODE}`, { "gameState/countdownStart":Date.now() });
+  // Wait 4 seconds for 3-2-1-GO animation
+  setTimeout(() => {
+    fp(`rooms/${CODE}`, { "gameState/countdownStart":null });
+    hostStartQ(room, gs, rQs);
+  }, 4000);
 }
 
 // ── Démarre une question — délègue au bon module round ──
 async function hostStartQ(room, gs, rQs) {
   I_BUZZED = false; lastAnswerKey = "";
   const rType = room.rounds[gs.roundIdx];
-  const tDur  = rType === "chrono" ? 20 : 30;
   const tStart = Date.now();
 
   if (HTIMER) { clearTimeout(HTIMER); HTIMER = null; }
 
-  // Rounds QCM-style (tout le monde répond en même temps)
+  // Rounds QCM-style
   if (rType === "qcm")    { await roundQCM_start(room, gs, rQs); return; }
   if (rType === "orage")  { await roundOrage_start(room, gs, rQs); return; }
   if (rType === "chrono") { await roundChrono_start(room, gs, rQs); return; }
   if (rType === "steal")  { await roundSteal_start(room, gs, rQs); return; }
   if (rType === "carton") { await roundCarton_start(room, gs, rQs); return; }
 
-  // Patate Chaude — new bomb mechanic
+  // Patate Chaude — hidden timer, holder only
   if (rType === "patate") {
     await roundPatate_start(room, gs, rQs);
     return;
   }
 
-  // Buzzer — needs special timer: 30s question, 3s answer, pause on buzz
+  // Buzzer — 30s question, 3s answer, pause on buzz
   if (rType === "buzzer") {
     await fp(`rooms/${CODE}`, {
       "gameState/phase":"question", "gameState/buzzed":null, "gameState/buzzedOut":[],
@@ -85,8 +136,13 @@ async function hostNextQ(room, gs, rQs) {
   if (qIdx >= (rQs[rIdx]||[]).length) {
     rIdx++; qIdx=0; rE=[];
     if (rIdx >= room.rounds.length) { await fp(`rooms/${CODE}`,{"gameState/phase":"final","gameState/scores":gs.scores}); return; }
-    await fp(`rooms/${CODE}`,{"gameState/phase":"scoreboard","gameState/roundIdx":rIdx,"gameState/qIdx":0,"gameState/roundElim":[],"gameState/chronoRanking":null});
-    setTimeout(async()=>{ await fp(`rooms/${CODE}`,{"gameState/phase":"roundIntro"}); setTimeout(async()=>{ const cur=await fg(`rooms/${CODE}/gameState`); hostStartQ(room,{...cur,roundIdx:rIdx,qIdx:0,roundElim:[]},rQs); },4000); },5000);
+    await fp(`rooms/${CODE}`,{"gameState/phase":"scoreboard","gameState/roundIdx":rIdx,"gameState/qIdx":0,"gameState/roundElim":[],"gameState/chronoRanking":null,"gameState/patateManche":0,"gameState/patateExplosion":null});
+    setTimeout(async()=>{
+      await fp(`rooms/${CODE}`,{"gameState/phase":"roundIntro","gameState/ready":{}});
+      const cur=await fg(`rooms/${CODE}/gameState`);
+      // Wait for ready
+      hostWaitReady(room,{...cur,roundIdx:rIdx,qIdx:0,roundElim:[]},rQs);
+    },5000);
     return;
   }
   await fp(`rooms/${CODE}`,{"gameState/qIdx":qIdx,"gameState/roundElim":rE,"gameState/chronoRanking":null});
@@ -104,7 +160,10 @@ async function hostProcessAnswer(room, gs, rQs, isOk) {
   else if (rType === "qcm")    { await roundQCM_end(room, gs, rQs); }
   else if (rType === "orage")  { await roundOrage_end(room, gs, rQs); }
   else if (rType === "chrono") { await roundChrono_end(room, gs, rQs); }
-  else if (rType === "patate") { await roundPatate_process(room, gs, rQs, isOk); }
+  else if (rType === "patate") {
+    // DON'T clear HTIMER for patate — explosion timer must keep ticking
+    await roundPatate_process(room, gs, rQs, isOk);
+  }
   // steal and carton are handled via their _check functions
 }
 
@@ -126,14 +185,12 @@ async function actBuzz() {
   I_BUZZED = true;
   drawQ_optimistic(gs);
 
-  // Calculate remaining question time before buzzing (for pause/resume)
   const timeRemaining = Math.max(1, Math.round(gs.timerDur - (Date.now() - gs.timerStart) / 1000));
   await fp(`rooms/${CODE}`, { "gameState/buzzed": ME, "gameState/_buzzerTimeRemaining": timeRemaining });
 
   if (HOST) {
     if(HTIMER){clearTimeout(HTIMER);HTIMER=null;}
     const room2=await fg(`rooms/${CODE}`);
-    // 3 second answer timer for buzzer round
     HTIMER=setTimeout(async()=>{
       const c3=await fg(`rooms/${CODE}/gameState`);
       if(!c3||c3.revealed||(c3.answers||{})[ME]!==undefined)return;
@@ -159,7 +216,6 @@ async function actAnswer(ansIdx) {
       const allAnswered=Object.keys(upd.answers||{}).length>=alive.length;
 
       if (rType==="steal") {
-        // Check if first correct answer found
         const isOk = ansIdx === q.c;
         if (isOk) {
           await roundSteal_check(room, upd, gs.rQs);
@@ -167,7 +223,6 @@ async function actAnswer(ansIdx) {
           await roundSteal_end(room, upd, gs.rQs);
         }
       } else if (rType==="carton") {
-        // Check if first correct or all answered
         const isOk = ansIdx === q.c;
         if (isOk || allAnswered) {
           await roundCarton_check(room, upd, gs.rQs);
@@ -246,7 +301,7 @@ function Watch(initialRoom) {
             hostProcessAnswer(room,gs,gs.rQs,isOk); return;
           }
 
-          // Patate: handle remote bomb holder answer
+          // Patate: handle remote bomb holder answer (DON'T clear HTIMER)
           if (rType==="patate"&&gs.patateHolder&&gs.patateHolder!==ME&&answers[gs.patateHolder]!==undefined) {
             const q=gs.rQs[gs.roundIdx][gs.qIdx]; const isOk=answers[gs.patateHolder].ansIdx===q.c;
             roundPatate_process(room,{...gs,buzzed:gs.patateHolder},gs.rQs,isOk); return;
@@ -264,7 +319,7 @@ function Watch(initialRoom) {
             }
           }
 
-          // Steal QCM-style: check each new answer
+          // Steal QCM-style
           if (rType==="steal") {
             const q=gs.rQs[gs.roundIdx][gs.qIdx];
             const hasCorrect = Object.entries(answers).some(([, {ansIdx}]) => ansIdx===q.c);
@@ -277,7 +332,7 @@ function Watch(initialRoom) {
             }
           }
 
-          // Carton QCM-style: check each new answer
+          // Carton QCM-style
           if (rType==="carton") {
             const q=gs.rQs[gs.roundIdx][gs.qIdx];
             const hasCorrect = Object.entries(answers).some(([name, {ansIdx}]) => ansIdx===q.c && !(gs.roundElim||[]).includes(name));
@@ -290,7 +345,7 @@ function Watch(initialRoom) {
         }
       }
     }
-    const key = gs.phase+"-"+gs.roundIdx+"-"+gs.qIdx+"-"+(gs.buzzed||"")+"-"+gs.revealed+"-"+gs.pickTarget+"-"+JSON.stringify(gs.result);
+    const key = gs.phase+"-"+gs.roundIdx+"-"+gs.qIdx+"-"+(gs.buzzed||"")+"-"+gs.revealed+"-"+gs.pickTarget+"-"+(gs.countdownStart||"")+"-"+JSON.stringify(gs.result)+"-"+JSON.stringify(gs.ready||{})+"-"+(gs.patateHolder||"")+"-"+(gs.patateExplosion||"");
     if (key===lastPhase) return;
     if (gs.buzzed&&gs.buzzed!==ME) I_BUZZED=false;
     if (gs.revealed) I_BUZZED=false;

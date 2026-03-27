@@ -36,18 +36,20 @@
     @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
     #screen-game{padding:0;justify-content:flex-start;background:#06080f}
     .game-header{width:100%;background:#0a0e1a;border-bottom:1px solid #1e2a40;padding:10px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-    .game-round-name{font-size:.65rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
+    .game-round-name{font-size:.75rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase}
     .game-round-desc{font-size:.6rem;color:#2a3a55}
     .game-timer{font-family:'Bebas Neue',sans-serif;font-size:2rem;line-height:1;color:#e8edf5;transition:color .3s;min-width:40px;text-align:right}
     .game-timer.urgent{color:#f87171}
     .scores-strip{width:100%;padding:8px 16px;display:flex;gap:6px;overflow-x:auto;flex-shrink:0;background:#06080f;border-bottom:1px solid #1e2a4022;scrollbar-width:none}
     .scores-strip::-webkit-scrollbar{display:none}
     .score-pill{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;padding:6px 10px;background:#0e1422;border:1px solid #1e2a40;border-radius:10px;min-width:60px}
-    .score-pill.me{border-color:var(--accent);background:var(--accent-glow)}
-    .score-pill-name{font-size:.62rem;color:#4a5a7a;font-weight:500;white-space:nowrap;max-width:55px;overflow:hidden;text-overflow:ellipsis}
+    .score-pill.me{border-color:var(--accent);background:var(--accent-glow);border-width:2px;box-shadow:0 0 10px var(--accent-glow)}
+    .score-pill-name{font-size:.7rem;color:#4a5a7a;font-weight:500;white-space:nowrap;max-width:60px;overflow:hidden;text-overflow:ellipsis}
     .score-pill.me .score-pill-name{color:var(--accent)}
     .score-pill-val{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;line-height:1}
-    .game-body{flex:1;width:100%;display:flex;flex-direction:column;padding:16px;gap:12px;overflow:hidden}
+    .game-body{flex:1;width:100%;display:flex;flex-direction:column;padding:16px;gap:12px;overflow:hidden;position:relative}
+    .game-body::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,var(--accent-glow) 0%,transparent 70%);opacity:.3;pointer-events:none;animation:bgPulse 4s ease-in-out infinite}
+    @keyframes bgPulse{0%,100%{opacity:.2}50%{opacity:.4}}
     #state-buzz{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
     .buzz-btn{width:min(200px,55vw);height:min(200px,55vw);border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;transition:transform .1s}
     .buzz-btn:active{transform:scale(0.94)}
@@ -56,19 +58,24 @@
     .buzz-sublabel{font-size:.65rem;color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase}
     .buzz-hint{font-size:.72rem;color:#2a3a55;text-align:center;max-width:220px;line-height:1.5}
     #state-answers{flex:1;display:flex;flex-direction:column;gap:10px}
-    .answer-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .answer-btn{border:none;border-radius:16px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:16px 10px;transition:all .15s}
+    .answer-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:center}
+    .answer-btn{border:none;border-radius:16px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:12px 8px;transition:all .15s}
     .answer-btn:active:not([disabled]){transform:scale(0.96)}
     .answer-btn[disabled]{cursor:default}
-    .answer-letter{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;line-height:1;color:white}
-    .answer-text{font-size:.75rem;font-weight:500;color:rgba(255,255,255,.85);text-align:center;line-height:1.3}
-    .answer-btn.c0{background:#1a2a6c;border:1.5px solid #2a3a8c}
-    .answer-btn.c1{background:#6c1a1a;border:1.5px solid #8c2a2a}
-    .answer-btn.c2{background:#1a6c3a;border:1.5px solid #2a8c4a}
-    .answer-btn.c3{background:#6c5a1a;border:1.5px solid #8c7a2a}
-    .answer-btn.ok{background:#14532d!important;border-color:#22c55e!important;box-shadow:0 0 20px #22c55e44}
-    .answer-btn.no{background:#7f1d1d!important;border-color:#ef4444!important}
+    .answer-letter{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;line-height:1;color:white}
+    .answer-text{font-size:.88rem;font-weight:500;color:rgba(255,255,255,.85);text-align:center;line-height:1.3}
+    .answer-btn.c0{background:#1e3399;border:1.5px solid #3050bb}
+    .answer-btn.c1{background:#991e1e;border:1.5px solid #bb3030}
+    .answer-btn.c2{background:#1e9944;border:1.5px solid #30bb55}
+    .answer-btn.c3{background:#997a1e;border:1.5px solid #bb9930}
+    .answer-btn.ok{background:#14532d!important;border:3px solid #22c55e!important;box-shadow:0 0 25px #22c55e88,0 0 50px #22c55e44;animation:correctGlow 1.2s ease-in-out infinite}
+    .answer-btn.no{background:#7f1d1d!important;border:3px solid #ef4444!important;box-shadow:0 0 20px #ef444488;animation:wrongShake .4s ease}
     .answer-btn.dim{opacity:.3}
+    @keyframes correctGlow{0%,100%{box-shadow:0 0 25px #22c55e88,0 0 50px #22c55e44}50%{box-shadow:0 0 35px #22c55eaa,0 0 70px #22c55e66}}
+    @keyframes wrongShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+    @keyframes patBounce{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-18px) rotate(5deg)}}
+    @keyframes patFlame{0%,100%{text-shadow:0 0 20px #f97316,0 -8px 30px #ef4444}50%{text-shadow:0 0 35px #fb923c,0 -14px 45px #ef4444}}
+    @keyframes patExplode{0%{transform:scale(.3);opacity:0}30%{transform:scale(1.4);opacity:1}100%{transform:scale(2);opacity:0}}
     #state-waiting{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
     .waiting-text{font-size:.85rem;color:#4a5a7a;text-align:center}
     #state-result{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
@@ -186,7 +193,7 @@ const RT = [
   { id:"chrono", name:"Contre la Montre",      icon:"⏱️", desc:"Tout le monde répond. Classement par rapidité !" },
   { id:"steal",  name:"Vol de Points",         icon:"😈", desc:"Tous répondent ! Le premier correct vole des points." },
   { id:"patate", name:"Patate Chaude",         icon:"🥔", desc:"Une bombe aléatoire à chaque question !" },
-  { id:"carton", name:"Tir à la Carabine",     icon:"🎯", desc:"Tous répondent ! Le premier correct tire sur un ballon !" },
+  { id:"carton", name:"Tir à la Carabine",     icon:"🎯", desc:"Dernier survivant avec des ballons 🎈 gagne ! Bonne réponse → crevez un ballon adverse." },
   { id:"orage",  name:"Orage de Points",       icon:"⚡", desc:"60 secondes de questions rapides !" },
 ];
 
@@ -395,7 +402,7 @@ function watchGame() {
     MY_INDEX = toArr(gs.players).indexOf(ME);
     setAccent(room.theme || 'culture');
 
-    const key = [gs.phase, gs.roundIdx, gs.qIdx, gs.buzzed, gs.revealed, gs.pickTarget, gs.patateHolder||'', gs.chronoRanking?'r':'', JSON.stringify(gs.result||{})].join('-');
+    const key = [gs.phase, gs.roundIdx, gs.qIdx, gs.buzzed, gs.revealed, gs.pickTarget, gs.patateHolder||'', gs.chronoRanking?'r':'', gs.countdownStart||'', gs.patateExplosion||'', JSON.stringify(gs.ready||{}), JSON.stringify(gs.result||{})].join('-');
     if (key === LAST_KEY) return;
     LAST_KEY = key;
 
@@ -418,9 +425,11 @@ function updateHeader(room, gs) {
 function startTimer(gs, room) {
   if (TIMER_IV) clearInterval(TIMER_IV);
   const el = G('hdr-timer');
+  const rType = room ? room.rounds[gs.roundIdx] : '';
+  // Hide timer for patate (hidden timer)
+  if (rType === 'patate') { el.textContent = '🥔'; el.classList.remove('urgent'); return; }
   if (!gs.timerStart || !gs.timerDur || gs.revealed) { el.textContent = '—'; el.classList.remove('urgent'); return; }
   // Pause timer display when someone buzzed (except chrono where everyone answers)
-  const rType = room ? room.rounds[gs.roundIdx] : '';
   if (gs.buzzed && rType !== 'chrono') {
     const frozen = gs._buzzerTimeRemaining || Math.max(0, Math.round(gs.timerDur - (Date.now() - gs.timerStart) / 1000));
     el.textContent = frozen + 's';
@@ -454,7 +463,33 @@ function renderState(room, gs) {
   const isElim = (gs.roundElim||[]).includes(ME);
   const myAns = (gs.answers||{})[ME];
 
-  if (gs.phase === 'roundIntro' || gs.phase === 'scoreboard') {
+  // Ready screen during roundIntro
+  if (gs.phase === 'roundIntro') {
+    // Check for countdown
+    if (gs.countdownStart) {
+      const elapsed = Math.round((Date.now() - gs.countdownStart) / 1000);
+      const num = 3 - elapsed;
+      showState('state-waiting');
+      G('waiting-text').innerHTML = num > 0
+        ? `<span style="font-size:4rem;font-weight:900;color:var(--accent)">${num}</span>`
+        : `<span style="font-size:3rem;font-weight:900;color:#22c55e">GO!</span>`;
+      return;
+    }
+    const r = RT.find(x => x.id === (room.rounds[gs.roundIdx] || ''));
+    const isReady = !!(gs.ready && gs.ready[ME]);
+    showState('state-waiting');
+    G('waiting-text').innerHTML = `
+      <div style="text-align:center">
+        <div style="font-size:2.5rem;margin-bottom:8px">${r ? r.icon : '🎮'}</div>
+        <div style="font-size:1.1rem;font-weight:700;margin-bottom:4px">${r ? r.name : 'Round'}</div>
+        <div style="font-size:.72rem;color:#4a5a7a;margin-bottom:16px">${r ? r.desc : ''}</div>
+        <button onclick="actReady()" style="padding:14px 32px;border:none;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:.05em;transition:all .15s;${isReady ? 'background:#14532d;color:#86efac;cursor:default' : 'background:var(--accent);color:white'}" ${isReady ? 'disabled' : ''}>
+          ${isReady ? '✓ En attente…' : 'READY ✓'}
+        </button>
+      </div>`;
+    return;
+  }
+  if (gs.phase === 'scoreboard') {
     renderScoreboard(gs);
     return;
   }
@@ -499,13 +534,43 @@ function renderState(room, gs) {
     return;
   }
 
-  // Patate — bomb holder answers
+  // Patate — explosion shown to ALL
   if (rType === 'patate') {
-    if (gs.patateHolder === ME) {
-      renderAnswers(gs, q);
-    } else {
+    if (gs.patateExplosion || (gs.revealed && gs.result && gs.result.msg && gs.result.msg.includes('BOOM'))) {
       showState('state-waiting');
-      G('waiting-text').textContent = `💣 ${gs.patateHolder || '?'} a la bombe…`;
+      G('waiting-text').innerHTML = `
+        <div style="text-align:center">
+          <div style="font-size:5rem;animation:patExplode 1.5s ease-out both">💥</div>
+          <div style="font-size:1.1rem;font-weight:700;color:#f87171;margin-top:10px">${gs.result?.msg || 'BOOM !'}</div>
+        </div>`;
+      return;
+    }
+    if (gs.patateHolder === ME) {
+      // Holder: sees animated potato + question
+      showState('state-answers');
+      const patInfo = `<div style="text-align:center;margin-bottom:8px;grid-column:1/-1"><div style="font-size:2.5rem;animation:patBounce 1s ease-in-out infinite,patFlame 0.8s ease-in-out infinite">🥔</div><div style="font-size:.78rem;font-weight:700;color:#fb923c;margin-top:4px">Tu as la patate ! Réponds vite !</div></div>`;
+      if (!q) return;
+      const myAnsP = (gs.answers||{})[ME];
+      const labels = ['A','B','C','D'];
+      const colors = ['c0','c1','c2','c3'];
+      G('answer-grid').style.gridTemplateColumns = '1fr 1fr';
+      G('answer-grid').innerHTML = patInfo + q.a.map((ans, i) => {
+        let cls = colors[i];
+        const canClick = myAnsP === undefined;
+        return `<button class="answer-btn ${cls}" ${canClick ? `onclick="actAnswer(${i})"` : 'disabled'}>
+          <span class="answer-letter">${labels[i]}</span>
+          <span class="answer-text">${ans}</span>
+        </button>`;
+      }).join('');
+    } else {
+      // Non-holder: waiting screen with animated potato
+      showState('state-waiting');
+      G('waiting-text').innerHTML = `
+        <div style="text-align:center">
+          <div style="font-size:4.5rem;animation:patBounce 1s ease-in-out infinite,patFlame 0.8s ease-in-out infinite">🥔</div>
+          <div style="font-size:1.2rem;font-weight:700;color:#fb923c;margin-top:12px">${gs.patateHolder || '?'} a la patate !</div>
+          <div style="font-size:.75rem;color:#4a5a7a;margin-top:6px">Manche ${(gs.patateManche||0)+1}/4</div>
+        </div>`;
     }
     return;
   }
@@ -621,9 +686,9 @@ function renderPickTarget(room, gs) {
       const info = rType === 'carton'
         ? `${'🎈'.repeat(balloons[pi])} (${balloons[pi]} ballons)`
         : `${gs.scores[pi] || 0} pts`;
-      return `<button class="answer-btn" style="background:${color}22;border:2px solid ${color}88;flex-direction:row;justify-content:space-between;padding:14px 16px" onclick="actPick('${p}')">
-        <span style="font-weight:700;color:white">${p}</span>
-        <span style="font-size:.8rem;color:rgba(255,255,255,.7)">${info}</span>
+      return `<button class="answer-btn" style="background:${color}22;border:2px solid ${color}88;flex-direction:row;justify-content:space-between;padding:16px 18px" onclick="actPick('${p}')">
+        <span style="font-weight:700;color:white;font-size:clamp(1.2rem,4vw,2rem)">${p}</span>
+        <span style="font-size:clamp(.8rem,2.5vw,1rem);color:rgba(255,255,255,.7)">${info}</span>
       </button>`;
     }).join('');
 }
@@ -645,6 +710,11 @@ function renderChronoRanking(gs) {
 // ════════════════════════════════════════════
 //  ACTIONS
 // ════════════════════════════════════════════
+async function actReady() {
+  if (!CODE || !ME) return;
+  await fp(`rooms/${CODE}`, { [`gameState/ready/${ME}`]: true });
+}
+
 async function actBuzz() {
   const gs = await fg(`rooms/${CODE}/gameState`);
   if (!gs || gs.phase !== 'question' || gs.revealed || gs.buzzed) return;

@@ -256,6 +256,7 @@ function _loop3d() {
   const t = _clock3d.getElapsedTime();
 
   _tickCharacter(t);
+  _tickLogo(t);
 
   // Particules : montée douce en boucle
   if (_particles) {
@@ -279,6 +280,71 @@ function _loop3d() {
 _loop3d();
 
 // ════════════════════════════════════════════
+//  LOGO 3D "BRAIN CLASH"
+//  Canvas 2D → texture → plane mesh
+//  Option B du prompt (pas de dépendance FontLoader)
+// ════════════════════════════════════════════
+let _logoMesh = null;
+let _logoVisible = false;
+
+function _buildLogo() {
+  if (_logoMesh) return;
+
+  // Create canvas texture
+  const cvs = document.createElement('canvas');
+  cvs.width = 1024; cvs.height = 256;
+  const ctx = cvs.getContext('2d');
+
+  // Transparent background
+  ctx.clearRect(0, 0, cvs.width, cvs.height);
+
+  // "BRAIN" line
+  ctx.font = '900 120px "Poppins", sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ffffff';
+  ctx.shadowColor = '#a78bfa';
+  ctx.shadowBlur = 40;
+  ctx.fillText('BRAIN', 512, 90);
+
+  // "CLASH" line
+  ctx.shadowColor = '#7c3aed';
+  ctx.shadowBlur = 50;
+  ctx.fillStyle = '#a78bfa';
+  ctx.fillText('CLASH', 512, 195);
+
+  const tex = new THREE.CanvasTexture(cvs);
+  tex.needsUpdate = true;
+
+  const geo = new THREE.PlaneGeometry(5, 1.25);
+  const mat = new THREE.MeshBasicMaterial({
+    map: tex, transparent: true, side: THREE.DoubleSide,
+    depthWrite: false
+  });
+  _logoMesh = new THREE.Mesh(geo, mat);
+  _logoMesh.position.set(0, 4.2, -1.2);
+  _logoMesh.visible = false;
+  _scene.add(_logoMesh);
+}
+_buildLogo();
+
+function _showLogo(visible) {
+  _logoVisible = visible;
+  if (_logoMesh) _logoMesh.visible = visible;
+}
+
+// Animate the logo in the main loop
+function _tickLogo(t) {
+  if (!_logoMesh || !_logoVisible) return;
+  // Gentle float up/down
+  _logoMesh.position.y = 4.2 + Math.sin(t * 0.8) * 0.12;
+  // Slow Y rotation oscillation
+  _logoMesh.rotation.y = Math.sin(t * 0.4) * 0.15;
+  // Pulsing emissive glow via opacity
+  _logoMesh.material.opacity = 0.85 + Math.sin(t * 1.5) * 0.15;
+}
+
+// ════════════════════════════════════════════
 //  API PUBLIQUE
 //  Utilisée par ui.js et game.js pour
 //  piloter la scène depuis le reste du jeu
@@ -288,4 +354,5 @@ window.SCENE3D = {
   talk     : () => _setAnim('talk'),   // gesticule
   react    : () => _setAnim('react'),  // célèbre
   idle     : () => _setAnim('idle'),   // respiration douce
+  showLogo : _showLogo,                // afficher/masquer logo 3D
 };
