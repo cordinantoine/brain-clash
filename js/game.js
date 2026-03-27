@@ -7,7 +7,6 @@
    + Système Ready avant chaque round
    ════════════════════════════════════════════ */
 
-let USED_QS = new Set();
 let _readyTimeout = null;
 
 async function hostLoadQ() {

@@ -247,42 +247,10 @@ function _tickCharacter(t) {
 }
 
 // ════════════════════════════════════════════
-//  BOUCLE D'ANIMATION PRINCIPALE
-// ════════════════════════════════════════════
-const _clock3d = new THREE.Clock();
-
-function _loop3d() {
-  requestAnimationFrame(_loop3d);
-  const t = _clock3d.getElapsedTime();
-
-  _tickCharacter(t);
-  _tickLogo(t);
-
-  // Particules : montée douce en boucle
-  if (_particles) {
-    const pos = _particles.geometry.attributes.position.array;
-    const { spd, iniY } = _particles.geometry.userData;
-    for (let i = 0; i < spd.length; i++) {
-      pos[i*3+1] += spd[i] * .006;
-      if (pos[i*3+1] > 8) pos[i*3+1] = iniY[i] - 7;
-    }
-    _particles.geometry.attributes.position.needsUpdate = true;
-    _particles.rotation.y += .0004;
-  }
-
-  // Dérive douce de la caméra
-  _camera.position.x = Math.sin(t*.1) * .2;
-  _camera.position.y = 2.0 + Math.sin(t*.15) * .07;
-  _camera.lookAt(0, 1.6, 0);
-
-  _renderer.render(_scene, _camera);
-}
-_loop3d();
-
-// ════════════════════════════════════════════
 //  LOGO 3D "BRAIN CLASH"
 //  Canvas 2D → texture → plane mesh
 //  Option B du prompt (pas de dépendance FontLoader)
+//  DOIT être avant _loop3d pour éviter le TDZ
 // ════════════════════════════════════════════
 let _logoMesh = null;
 let _logoVisible = false;
@@ -290,15 +258,12 @@ let _logoVisible = false;
 function _buildLogo() {
   if (_logoMesh) return;
 
-  // Create canvas texture
   const cvs = document.createElement('canvas');
   cvs.width = 1024; cvs.height = 256;
   const ctx = cvs.getContext('2d');
 
-  // Transparent background
   ctx.clearRect(0, 0, cvs.width, cvs.height);
 
-  // "BRAIN" line
   ctx.font = '900 120px "Poppins", sans-serif';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
@@ -307,7 +272,6 @@ function _buildLogo() {
   ctx.shadowBlur = 40;
   ctx.fillText('BRAIN', 512, 90);
 
-  // "CLASH" line
   ctx.shadowColor = '#7c3aed';
   ctx.shadowBlur = 50;
   ctx.fillStyle = '#a78bfa';
@@ -333,16 +297,44 @@ function _showLogo(visible) {
   if (_logoMesh) _logoMesh.visible = visible;
 }
 
-// Animate the logo in the main loop
 function _tickLogo(t) {
   if (!_logoMesh || !_logoVisible) return;
-  // Gentle float up/down
   _logoMesh.position.y = 4.2 + Math.sin(t * 0.8) * 0.12;
-  // Slow Y rotation oscillation
   _logoMesh.rotation.y = Math.sin(t * 0.4) * 0.15;
-  // Pulsing emissive glow via opacity
   _logoMesh.material.opacity = 0.85 + Math.sin(t * 1.5) * 0.15;
 }
+
+// ════════════════════════════════════════════
+//  BOUCLE D'ANIMATION PRINCIPALE
+// ════════════════════════════════════════════
+const _clock3d = new THREE.Clock();
+
+function _loop3d() {
+  requestAnimationFrame(_loop3d);
+  const t = _clock3d.getElapsedTime();
+
+  _tickCharacter(t);
+  _tickLogo(t);
+
+  // Particules : montée douce en boucle
+  if (_particles) {
+    const pos = _particles.geometry.attributes.position.array;
+    const { spd, iniY } = _particles.geometry.userData;
+    for (let i = 0; i < spd.length; i++) {
+      pos[i*3+1] += spd[i] * .006;
+      if (pos[i*3+1] > 8) pos[i*3+1] = iniY[i] - 7;
+    }
+    _particles.geometry.attributes.position.needsUpdate = true;
+    _particles.rotation.y += .0004;
+  }
+
+  _camera.position.x = Math.sin(t*.1) * .2;
+  _camera.position.y = 2.0 + Math.sin(t*.15) * .07;
+  _camera.lookAt(0, 1.6, 0);
+
+  _renderer.render(_scene, _camera);
+}
+_loop3d();
 
 // ════════════════════════════════════════════
 //  API PUBLIQUE
