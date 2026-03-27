@@ -221,13 +221,20 @@ function drawIntro(room, gs) {
 
   // Check if countdown is active
   if (gs.countdownStart) {
-    const elapsed = Math.round((Date.now() - gs.countdownStart) / 1000);
-    const num = 3 - elapsed;
-    if (num > 0) {
-      R(`<div class="countdown-overlay"><div class="countdown-number" style="color:${t.accent}">${num}</div></div><div class="countdown-flash"></div>`);
-    } else {
-      R(`<div class="countdown-overlay"><div class="countdown-go" style="color:${t.accent}">GO!</div></div>`);
-    }
+    const _cdRender = () => {
+      const elapsed = Math.round((Date.now() - gs.countdownStart) / 1000);
+      const num = 3 - elapsed;
+      if (num > 0) {
+        R(`<div class="countdown-overlay"><div class="countdown-number" key="${num}" style="color:${t.accent}">${num}</div></div><div class="countdown-flash"></div>`);
+      } else {
+        R(`<div class="countdown-overlay"><div class="countdown-go" style="color:${t.accent}">GO!</div></div>`);
+      }
+    };
+    _cdRender();
+    // Re-render every second for 2, 1, GO
+    setTimeout(_cdRender, 1000);
+    setTimeout(_cdRender, 2000);
+    setTimeout(_cdRender, 3000);
     return;
   }
 

@@ -467,12 +467,20 @@ function renderState(room, gs) {
   if (gs.phase === 'roundIntro') {
     // Check for countdown
     if (gs.countdownStart) {
-      const elapsed = Math.round((Date.now() - gs.countdownStart) / 1000);
-      const num = 3 - elapsed;
       showState('state-waiting');
-      G('waiting-text').innerHTML = num > 0
-        ? `<span style="font-size:4rem;font-weight:900;color:var(--accent)">${num}</span>`
-        : `<span style="font-size:3rem;font-weight:900;color:#22c55e">GO!</span>`;
+      const _cdRender = () => {
+        const elapsed = Math.round((Date.now() - gs.countdownStart) / 1000);
+        const num = 3 - elapsed;
+        const el = G('waiting-text');
+        if (!el) return;
+        el.innerHTML = num > 0
+          ? `<span style="font-size:4rem;font-weight:900;color:var(--accent)">${num}</span>`
+          : `<span style="font-size:3rem;font-weight:900;color:#22c55e">GO!</span>`;
+      };
+      _cdRender();
+      setTimeout(_cdRender, 1000);
+      setTimeout(_cdRender, 2000);
+      setTimeout(_cdRender, 3000);
       return;
     }
     const r = RT.find(x => x.id === (room.rounds[gs.roundIdx] || ''));
