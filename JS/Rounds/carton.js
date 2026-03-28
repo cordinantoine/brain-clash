@@ -102,6 +102,14 @@ async function roundCarton_check(room, gs, rQs) {
     if (balloons[pi] <= 0 && !roundElim.includes(name)) roundElim.push(name);
   });
 
+  // Messages détaillés pour les mauvaises réponses
+  const wrongDetails = wrongPlayers.map(([name]) => {
+    const pi = players.indexOf(name);
+    if (balloons[pi] <= 0) return `❌ ${name} perd son dernier ballon ! 💥 Éliminé !`;
+    return `❌ ${name} perd un ballon ! 🎈 (${balloons[pi]} restant${balloons[pi]>1?'s':''})`;
+  });
+  const recap = players.map((p, i) => `${p}: ${'🎈'.repeat(balloons[i])}${balloons[i] === 0 ? ' 💀' : ''}`).join('  ');
+
   if (correct.length > 0) {
     if (HTIMER) { clearTimeout(HTIMER); HTIMER = null; }
     const winner = correct[0][0];
@@ -109,12 +117,13 @@ async function roundCarton_check(room, gs, rQs) {
     sc[players.indexOf(winner)] += ptsWin;
 
     const targets = players.filter(p => p !== winner && !roundElim.includes(p));
+    const wrongPart = wrongDetails.length ? '\n' + wrongDetails.join('\n') : '';
 
     if (targets.length === 0) {
       await fp(`rooms/${CODE}`, {
         "gameState/revealed":true, "gameState/scores":sc, "gameState/balloons":balloons,
         "gameState/roundElim":roundElim,
-        "gameState/result":{ msg:`✅ ${winner} a bon ! +${ptsWin} pts 🎯`, pts:ptsWin, scorer:winner }
+        "gameState/result":{ msg:`✅ ${winner} a bon ! +${ptsWin} pts 🎯${wrongPart}\n${recap}`, pts:ptsWin, scorer:winner }
       });
       const done = await roundCarton_checkLastStanding(room, gs, rQs, balloons, roundElim, sc);
       if (!done) setTimeout(() => roundCarton_nextQ(room, { ...gs, balloons, roundElim, scores:sc }, rQs), 3500);
@@ -123,17 +132,16 @@ async function roundCarton_check(room, gs, rQs) {
         "gameState/buzzed":winner,
         "gameState/pickTarget":true, "gameState/scores":sc, "gameState/balloons":balloons,
         "gameState/roundElim":roundElim,
-        "gameState/result":{ msg:`✅ ${winner} a bon ! +${ptsWin} pts — Sur qui tirer ? 🎯`, pts:ptsWin, scorer:winner }
+        "gameState/result":{ msg:`✅ ${winner} a bon ! +${ptsWin} pts — Sur qui tirer ? 🎯${wrongPart}`, pts:ptsWin, scorer:winner }
       });
     }
   } else {
     if (HTIMER) { clearTimeout(HTIMER); HTIMER = null; }
-    const wrongMsgs = wrongPlayers.map(([name]) => `${name} -1🎈`).join(', ');
-    const recap = players.map((p, i) => `${p}: ${'🎈'.repeat(balloons[i])}${balloons[i] === 0 ? ' 💀' : ''}`).join('  ');
+    const wrongPart = wrongDetails.length ? wrongDetails.join('\n') : '';
     await fp(`rooms/${CODE}`, {
       "gameState/revealed":true, "gameState/scores":sc, "gameState/balloons":balloons,
       "gameState/roundElim":roundElim,
-      "gameState/result":{ msg:`❌ Personne n'a bon ! ${wrongMsgs ? wrongMsgs : ''}\n${recap}`, pts:0, scorer:null }
+      "gameState/result":{ msg:`❌ Personne n'a bon ! Réponse : ${q.a[q.c]}\n${wrongPart}\n${recap}`, pts:0, scorer:null }
     });
     const done = await roundCarton_checkLastStanding(room, gs, rQs, balloons, roundElim, sc);
     if (!done) setTimeout(() => roundCarton_nextQ(room, { ...gs, balloons, roundElim, scores:sc }, rQs), 3500);
