@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════
-   questions/francaise.js — Culture Française — 100 questions
+   questions/francaise.js — Culture Française — 200 questions
    ════════════════════════════════════════ */
 QUESTIONS.francaise = [
   {q:"Quelle est la capitale de la France ?",a:["Lyon","Marseille","Paris","Bordeaux"],c:2,f:""},
@@ -103,4 +103,145 @@ QUESTIONS.francaise = [
   {q:"Quel est le département le plus peuplé de France ?",a:["Les Bouches-du-Rhône","Paris","Le Rhône","Le Nord"],c:3,f:""},
   {q:"Quelle femme de lettres française a écrit 'Le Deuxième Sexe' ?",a:["Marguerite Duras","Simone de Beauvoir","Colette","Marguerite Yourcenar"],c:1,f:""},
   {q:"Quel est le sport le plus pratiqué en France ?",a:["Le rugby","Le tennis","Le football","Le cyclisme"],c:2,f:""},
+
+  // ═══════════════════════════════════════════════
+  // 100 NOUVELLES QUESTIONS (101–200)
+  // ═══════════════════════════════════════════════
+
+  // --- Rois et Reines de France ---
+  {q:"Quel roi de France a signé l'Édit de Nantes en 1598 ?",a:["Louis XIII","François Ier","Henri IV","Charles IX"],c:2,f:""},
+  {q:"Quelle reine de France était surnommée 'l'Autrichienne' ?",a:["Catherine de Médicis","Anne d'Autriche","Marie-Antoinette","Marie de Médicis"],c:2,f:""},
+  {q:"Quel roi de France a été sacré à Reims en 1429 grâce à Jeanne d'Arc ?",a:["Charles VII","Louis XI","Charles VI","Philippe VI"],c:0,f:""},
+  {q:"Quel roi capétien a régné de 987 à 996, fondant la dynastie capétienne ?",a:["Philippe Auguste","Robert le Pieux","Hugues Capet","Louis VI"],c:2,f:""},
+  {q:"Quelle reine a exercé la régence pendant la minorité de Louis XIV ?",a:["Catherine de Médicis","Marie-Antoinette","Anne d'Autriche","Blanche de Castille"],c:2,f:""},
+
+  // --- DOM-TOM ---
+  {q:"Quel est le chef-lieu de la Guadeloupe ?",a:["Pointe-à-Pitre","Fort-de-France","Basse-Terre","Les Abymes"],c:2,f:""},
+  {q:"Dans quel océan se trouve La Réunion ?",a:["Océan Atlantique","Océan Pacifique","Océan Indien","Mer Méditerranée"],c:2,f:""},
+  {q:"Quel territoire français du Pacifique est célèbre pour son lagon classé à l'UNESCO ?",a:["Wallis-et-Futuna","Polynésie française","Nouvelle-Calédonie","Saint-Pierre-et-Miquelon"],c:2,f:""},
+  {q:"Quel est le chef-lieu de la Martinique ?",a:["Basse-Terre","Cayenne","Fort-de-France","Pointe-à-Pitre"],c:2,f:""},
+  {q:"Quel département d'outre-mer se trouve en Amérique du Sud ?",a:["La Martinique","La Guadeloupe","La Guyane","Mayotte"],c:2,f:""},
+  {q:"Quel DOM-TOM est devenu le 101e département français en 2011 ?",a:["La Réunion","Saint-Martin","Mayotte","Wallis-et-Futuna"],c:2,f:""},
+
+  // --- Inventions françaises ---
+  {q:"Quel Français a inventé le cinématographe en 1895 ?",a:["Georges Méliès","Les frères Lumière","Léon Gaumont","Charles Pathé"],c:1,f:""},
+  {q:"Qui a inventé le stéthoscope en 1816 ?",a:["Ambroise Paré","Louis Pasteur","René Laennec","Claude Bernard"],c:2,f:""},
+  {q:"Quel Français a inventé le système d'écriture pour aveugles ?",a:["Louis Braille","Denis Diderot","Valentin Haüy","Charles Barbier"],c:0,f:""},
+  {q:"Quel ingénieur français a mis au point la pasteurisation ?",a:["Antoine Lavoisier","Louis Pasteur","Marie Curie","Henri Becquerel"],c:1,f:""},
+  {q:"Quel Français a inventé la carte à puce ?",a:["Roland Moreno","Louis Pouzin","Jacques-Yves Cousteau","Marcel Dassault"],c:0,f:""},
+
+  // --- Champions sportifs français ---
+  {q:"Quel judoka français est le plus titré de l'histoire olympique française ?",a:["David Douillet","Teddy Riner","Thierry Rey","Angelo Parisi"],c:1,f:""},
+  {q:"Quel cycliste français a remporté cinq Tours de France entre 1957 et 1964 ?",a:["Bernard Hinault","Laurent Fignon","Jacques Anquetil","Raymond Poulidor"],c:2,f:""},
+  {q:"Quelle nageuse française a remporté trois médailles d'or aux JO de 2012 et 2016 ?",a:["Laure Manaudou","Camille Muffat","Charlotte Bonnet","Florent Manaudou"],c:1,f:""},
+  {q:"Quel footballeur français a remporté le Ballon d'or en 1998 ?",a:["Thierry Henry","Michel Platini","Zinédine Zidane","Just Fontaine"],c:2,f:""},
+  {q:"Quel skieur français a remporté trois médailles d'or olympiques en ski alpin ?",a:["Jean-Claude Killy","Luc Alphand","Edgar Grospiron","Alexis Pinturault"],c:0,f:""},
+
+  // --- Émissions de télévision françaises ---
+  {q:"Quelle émission culte de France 2 était présentée par Patrice Laffont ?",a:["Intervilles","Fort Boyard","Des chiffres et des lettres","Pyramide"],c:3,f:""},
+  {q:"Quel animateur a présenté 'Nulle Part Ailleurs' sur Canal+ ?",a:["Michel Drucker","Thierry Ardisson","Antoine de Caunes","Laurent Ruquier"],c:2,f:""},
+  {q:"Quelle série télévisée française se déroule au Moyen Âge avec le roi Arthur ?",a:["Hero Corp","Kaamelott","Les Visiteurs","Merlin"],c:1,f:""},
+  {q:"Quel jeu télévisé français se déroule dans un fort maritime ?",a:["Intervilles","Le Maillon faible","Fort Boyard","Koh-Lanta"],c:2,f:""},
+  {q:"Quelle émission de variétés était présentée par Michel Drucker le dimanche ?",a:["Tout le monde en parle","Vivement Dimanche","C à vous","Taratata"],c:1,f:""},
+
+  // --- Bande dessinée (BD) ---
+  {q:"Quel dessinateur belge a créé Tintin ?",a:["René Goscinny","Hergé","Peyo","Morris"],c:1,f:""},
+  {q:"Dans quel journal les aventures d'Astérix ont-elles été publiées pour la première fois ?",a:["Spirou","Tintin","Pilote","Pif Gadget"],c:2,f:""},
+  {q:"Quel personnage de BD est un gaffeur travaillant dans un journal ?",a:["Spirou","Tintin","Gaston Lagaffe","Titeuf"],c:2,f:""},
+  {q:"Qui est le créateur de la bande dessinée 'Le Petit Nicolas' ?",a:["Sempé et Goscinny","Uderzo et Goscinny","Franquin","Peyo"],c:0,f:""},
+  {q:"Quel personnage de BD créé par Peyo vit dans des champignons ?",a:["Gaston Lagaffe","Spirou","Les Schtroumpfs","Boule et Bill"],c:2,f:""},
+
+  // --- Musique française ---
+  {q:"Quel rappeur français a sorti l'album 'Civilisation' ?",a:["Nekfeu","Booba","Orelsan","Jul"],c:2,f:""},
+  {q:"Quel chanteur de variété française a interprété 'La Bohème' ?",a:["Jacques Brel","Georges Brassens","Charles Aznavour","Serge Gainsbourg"],c:2,f:""},
+  {q:"Quel duo électro français est célèbre pour 'Around the World' ?",a:["Justice","Air","Daft Punk","Phoenix"],c:2,f:""},
+  {q:"Quel chanteur français est surnommé 'le Grand Jacques' ?",a:["Jacques Dutronc","Jacques Higelin","Jacques Brel","Jacques Prévert"],c:2,f:""},
+  {q:"Quelle chanteuse française a interprété 'Voyage, Voyage' en 1986 ?",a:["Mylène Farmer","Desireless","Patricia Kaas","Vanessa Paradis"],c:1,f:""},
+  {q:"Quel rappeur marseillais est membre du groupe IAM ?",a:["MC Solaar","Booba","Akhenaton","Oxmo Puccino"],c:2,f:""},
+
+  // --- Expressions et proverbes ---
+  {q:"Que signifie l'expression 'avoir le beurre et l'argent du beurre' ?",a:["Être riche","Tout vouloir sans rien sacrifier","Aimer cuisiner","Être avare"],c:1,f:""},
+  {q:"Que signifie le proverbe 'Pierre qui roule n'amasse pas mousse' ?",a:["Il faut être patient","Qui change souvent ne s'enrichit pas","Il faut travailler dur","Les voyages forment la jeunesse"],c:1,f:""},
+  {q:"Que signifie l'expression 'donner sa langue au chat' ?",a:["Être gourmand","Parler trop","Renoncer à deviner","Mentir"],c:2,f:""},
+  {q:"Que signifie l'expression 'faire la grasse matinée' ?",a:["Manger un gros petit-déjeuner","Dormir tard le matin","Faire du sport le matin","Se lever tôt"],c:1,f:""},
+  {q:"Que signifie l'expression 'il pleut des cordes' ?",a:["Il fait très froid","Il y a du vent","Il pleut très fort","Il neige"],c:2,f:""},
+
+  // --- Architecture française ---
+  {q:"Quel architecte français a conçu la Cité Radieuse à Marseille ?",a:["Gustave Eiffel","Jean Nouvel","Le Corbusier","Hector Guimard"],c:2,f:""},
+  {q:"Quel style architectural caractérise la cathédrale de Chartres ?",a:["Roman","Baroque","Gothique","Renaissance"],c:2,f:""},
+  {q:"Quel architecte a dessiné les entrées du métro parisien en style Art Nouveau ?",a:["Le Corbusier","Hector Guimard","Gustave Eiffel","Auguste Perret"],c:1,f:""},
+  {q:"Quel château de la Loire est célèbre pour son escalier à double révolution ?",a:["Chenonceau","Amboise","Chambord","Azay-le-Rideau"],c:2,f:""},
+  {q:"Quel bâtiment parisien conçu par Renzo Piano et Richard Rogers abrite un centre d'art moderne ?",a:["Le Grand Palais","Le Centre Pompidou","La Fondation Louis Vuitton","Le Palais de Tokyo"],c:1,f:""},
+
+  // --- Créateurs de mode ---
+  {q:"Quelle créatrice de mode française a popularisé la petite robe noire ?",a:["Elsa Schiaparelli","Sonia Rykiel","Coco Chanel","Jeanne Lanvin"],c:2,f:""},
+  {q:"Quel couturier français a lancé la première collection de prêt-à-porter de luxe en 1966 ?",a:["Pierre Cardin","Christian Dior","Yves Saint Laurent","Hubert de Givenchy"],c:2,f:""},
+  {q:"Quelle maison de mode française est célèbre pour son sac 'Birkin' ?",a:["Louis Vuitton","Chanel","Hermès","Dior"],c:2,f:""},
+  {q:"Quel couturier français a habillé Audrey Hepburn dans 'Breakfast at Tiffany's' ?",a:["Christian Dior","Pierre Balmain","Hubert de Givenchy","Yves Saint Laurent"],c:2,f:""},
+
+  // --- Scientifiques français ---
+  {q:"Quel chimiste français est considéré comme le père de la chimie moderne ?",a:["Louis Pasteur","Marie Curie","Antoine Lavoisier","Henri Moissan"],c:2,f:""},
+  {q:"Quelle scientifique d'origine polonaise a reçu deux prix Nobel en France ?",a:["Irène Joliot-Curie","Marie Curie","Marguerite Perey","Claudie Haigneré"],c:1,f:""},
+  {q:"Quel mathématicien français a inventé la géométrie analytique avec Descartes ?",a:["Blaise Pascal","Pierre de Fermat","Henri Poincaré","Joseph Fourier"],c:1,f:""},
+  {q:"Quel physicien français a donné son nom à l'unité de pression ?",a:["André-Marie Ampère","Charles-Augustin de Coulomb","Blaise Pascal","Joseph Louis Gay-Lussac"],c:2,f:""},
+  {q:"Quel océanographe français a co-inventé le scaphandre autonome ?",a:["Paul-Émile Victor","Jean-Baptiste Charcot","Jacques-Yves Cousteau","Théodore Monod"],c:2,f:""},
+
+  // --- Explorateurs français ---
+  {q:"Quel explorateur français a fondé la ville de Québec en 1608 ?",a:["Jacques Cartier","La Pérouse","Samuel de Champlain","René-Robert Cavelier de La Salle"],c:2,f:""},
+  {q:"Quel explorateur français a revendiqué la Louisiane pour la France ?",a:["Samuel de Champlain","Jacques Cartier","Cavelier de La Salle","Louis Antoine de Bougainville"],c:2,f:""},
+  {q:"Quel navigateur français a réalisé le premier tour du monde français au XVIIIe siècle ?",a:["La Pérouse","Jacques Cartier","Louis Antoine de Bougainville","Dumont d'Urville"],c:2,f:""},
+  {q:"Quel explorateur français a donné son nom à un détroit entre l'Australie et la Tasmanie ?",a:["Bougainville","La Pérouse","Dumont d'Urville","Bruni d'Entrecasteaux"],c:3,f:""},
+
+  // --- Système politique français ---
+  {q:"Comment s'appelle la chambre basse du Parlement français ?",a:["Le Sénat","Le Conseil d'État","L'Assemblée nationale","Le Conseil constitutionnel"],c:2,f:""},
+  {q:"Combien de sénateurs siègent au Sénat français ?",a:["348","577","300","450"],c:0,f:""},
+  {q:"Combien de députés siègent à l'Assemblée nationale ?",a:["348","450","577","650"],c:2,f:""},
+  {q:"Quel est le mandat du président de la République française depuis 2000 ?",a:["7 ans","4 ans","5 ans","6 ans"],c:2,f:""},
+  {q:"Où siège le Sénat français ?",a:["Le Palais Bourbon","Le Palais du Luxembourg","L'Élysée","Matignon"],c:1,f:""},
+
+  // --- Fêtes et traditions ---
+  {q:"Quel jour fête-t-on la Chandeleur en France ?",a:["1er janvier","2 février","14 février","1er mai"],c:1,f:""},
+  {q:"Que mange-t-on traditionnellement à la Chandeleur ?",a:["Des galettes","Des crêpes","Des gaufres","Du pain d'épices"],c:1,f:""},
+  {q:"Quel jour célèbre-t-on la Fête de la Musique en France ?",a:["14 juillet","1er mai","21 juin","25 décembre"],c:2,f:""},
+  {q:"Quel est le jour férié du 11 novembre en France ?",a:["La Fête nationale","L'Armistice de 1918","La Toussaint","L'Assomption"],c:1,f:""},
+  {q:"Que distribue-t-on traditionnellement le 1er mai en France ?",a:["Des œufs en chocolat","Des crêpes","Du muguet","Des roses"],c:2,f:""},
+
+  // --- Fleuves et montagnes ---
+  {q:"Quel fleuve français se jette dans la Manche ?",a:["La Garonne","Le Rhône","La Seine","La Loire"],c:2,f:""},
+  {q:"Quel massif montagneux se situe entre la France et la Suisse ?",a:["Les Pyrénées","Le Massif central","Les Vosges","Le Jura"],c:3,f:""},
+  {q:"Quel fleuve français prend sa source au mont Gerbier-de-Jonc ?",a:["La Seine","Le Rhône","La Garonne","La Loire"],c:3,f:""},
+  {q:"Quel est le point culminant des Pyrénées françaises ?",a:["Le Pic du Midi","Le Vignemale","Le Pic d'Aneto","Le Pic du Canigou"],c:1,f:""},
+  {q:"Dans quel massif se trouve le Puy de Sancy, point culminant du Massif central ?",a:["Les Monts du Cantal","Les Monts Dore","Les Monts du Forez","Les Causses"],c:1,f:""},
+
+  // --- Îles françaises ---
+  {q:"Quelle île française se situe au large de Cannes ?",a:["L'île de Ré","L'île d'Oléron","L'île Sainte-Marguerite","L'île de Porquerolles"],c:2,f:""},
+  {q:"Quelle île bretonne est célèbre pour ses alignements mégalithiques ?",a:["Belle-Île-en-Mer","L'île de Bréhat","L'île de Groix","Carnac n'est pas une île"],c:0,f:""},
+  {q:"Quelle île française de l'Atlantique est reliée au continent par un pont ?",a:["L'île de Ré","L'île d'Yeu","Belle-Île-en-Mer","L'île de Batz"],c:0,f:""},
+  {q:"Quel volcan actif se trouve à La Réunion ?",a:["La Montagne Pelée","Le Piton de la Fournaise","Le Piton des Neiges","Le Karthala"],c:1,f:""},
+
+  // --- Vins et AOC ---
+  {q:"Quel vignoble français produit le Gewurztraminer ?",a:["La Bourgogne","Le Bordelais","L'Alsace","La Vallée du Rhône"],c:2,f:""},
+  {q:"Quel vin de Bourgogne est considéré comme l'un des plus prestigieux au monde ?",a:["Le Châteauneuf-du-Pape","Le Romanée-Conti","Le Margaux","Le Sancerre"],c:1,f:""},
+  {q:"Dans quelle région produit-on le Muscadet ?",a:["La Bourgogne","L'Alsace","La Vallée de la Loire","La Provence"],c:2,f:""},
+  {q:"Quel type de vin est le Sauternes ?",a:["Un vin rouge","Un vin rosé","Un vin blanc sec","Un vin blanc liquoreux"],c:3,f:""},
+  {q:"Quelle appellation viticole se trouve sur les pentes du Rhône près de Lyon ?",a:["Le Beaujolais","Le Côtes-du-Rhône","Le Côte-Rôtie","Le Condrieu"],c:2,f:""},
+
+  // --- Régions et spécialités régionales ---
+  {q:"Quelle spécialité culinaire est originaire de Nice ?",a:["La quiche lorraine","La socca","Le kouign-amann","La flammekueche"],c:1,f:""},
+  {q:"Quel gâteau breton est préparé avec beaucoup de beurre ?",a:["Le far breton","Le kouign-amann","La galette bretonne","Le gâteau nantais"],c:1,f:""},
+  {q:"Quelle ville du Nord est célèbre pour ses moules-frites ?",a:["Amiens","Roubaix","Lille","Dunkerque"],c:2,f:""},
+  {q:"Quelle confiserie est une spécialité de Montélimar ?",a:["La praline","Le calisson","Le nougat","La bergamote"],c:2,f:""},
+  {q:"De quelle région est originaire la flammekueche (tarte flambée) ?",a:["La Lorraine","La Bretagne","L'Alsace","La Franche-Comté"],c:2,f:""},
+
+  // --- Divers culture française ---
+  {q:"Quel est le nom de la femme symbolisant la République française ?",a:["Jeanne","Marianne","Marie","Françoise"],c:1,f:""},
+  {q:"Quel navigateur français a remporté le Vendée Globe en 2001 en solitaire ?",a:["Éric Tabarly","Michel Desjoyeaux","Alain Colas","François Gabart"],c:1,f:""},
+  {q:"Quel comédien français a créé le personnage de Coluche ?",a:["Michel Colucci","Pierre Desproges","Raymond Devos","Fernand Raynaud"],c:0,f:""},
+  {q:"Quel humoriste français a fondé les Restos du Cœur ?",a:["Pierre Desproges","Thierry Le Luron","Coluche","Guy Bedos"],c:2,f:""},
+  {q:"Quel philosophe des Lumières est l'auteur de 'Candide' ?",a:["Montesquieu","Jean-Jacques Rousseau","Denis Diderot","Voltaire"],c:3,f:""},
+  {q:"Quelle est la plus grande forêt domaniale de France métropolitaine ?",a:["La forêt de Fontainebleau","La forêt de Compiègne","La forêt d'Orléans","La forêt de Brocéliande"],c:2,f:""},
+  {q:"Quel prix littéraire français est décerné chaque année en novembre ?",a:["Le prix Femina","Le prix Goncourt","Le prix Renaudot","Le prix Médicis"],c:1,f:""},
+  {q:"Dans quelle ville française se trouve le Vieux-Port ?",a:["Nice","Toulon","Marseille","La Rochelle"],c:2,f:""},
+  {q:"Quel monument de Paris abrite le tombeau de Napoléon Ier ?",a:["Le Panthéon","L'Arc de Triomphe","Les Invalides","Notre-Dame de Paris"],c:2,f:""},
+  {q:"Quel chanteur français a interprété 'Ne me quitte pas' ?",a:["Charles Aznavour","Georges Brassens","Serge Gainsbourg","Jacques Brel"],c:3,f:""},
 ];
