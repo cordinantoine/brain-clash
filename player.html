@@ -526,7 +526,19 @@ function renderState(room, gs) {
     return;
   }
 
-  // Résultat révélé — check for pick target first (steal/carton)
+  // Résultat révélé — QCM-style : montrer les boutons colorés ok/no
+  if (gs.revealed && gs.result && ['qcm','chrono','orage','steal','carton'].includes(rType)) {
+    renderAnswers(gs, q);
+    // Ajouter le message de résultat sous la grille
+    const oldMsg = document.querySelector('.reveal-msg');
+    if (oldMsg) oldMsg.remove();
+    const myA = (gs.answers||{})[ME];
+    const isOk = myA !== undefined && myA.ansIdx === q?.c;
+    G('answer-grid').insertAdjacentHTML('afterend',
+      `<p class="reveal-msg" style="text-align:center;font-size:.85rem;font-weight:700;margin-top:6px;color:${isOk ? '#4ade80' : '#f87171'}">${isOk ? '✅ Bonne réponse !' : '❌ Mauvaise réponse'}</p>`);
+    return;
+  }
+  // Résultat révélé — autres rounds (buzzer, patate)
   if (gs.revealed && gs.result) { renderResult(gs, q); return; }
 
   // Pick target screen for steal/carton
@@ -626,9 +638,11 @@ function renderState(room, gs) {
 
 function renderAnswers(gs, q) {
   showState('state-answers');
-  // Nettoyer l'indicateur "Réponse envoyée" de la question précédente
+  // Nettoyer les indicateurs de la question précédente
   const oldSent = document.querySelector('.answer-sent');
   if (oldSent) oldSent.remove();
+  const oldReveal = document.querySelector('.reveal-msg');
+  if (oldReveal) oldReveal.remove();
   G('answer-grid').style.gridTemplateColumns = '1fr 1fr';
   if (!q) return;
   const myAns = (gs.answers||{})[ME];
