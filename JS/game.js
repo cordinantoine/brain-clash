@@ -142,16 +142,6 @@ async function hostNextQ(room, gs, rQs) {
 
   qIdx++;
   if (qIdx >= (rQs[rIdx]||[]).length) {
-    // Carton : recharger des questions au lieu de passer au round suivant
-    if (rType === "carton") {
-      const themes = room.themes && room.themes.length ? room.themes : [room.theme || "culture"];
-      rQs[rIdx] = getStaticQs(themes, 50);
-      qIdx = 0;
-      await fp(`rooms/${CODE}`, { "gameState/rQs":rQs, "gameState/qIdx":0 });
-      const cur = await fg(`rooms/${CODE}/gameState`);
-      hostStartQ(room, { ...cur, qIdx:0, roundElim:rE }, rQs);
-      return;
-    }
     rIdx++; qIdx=0; rE=[];
     if (rIdx >= room.rounds.length) { await fp(`rooms/${CODE}`,{"gameState/phase":"final","gameState/scores":gs.scores}); return; }
     await fp(`rooms/${CODE}`,{"gameState/phase":"scoreboard","gameState/roundIdx":rIdx,"gameState/qIdx":0,"gameState/roundElim":[],"gameState/chronoRanking":null,"gameState/patateManche":0,"gameState/patateExplosion":null});

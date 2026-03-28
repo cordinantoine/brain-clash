@@ -158,6 +158,7 @@ async function roundCarton_checkLastStanding(room, gs, rQs, balloons, roundElim,
   const BASE = 50 * N;
   const alive = players.filter(p => !roundElim.includes(p));
   if (alive.length <= 1) {
+    if (HTIMER) { clearTimeout(HTIMER); HTIMER = null; }
     const surv = alive[0] || null;
     const survPts = Math.round(BASE * 1.25);
     if (surv) { sc[players.indexOf(surv)] += survPts; }
@@ -166,8 +167,24 @@ async function roundCarton_checkLastStanding(room, gs, rQs, balloons, roundElim,
       "gameState/revealed":true, "gameState/scores":sc, "gameState/balloons":balloons, "gameState/roundElim":roundElim,
       "gameState/result":{ msg:surv ? `🏆 ${surv} est le dernier debout ! +${survPts} pts\n${recap}` : `Round terminé !\n${recap}`, pts:surv ? survPts : 0, scorer:surv }
     });
-    // Round is over — go to next round
-    setTimeout(() => hostNextQ(room, { ...gs, balloons, roundElim, scores:sc }, rQs), 3500);
+    // Round terminé — passage direct au round suivant (scoreboard → roundIntro)
+    const nextRIdx = gs.roundIdx + 1;
+    setTimeout(async () => {
+      if (nextRIdx >= room.rounds.length) {
+        await fp(`rooms/${CODE}`, {"gameState/phase":"final","gameState/scores":sc});
+        return;
+      }
+      await fp(`rooms/${CODE}`, {
+        "gameState/phase":"scoreboard","gameState/roundIdx":nextRIdx,"gameState/qIdx":0,
+        "gameState/roundElim":[],"gameState/chronoRanking":null,"gameState/balloons":null,
+        "gameState/patateManche":0,"gameState/patateExplosion":null
+      });
+      setTimeout(async () => {
+        await fp(`rooms/${CODE}`, {"gameState/phase":"roundIntro","gameState/ready":{}});
+        const cur = await fg(`rooms/${CODE}/gameState`);
+        hostWaitReady(room, {...cur, roundIdx:nextRIdx, qIdx:0, roundElim:[]}, rQs);
+      }, 5000);
+    }, 3500);
     return true;
   }
   return false;
