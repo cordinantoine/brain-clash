@@ -71,8 +71,19 @@
     .answer-btn.ok{background:#14532d!important;border:3px solid #22c55e!important;box-shadow:0 0 25px #22c55e88,0 0 50px #22c55e44;animation:correctGlow 1.2s ease-in-out infinite}
     .answer-btn.no{background:#7f1d1d!important;border:3px solid #ef4444!important;box-shadow:0 0 20px #ef444488;animation:wrongShake .4s ease}
     .answer-btn.dim{opacity:.3}
+    .answer-btn.selected{border:3px solid white!important;box-shadow:0 0 15px rgba(255,255,255,0.3);transform:scale(1.03);animation:selectedPulse 1.5s ease-in-out infinite}
+    @keyframes selectedPulse{0%,100%{box-shadow:0 0 15px rgba(255,255,255,0.3)}50%{box-shadow:0 0 25px rgba(255,255,255,0.5)}}
+    .answer-btn.dim-wait{opacity:.35}
+    .answer-sent{font-size:.75rem;color:#4ade80;text-align:center;margin-top:4px;font-weight:600;animation:fadeIn .3s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
     @keyframes correctGlow{0%,100%{box-shadow:0 0 25px #22c55e88,0 0 50px #22c55e44}50%{box-shadow:0 0 35px #22c55eaa,0 0 70px #22c55e66}}
     @keyframes wrongShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+    #state-buzzed-out{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+    .buzzed-out-icon{width:90px;height:90px;border-radius:50%;background:#7f1d1d;border:3px solid #ef4444;display:flex;align-items:center;justify-content:center;font-size:2.8rem;color:#ef4444;animation:buzzOutAppear .5s cubic-bezier(.36,.07,.19,.97) both}
+    @keyframes buzzOutAppear{0%{transform:scale(0.3) rotate(-10deg);opacity:0}60%{transform:scale(1.15) rotate(3deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+    .buzzed-out-title{font-size:1.1rem;font-weight:700;color:#f87171;animation:shakeText .4s ease .3s both}
+    @keyframes shakeText{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+    .buzzed-out-sub{font-size:.8rem;color:#4a5a7a;text-align:center}
     @keyframes patBounce{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-18px) rotate(5deg)}}
     @keyframes patFlame{0%,100%{text-shadow:0 0 20px #f97316,0 -8px 30px #ef4444}50%{text-shadow:0 0 35px #fb923c,0 -14px 45px #ef4444}}
     @keyframes patExplode{0%{transform:scale(.3);opacity:0}30%{transform:scale(1.4);opacity:1}100%{transform:scale(2);opacity:0}}
@@ -160,6 +171,11 @@
     <div id="state-scoreboard" style="display:none">
       <p class="scoreboard-title">Scores</p>
       <div id="scoreboard-list"></div>
+    </div>
+    <div id="state-buzzed-out" style="display:none">
+      <div class="buzzed-out-icon">✗</div>
+      <p class="buzzed-out-title">Mauvaise réponse !</p>
+      <p class="buzzed-out-sub">Attendez la prochaine question…</p>
     </div>
     <div id="state-final" style="display:none">
       <div class="final-trophy">🏆</div>
@@ -268,7 +284,7 @@ function showScreen(id) {
 }
 
 function showState(id) {
-  ['state-buzz','state-answers','state-waiting','state-result','state-scoreboard','state-final']
+  ['state-buzz','state-answers','state-waiting','state-result','state-scoreboard','state-final','state-buzzed-out']
     .forEach(s => G(s).style.display = 'none');
   G(id).style.display = 'flex';
 }
@@ -588,8 +604,7 @@ function renderState(room, gs) {
   const buzzedOut = (gs.buzzedOut||[]).includes(ME);
 
   if (buzzedOut) {
-    showState('state-waiting');
-    G('waiting-text').textContent = '❌ Tu as déjà tenté ta chance';
+    showState('state-buzzed-out');
     return;
   }
   if (amBuzzer) { renderAnswers(gs, q); return; }
@@ -611,6 +626,9 @@ function renderState(room, gs) {
 
 function renderAnswers(gs, q) {
   showState('state-answers');
+  // Nettoyer l'indicateur "Réponse envoyée" de la question précédente
+  const oldSent = document.querySelector('.answer-sent');
+  if (oldSent) oldSent.remove();
   G('answer-grid').style.gridTemplateColumns = '1fr 1fr';
   if (!q) return;
   const myAns = (gs.answers||{})[ME];
@@ -733,6 +751,19 @@ async function actBuzz() {
 }
 
 async function actAnswer(ansIdx) {
+  // Feedback visuel immédiat côté client
+  const btns = document.querySelectorAll('#answer-grid > .answer-btn');
+  btns.forEach((btn, i) => {
+    if (i === ansIdx) btn.classList.add('selected');
+    else btn.classList.add('dim-wait');
+    btn.disabled = true;
+    btn.removeAttribute('onclick');
+  });
+  const grid = G('answer-grid');
+  if (!grid.querySelector('.answer-sent')) {
+    grid.insertAdjacentHTML('afterend', '<p class="answer-sent">Réponse envoyée ✓</p>');
+  }
+  // Puis envoi Firebase
   const gs = await fg(`rooms/${CODE}/gameState`);
   if (!gs || gs.phase !== 'question' || gs.revealed) return;
   if ((gs.answers||{})[ME] !== undefined) return;

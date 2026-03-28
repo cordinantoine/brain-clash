@@ -98,7 +98,16 @@ async function hostStartQ(room, gs, rQs) {
   if (rType === "orage")  { await roundOrage_start(room, gs, rQs); return; }
   if (rType === "chrono") { await roundChrono_start(room, gs, rQs); return; }
   if (rType === "steal")  { await roundSteal_start(room, gs, rQs); return; }
-  if (rType === "carton") { await roundCarton_start(room, gs, rQs); return; }
+  if (rType === "carton") {
+    // Filet de sécurité : si ≤1 survivant, ne pas lancer de question
+    const cAlive = toArr(gs.players).filter(p => !toArr(gs.roundElim).includes(p));
+    if (cAlive.length <= 1) {
+      const bals = toArr(gs.balloons).length ? toArr(gs.balloons) : toArr(gs.players).map(() => room.cartonBallons || 3);
+      await roundCarton_checkLastStanding(room, gs, rQs, bals, toArr(gs.roundElim), [...toArr(gs.scores)]);
+      return;
+    }
+    await roundCarton_start(room, gs, rQs); return;
+  }
 
   // Patate Chaude — hidden timer, holder only
   if (rType === "patate") {
