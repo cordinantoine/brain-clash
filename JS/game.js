@@ -241,10 +241,8 @@ async function actAnswer(ansIdx) {
           await roundSteal_end(room, upd, gs.rQs);
         }
       } else if (rType==="carton") {
-        const isOk = ansIdx === q.c;
-        if (isOk || allAnswered) {
-          await roundCarton_check(room, upd, gs.rQs);
-        }
+        // Carton : toute réponse stoppe la question immédiatement
+        await roundCarton_check(room, upd, gs.rQs);
       } else if (allAnswered) {
         if(HTIMER){clearTimeout(HTIMER);HTIMER=null;}
         if(rType==="chrono") await roundChrono_end(room,upd,gs.rQs);
@@ -350,15 +348,9 @@ function Watch(initialRoom) {
             }
           }
 
-          // Carton QCM-style
-          if (rType==="carton") {
-            const q=gs.rQs[gs.roundIdx][gs.qIdx];
-            const hasCorrect = Object.entries(answers).some(([name, {ansIdx}]) => ansIdx===q.c && !toArr(gs.roundElim).includes(name));
-            const alive=toArr(gs.players).filter(p=>!toArr(gs.roundElim).includes(p));
-            const allAnswered=Object.keys(answers).length>=alive.length;
-            if ((hasCorrect || allAnswered) && !gs.pickTarget) {
-              roundCarton_check(room,gs,gs.rQs); return;
-            }
+          // Carton : toute réponse stoppe la question immédiatement
+          if (rType==="carton" && Object.keys(answers).length > 0 && !gs.pickTarget && !gs.revealed) {
+            roundCarton_check(room,gs,gs.rQs); return;
           }
         }
       }

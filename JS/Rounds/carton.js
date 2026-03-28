@@ -135,16 +135,20 @@ async function roundCarton_check(room, gs, rQs) {
         "gameState/result":{ msg:`✅ ${winner} a bon ! +${ptsWin} pts — Sur qui tirer ? 🎯${wrongPart}`, pts:ptsWin, scorer:winner }
       });
     }
-  } else {
+  } else if (wrongPlayers.length > 0) {
+    // Au moins une mauvaise réponse — stopper la question immédiatement
     if (HTIMER) { clearTimeout(HTIMER); HTIMER = null; }
-    const wrongPart = wrongDetails.length ? wrongDetails.join('\n') : '';
+    const wrongPart = wrongDetails.join('\n');
     await fp(`rooms/${CODE}`, {
       "gameState/revealed":true, "gameState/scores":sc, "gameState/balloons":balloons,
       "gameState/roundElim":roundElim,
-      "gameState/result":{ msg:`❌ Personne n'a bon ! Réponse : ${q.a[q.c]}\n${wrongPart}\n${recap}`, pts:0, scorer:null }
+      "gameState/result":{ msg:`${wrongPart}\nBonne réponse : ${q.a[q.c]}\n${recap}`, pts:0, scorer:null }
     });
     const done = await roundCarton_checkLastStanding(room, gs, rQs, balloons, roundElim, sc);
     if (!done) setTimeout(() => roundCarton_nextQ(room, { ...gs, balloons, roundElim, scores:sc }, rQs), 3500);
+  } else {
+    // Aucune réponse traitée (ne devrait pas arriver)
+    return;
   }
 }
 
