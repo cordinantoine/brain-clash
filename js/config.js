@@ -19,6 +19,10 @@ const THEMES = {
   geo     : { id:"geo",      name:"Géographie",        emoji:"🌍", accent:"#60a5fa", dark:"#2563eb", stars:true  },
   gaming  : { id:"gaming",   name:"Jeux Vidéo",        emoji:"🎮", accent:"#c084fc", dark:"#7e22ce", stars:false },
   hp      : { id:"hp",       name:"Harry Potter",      emoji:"⚡", accent:"#fcd34d", dark:"#92400e", stars:true  },
+  nba     : { id:"nba",      name:"NBA",               emoji:"🏀", accent:"#f97316", dark:"#c2410c", stars:false },
+  football: { id:"football", name:"Football",           emoji:"⚽", accent:"#22c55e", dark:"#15803d", stars:false },
+  francaise:{ id:"francaise",name:"Culture Française",  emoji:"🇫🇷", accent:"#3b82f6", dark:"#1d4ed8", stars:true  },
+  lotr    : { id:"lotr",     name:"Seigneur des Anneaux",emoji:"💍", accent:"#eab308", dark:"#a16207", stars:true  },
 };
 
 // ── Types de rounds disponibles ──

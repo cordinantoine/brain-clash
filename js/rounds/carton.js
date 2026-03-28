@@ -20,9 +20,7 @@ async function roundCarton_start(room, gs, rQs) {
 
   // Si ≤1 survivant → fin du round
   const alive = players.filter(p => !roundElim.includes(p));
-  console.log("[CARTON START] players:", players, "roundElim:", roundElim, "alive:", alive, "balloons:", balloons);
   if (alive.length <= 1) {
-    console.log("[CARTON START] → FIN DU ROUND, alive<=1");
     await _cartonEndRound(room, gs, rQs, players, balloons, roundElim, scores);
     return;
   }
@@ -86,9 +84,8 @@ async function _cartonTimeout(room, gs, rQs) {
 
 // Traitement de la 1ère réponse reçue
 async function roundCarton_check(room, gs, rQs) {
-  console.log("[CARTON CHECK] called. busy:", _cartonBusy, "answers:", JSON.stringify(gs.answers), "rQs exists:", !!rQs, "rQs[roundIdx] exists:", !!(rQs && rQs[gs.roundIdx]));
   // Verrou anti-double
-  if (_cartonBusy) { console.log("[CARTON CHECK] SKIP (busy)"); return; }
+  if (_cartonBusy) return;
   _cartonBusy = true;
 
   if (HTIMER) { clearTimeout(HTIMER); HTIMER = null; }
@@ -103,8 +100,7 @@ async function roundCarton_check(room, gs, rQs) {
   // Récupérer la question depuis le paramètre rQs ou depuis gs
   const qPool = rQs ? rQs[gs.roundIdx] : (gs.rQs ? gs.rQs[gs.roundIdx] : null);
   const q = qPool ? qPool[gs.qIdx] : null;
-  console.log("[CARTON CHECK] roundIdx:", gs.roundIdx, "qIdx:", gs.qIdx, "q exists:", !!q, "qPool exists:", !!qPool);
-  if (!q) { console.log("[CARTON CHECK] ABORT: no question found!"); _cartonBusy = false; return; }
+  if (!q) { _cartonBusy = false; return; }
 
   const ans = gs.answers || {};
   // Trouver la 1ère réponse (par temps)
@@ -117,8 +113,6 @@ async function roundCarton_check(room, gs, rQs) {
   const [firstPlayer, firstAns] = sorted[0];
   const isCorrect = firstAns.ansIdx === q.c;
   const pi = players.indexOf(firstPlayer);
-
-  console.log("[CARTON CHECK] firstPlayer:", firstPlayer, "isCorrect:", isCorrect, "balloons:", balloons, "roundElim:", roundElim);
 
   if (isCorrect) {
     // BONNE RÉPONSE → points + choix de cible
@@ -232,7 +226,6 @@ async function _cartonNextQ(room, gs, rQs) {
 }
 
 async function _cartonEndRound(room, gs, rQs, players, balloons, roundElim, scores) {
-  console.log("[CARTON END ROUND] alive:", players.filter(p => !roundElim.includes(p)), "roundElim:", roundElim, "balloons:", balloons);
   if (HTIMER) { clearTimeout(HTIMER); HTIMER = null; }
   _cartonBusy = true; // bloqué définitivement
 

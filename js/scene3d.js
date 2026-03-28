@@ -18,6 +18,10 @@ const THEME3D = {
   geo     : { fogColor:0x071020, fogNear:9,  fogFar:22, ambCol:0x0c1a30, ambInt:.5,  spot1Col:0x60a5fa, spot1Int:2.5, rimCol:0x2563eb, rimInt:1.4, siloCol:0x040810, glowCol:0x60a5fa, floorCol:0x050a18, partCol:0x60a5fa, bgCol:0x03060e },
   gaming  : { fogColor:0x0e0520, fogNear:8,  fogFar:20, ambCol:0x180040, ambInt:.5,  spot1Col:0xc084fc, spot1Int:2.7, rimCol:0x7e22ce, rimInt:1.6, siloCol:0x070014, glowCol:0xc084fc, floorCol:0x060010, partCol:0xc084fc, bgCol:0x04000c },
   hp      : { fogColor:0x120800, fogNear:8,  fogFar:20, ambCol:0x1e1000, ambInt:.5,  spot1Col:0xfcd34d, spot1Int:2.8, rimCol:0x92400e, rimInt:1.6, siloCol:0x0c0600, glowCol:0xfcd34d, floorCol:0x0a0500, partCol:0xfcd34d, bgCol:0x080400 },
+  nba     : { fogColor:0x180800, fogNear:8,  fogFar:20, ambCol:0x281200, ambInt:.5,  spot1Col:0xf97316, spot1Int:2.6, rimCol:0xc2410c, rimInt:1.5, siloCol:0x0e0600, glowCol:0xf97316, floorCol:0x0c0500, partCol:0xf97316, bgCol:0x0a0400 },
+  football: { fogColor:0x051208, fogNear:8,  fogFar:20, ambCol:0x082010, ambInt:.5,  spot1Col:0x22c55e, spot1Int:2.6, rimCol:0x15803d, rimInt:1.5, siloCol:0x030a04, glowCol:0x22c55e, floorCol:0x040c05, partCol:0x22c55e, bgCol:0x020802 },
+  francaise:{ fogColor:0x06102a, fogNear:9,  fogFar:22, ambCol:0x0c1a3a, ambInt:.55, spot1Col:0x3b82f6, spot1Int:2.5, rimCol:0x1d4ed8, rimInt:1.4, siloCol:0x040810, glowCol:0x3b82f6, floorCol:0x050a18, partCol:0x3b82f6, bgCol:0x03060e },
+  lotr    : { fogColor:0x100a00, fogNear:8,  fogFar:20, ambCol:0x1c1200, ambInt:.5,  spot1Col:0xeab308, spot1Int:2.8, rimCol:0xa16207, rimInt:1.6, siloCol:0x0a0600, glowCol:0xeab308, floorCol:0x080400, partCol:0xeab308, bgCol:0x060300 },
 };
 
 // ════════════════════════════════════════════

@@ -224,8 +224,7 @@ async function actAnswer(ansIdx) {
           await roundSteal_end(room, upd, gs.rQs);
         }
       } else if (rType==="carton") {
-        console.log("[ACTANSWER CARTON] triggering roundCarton_check");
-        try { await roundCarton_check(room, upd, gs.rQs); } catch(e) { console.error("[ACTANSWER CARTON] error:", e); }
+        try { await roundCarton_check(room, upd, gs.rQs); } catch(e) { /* ignore */ }
       } else if (allAnswered) {
         if(HTIMER){clearTimeout(HTIMER);HTIMER=null;}
         if(rType==="chrono") await roundChrono_end(room,upd,gs.rQs);
@@ -333,8 +332,7 @@ function Watch(initialRoom) {
 
           // Carton : dès qu'une réponse arrive, traiter immédiatement
           if (rType==="carton" && Object.keys(answers).length > 0 && !gs.pickTarget && !gs.revealed) {
-            console.log("[WATCH CARTON] triggering roundCarton_check, answers:", Object.keys(answers).length);
-            try { await roundCarton_check(room, gs, gs.rQs); } catch(e) { console.error("[WATCH CARTON] error:", e); }
+            try { await roundCarton_check(room, gs, gs.rQs); } catch(e) { /* ignore */ }
             return;
           }
         }
