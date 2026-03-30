@@ -1,7 +1,8 @@
 /* ════════════════════════════════════════
-   questions/gaming.js — Jeux Vidéo — 100 questions
+   questions/gaming.js — Jeux Vidéo — 200 questions
    ════════════════════════════════════════ */
 QUESTIONS.gaming = [
+  // ── Originales 1-95 ──
   {q:"Quel personnage est le héros principal de Super Mario Bros. ?",a:["Luigi","Mario","Bowser","Toad"],c:1,f:""},
   {q:"Dans quel jeu trouve-t-on le personnage de Link ?",a:["Final Fantasy","The Legend of Zelda","Dragon Quest","Monster Hunter"],c:1,f:""},
   {q:"Quel jeu de Mojang consiste à construire avec des blocs ?",a:["Terraria","Minecraft","Roblox","Fortnite"],c:1,f:""},
@@ -96,4 +97,144 @@ QUESTIONS.gaming = [
   {q:"Quel jeu de combat met en scène des personnages Nintendo comme Mario et Link ?",a:["Super Smash Bros.","PlayStation All-Stars","MultiVersus","Brawlhalla"],c:0,f:""},
   {q:"Dans quel jeu trouve-t-on le personnage de CJ (Carl Johnson) ?",a:["GTA IV","GTA Vice City","GTA San Andreas","GTA III"],c:2,f:""},
   {q:"Quel jeu de tir coopératif contre des zombies est développé par Turtle Rock Studios ?",a:["Left 4 Dead","Back 4 Blood","World War Z","Killing Floor"],c:0,f:""},
+
+  // ── Nouvelles questions 96-200 ──
+
+  // Indie games
+  {q:"Dans Hollow Knight, quel est le nom du royaume souterrain que le joueur explore ?",a:["Lordrania","Hallownest","Deepnest","Wraithholm"],c:1,f:""},
+  {q:"Quel jeu indépendant de plateforme raconte l'ascension d'une montagne par Madeline ?",a:["Celeste","Gris","Ori and the Blind Forest","A Short Hike"],c:0,f:""},
+  {q:"Dans Hades, quel dieu grec est le père du protagoniste Zagreus ?",a:["Zeus","Poséidon","Hadès","Arès"],c:2,f:""},
+  {q:"Dans Stardew Valley, comment s'appelle le supermarché qui menace la communauté ?",a:["MegaMart","Joja","ValuCorp","HyperShop"],c:1,f:""},
+  {q:"Quel studio indépendant a développé Hollow Knight ?",a:["Supergiant Games","Team Cherry","Motion Twin","ConcernedApe"],c:1,f:""},
+  {q:"Dans quel jeu indépendant un chevalier explore-t-il des ruines hantées par l'Infection ?",a:["Dead Cells","Hollow Knight","Salt and Sanctuary","Blasphemous"],c:1,f:""},
+  {q:"Quel jeu indépendant développé par Supergiant Games est un roguelike mythologique ?",a:["Bastion","Transistor","Pyre","Hades"],c:3,f:""},
+  {q:"Dans Celeste, quel objet Madeline doit-elle collecter dans chaque niveau ?",a:["Des plumes","Des fraises","Des cristaux","Des étoiles"],c:1,f:""},
+  {q:"Quel jeu indépendant permet de gérer une ferme dans la vallée de Pelican Town ?",a:["My Time at Portia","Harvest Moon","Stardew Valley","Littlewood"],c:2,f:""},
+  {q:"Dans Hades, quelle arme est un arc nommé Coronacht ?",a:["L'épée","La lance","Le bouclier","L'arc"],c:3,f:""},
+  {q:"Quel jeu indépendant français, développé par Motion Twin, est un roguelike en 2D ?",a:["Dead Cells","Hollow Knight","Enter the Gungeon","Spelunky 2"],c:0,f:""},
+  {q:"Dans quel jeu indie le joueur incarne-t-il un chat dans une ville de robots ?",a:["Night in the Woods","Stray","Gris","Spiritfarer"],c:1,f:""},
+  {q:"Quel jeu indépendant met en scène un personnage nommé The Knight dans un monde d'insectes ?",a:["Bug Fables","Hollow Knight","Silk Song","Grounded"],c:1,f:""},
+  {q:"Dans Undertale, quel personnage squelette fait des blagues dans le jeu ?",a:["Papyrus","Undyne","Sans","Alphys"],c:2,f:""},
+  {q:"Quel jeu indépendant propose de gérer un ferry pour les âmes des défunts ?",a:["Spiritfarer","Death's Door","Gris","Journey"],c:0,f:""},
+
+  // Esports
+  {q:"Quel tournoi annuel de League of Legends est le championnat du monde ?",a:["LCS Finals","MSI","Worlds","All-Star"],c:2,f:""},
+  {q:"Dans quel jeu se déroule le tournoi esport appelé 'The International' ?",a:["League of Legends","Counter-Strike","Dota 2","Valorant"],c:2,f:""},
+  {q:"Quel joueur esport coréen est surnommé 'Faker' sur League of Legends ?",a:["Park Jae-hyuk","Lee Sang-hyeok","Kim Min-kyu","Cho Se-hyeong"],c:1,f:""},
+  {q:"Quel pays domine historiquement la scène esport de StarCraft ?",a:["Chine","Japon","Corée du Sud","États-Unis"],c:2,f:""},
+  {q:"Quel jeu de tir tactique de Valve est une discipline majeure de l'esport ?",a:["Valorant","Rainbow Six Siege","Counter-Strike","Overwatch"],c:2,f:""},
+  {q:"Quel format de compétition oppose deux équipes de 5 dans la plupart des MOBA esport ?",a:["3 contre 3","5 contre 5","6 contre 6","4 contre 4"],c:1,f:""},
+  {q:"Quel événement esport annuel réunit les meilleures équipes de Valorant dans le monde ?",a:["VCT Champions","LEC Finals","CDL Champs","OWL Grand Finals"],c:0,f:""},
+
+  // Speedrunning
+  {q:"Comment appelle-t-on la pratique de finir un jeu le plus vite possible ?",a:["Speedhacking","Speedrunning","Fastplay","Rushgaming"],c:1,f:""},
+  {q:"Quel site web est la référence mondiale pour les records de speedrun ?",a:["SpeedGaming.com","Speedrun.com","FastFinish.net","SpeedRecord.org"],c:1,f:""},
+  {q:"En speedrunning, que signifie la catégorie 'Any%' ?",a:["100% du jeu complété","Finir le jeu par tous les moyens","Sans utiliser de glitch","En mode difficile"],c:1,f:""},
+  {q:"En speedrunning, que signifie la catégorie '100%' ?",a:["Terminer le jeu rapidement","Collecter tous les objets et compléter tout le contenu","Jouer sans mourir","Finir sans sauvegarder"],c:1,f:""},
+  {q:"Quel événement caritatif bisannuel diffuse des marathons de speedrun en direct ?",a:["TwitchCon","Games Done Quick","E3 Speedfest","PAX Speed"],c:1,f:""},
+  {q:"Dans le speedrun de Super Mario 64, combien d'étoiles faut-il pour la catégorie la plus courte (0/1 Star) ?",a:["0 ou 1","16","70","120"],c:0,f:""},
+
+  // Développeurs / Studios
+  {q:"Quel studio japonais a créé les séries Dark Souls et Elden Ring ?",a:["Capcom","Square Enix","FromSoftware","Konami"],c:2,f:""},
+  {q:"Quel studio a développé The Witcher 3: Wild Hunt ?",a:["BioWare","Bethesda","CD Projekt Red","Obsidian"],c:2,f:""},
+  {q:"Quelle entreprise possède les studios Bethesda, id Software et Arkane ?",a:["Sony","Nintendo","Microsoft","Tencent"],c:2,f:""},
+  {q:"Quel studio français est connu pour les séries Assassin's Creed et Far Cry ?",a:["Arkane","Quantic Dream","Ubisoft","Dontnod"],c:2,f:""},
+  {q:"Quel créateur japonais est surnommé le père de Metal Gear Solid ?",a:["Shigeru Miyamoto","Hideo Kojima","Hidetaka Miyazaki","Yu Suzuki"],c:1,f:""},
+  {q:"Quel studio a développé le jeu multijoueur Among Us ?",a:["Mediatonic","InnerSloth","Devolver Digital","Re-Logic"],c:1,f:""},
+  {q:"Quel designer japonais a créé Mario, Zelda et Donkey Kong ?",a:["Hideo Kojima","Hidetaka Miyazaki","Shigeru Miyamoto","Masahiro Sakurai"],c:2,f:""},
+  {q:"Quel studio a créé la série Mass Effect et Dragon Age ?",a:["BioWare","Obsidian","Bethesda","Larian Studios"],c:0,f:""},
+
+  // Retro gaming
+  {q:"Quelle console 8-bit de Nintendo est sortie en 1985 en Amérique du Nord ?",a:["Super Nintendo","Game Boy","NES","Nintendo 64"],c:2,f:""},
+  {q:"Quel jeu d'arcade de 1980 met en scène un personnage jaune qui mange des points ?",a:["Space Invaders","Pac-Man","Donkey Kong","Frogger"],c:1,f:""},
+  {q:"Quelle console portable de Nintendo est sortie en 1989 avec un écran monochrome ?",a:["Game Gear","Game Boy","Neo Geo Pocket","Lynx"],c:1,f:""},
+  {q:"Quel jeu de 1986 a introduit le concept de monde ouvert sur NES avec un héros en vert ?",a:["Metroid","Kid Icarus","The Legend of Zelda","Castlevania"],c:2,f:""},
+  {q:"Quelle console 16-bit de Sega rivalisait avec la Super Nintendo ?",a:["Master System","Sega Saturn","Mega Drive / Genesis","Dreamcast"],c:2,f:""},
+  {q:"Quel jeu d'arcade de 1978 a popularisé le genre shoot 'em up avec des aliens ?",a:["Asteroids","Galaga","Space Invaders","Defender"],c:2,f:""},
+  {q:"Quelle console de Sega, sortie en 1999, a été la première avec un modem intégré ?",a:["Sega Saturn","Mega Drive","Sega CD","Dreamcast"],c:3,f:""},
+  {q:"Quel jeu de plateforme sur NES met en scène un robot bleu nommé Mega Man ?",a:["Astro Boy","Mega Man","Bomberman","Contra"],c:1,f:""},
+
+  // VR gaming
+  {q:"Quel casque VR autonome de Meta est devenu extrêmement populaire en 2020 ?",a:["PlayStation VR","HTC Vive","Meta Quest 2","Valve Index"],c:2,f:""},
+  {q:"Quel jeu VR de rythme consiste à trancher des cubes avec des sabres laser ?",a:["Pistol Whip","Beat Saber","Synth Riders","Audio Trip"],c:1,f:""},
+  {q:"Quel célèbre jeu de Valve a reçu un épisode exclusivement en VR sorti en 2020 ?",a:["Portal VR","Left 4 Dead VR","Half-Life: Alyx","Counter-Strike VR"],c:2,f:""},
+  {q:"Quel fabricant de casques VR a créé le Valve Index ?",a:["Meta","HTC","Sony","Valve"],c:3,f:""},
+  {q:"Quel jeu VR d'horreur place le joueur dans un asile psychiatrique effrayant ?",a:["Resident Evil 7 VR","Phasmophobia VR","The Exorcist: Legion","Dreadhalls"],c:3,f:""},
+
+  // Mobile games
+  {q:"Quel jeu mobile de Niantic utilise la réalité augmentée pour capturer des créatures ?",a:["Pokémon GO","Ingress","Harry Potter: Wizards Unite","Pikmin Bloom"],c:0,f:""},
+  {q:"Quel jeu mobile consiste à lancer des oiseaux sur des cochons verts ?",a:["Cut the Rope","Angry Birds","Fruit Ninja","Doodle Jump"],c:1,f:""},
+  {q:"Quel jeu mobile de stratégie met en scène des clans qui s'affrontent ?",a:["Clash Royale","Clash of Clans","Boom Beach","Brawl Stars"],c:1,f:""},
+  {q:"Quel jeu mobile de battle royale a été développé par Tencent pour les smartphones ?",a:["Free Fire","PUBG Mobile","Call of Duty Mobile","Fortnite Mobile"],c:1,f:""},
+  {q:"Quel jeu mobile de puzzle consiste à aligner des bonbons colorés ?",a:["Bejeweled","Candy Crush Saga","Puzzle Bobble","Zuma"],c:1,f:""},
+  {q:"Quel jeu mobile développé par Supercell met en scène des combats en arène avec des cartes ?",a:["Clash of Clans","Brawl Stars","Clash Royale","Hay Day"],c:2,f:""},
+
+  // Fighting games
+  {q:"Dans quel jeu de combat trouve-t-on les personnages Ryu et Ken ?",a:["Tekken","Street Fighter","Mortal Kombat","Guilty Gear"],c:1,f:""},
+  {q:"Quel jeu de combat 3D de Bandai Namco met en scène Kazuya Mishima ?",a:["Street Fighter","Tekken","SoulCalibur","Virtua Fighter"],c:1,f:""},
+  {q:"Quel jeu de combat est connu pour ses 'Fatalities' ultra-violentes ?",a:["Street Fighter","Tekken","Mortal Kombat","Killer Instinct"],c:2,f:""},
+  {q:"Quel jeu de combat d'Arc System Works met en scène Sol Badguy ?",a:["BlazBlue","Guilty Gear","Dragon Ball FighterZ","Persona 4 Arena"],c:1,f:""},
+  {q:"Dans quel jeu de combat peut-on incarner Akuma, Chun-Li et Dhalsim ?",a:["Tekken 7","The King of Fighters","Street Fighter","Dead or Alive"],c:2,f:""},
+
+  // Horror games
+  {q:"Dans quel jeu d'horreur explore-t-on le manoir Spencer infesté de zombies ?",a:["Silent Hill","Resident Evil","Alone in the Dark","Fatal Frame"],c:1,f:""},
+  {q:"Quel jeu d'horreur met en scène la ville brumeuse de Silent Hill ?",a:["Resident Evil","Silent Hill","Fatal Frame","Outlast"],c:1,f:""},
+  {q:"Quel jeu d'horreur indépendant en vue subjective se déroule dans un asile ?",a:["Amnesia","Outlast","Layers of Fear","SOMA"],c:1,f:""},
+  {q:"Quel jeu d'horreur de Bloober Team explore la psyché d'un peintre perturbé ?",a:["SOMA","Amnesia","Layers of Fear","Observer"],c:2,f:""},
+  {q:"Dans quel jeu multijoueur d'horreur quatre survivants affrontent-ils un tueur ?",a:["Friday the 13th","Dead by Daylight","Phasmophobia","Devour"],c:1,f:""},
+  {q:"Quel jeu coopératif d'horreur consiste à chasser des fantômes avec du matériel paranormal ?",a:["Ghostbusters","Luigi's Mansion","Phasmophobia","Devour"],c:2,f:""},
+  {q:"Quel jeu d'horreur de Frictional Games plonge le joueur dans un château prussien ?",a:["SOMA","Outlast","Penumbra","Amnesia: The Dark Descent"],c:3,f:""},
+
+  // Simulation games
+  {q:"Quel jeu de simulation de gestion urbaine développé par Colossal Order est sorti en 2015 ?",a:["SimCity","Tropico 6","Cities: Skylines","Anno 1800"],c:2,f:""},
+  {q:"Quel jeu de simulation de vie japonais permet de vivre sur une île déserte ?",a:["The Sims 4","Animal Crossing: New Horizons","Stardew Valley","My Time at Portia"],c:1,f:""},
+  {q:"Quel jeu de simulation de conduite de train est développé par Dovetail Games ?",a:["Train Sim World","Euro Truck Simulator","Transport Fever","Railway Empire"],c:0,f:""},
+  {q:"Quel jeu de simulation de camion européen est très populaire sur PC ?",a:["Farming Simulator","Euro Truck Simulator 2","American Truck Simulator","SnowRunner"],c:1,f:""},
+  {q:"Quel jeu de simulation médicale humoristique propose de gérer un hôpital loufoque ?",a:["Surgeon Simulator","Two Point Hospital","Theme Hospital","Trauma Center"],c:1,f:""},
+
+  // MMORPGs
+  {q:"Quel MMORPG de Blizzard lancé en 2004 se déroule dans le monde d'Azeroth ?",a:["Guild Wars","Final Fantasy XIV","World of Warcraft","The Elder Scrolls Online"],c:2,f:""},
+  {q:"Quel MMORPG de Square Enix a connu un renouveau massif avec A Realm Reborn ?",a:["World of Warcraft","Final Fantasy XIV","Guild Wars 2","Lost Ark"],c:1,f:""},
+  {q:"Dans World of Warcraft, comment s'appelle la faction regroupant Humains, Nains et Elfes ?",a:["La Horde","L'Alliance","Le Fléau","Les Illidari"],c:1,f:""},
+  {q:"Quel MMORPG gratuit développé par Amazon se déroule sur l'île d'Aeternum ?",a:["Lost Ark","New World","Throne and Liberty","Albion Online"],c:1,f:""},
+  {q:"Quel MMORPG coréen d'action est connu pour son système de combat très dynamique ?",a:["New World","Guild Wars 2","Lost Ark","Final Fantasy XIV"],c:2,f:""},
+
+  // Game awards
+  {q:"Quel jeu a remporté le Game of the Year aux Game Awards 2023 ?",a:["Zelda: Tears of the Kingdom","Baldur's Gate 3","Resident Evil 4 Remake","Alan Wake 2"],c:1,f:""},
+  {q:"Quel jeu FromSoftware a remporté le Game of the Year aux Game Awards 2022 ?",a:["God of War Ragnarok","Stray","Elden Ring","Xenoblade Chronicles 3"],c:2,f:""},
+  {q:"Quel présentateur canadien anime les Game Awards depuis leur création ?",a:["Phil Spencer","Reggie Fils-Aimé","Geoff Keighley","Todd Howard"],c:2,f:""},
+  {q:"Quel jeu a remporté le Game of the Year aux Game Awards 2020 ?",a:["Hades","Ghost of Tsushima","The Last of Us Part II","Animal Crossing"],c:2,f:""},
+  {q:"Quel jeu narratif de Naughty Dog a fait polémique lors de sa victoire aux Game Awards 2020 ?",a:["Uncharted 4","The Last of Us Part II","God of War","Ghost of Tsushima"],c:1,f:""},
+
+  // Streaming / Twitch
+  {q:"Quelle plateforme de streaming appartenant à Amazon est dédiée aux jeux vidéo ?",a:["YouTube Gaming","Twitch","Kick","Facebook Gaming"],c:1,f:""},
+  {q:"Comment appelle-t-on un abonnement payant mensuel à une chaîne Twitch ?",a:["Un follow","Un sub","Un don","Un bit"],c:1,f:""},
+  {q:"Quelle monnaie virtuelle sur Twitch permet d'envoyer des micro-dons aux streamers ?",a:["Stars","Coins","Bits","Gems"],c:2,f:""},
+  {q:"Quel streamer américano-nicaraguayen détient des records d'audience sur Twitch avec des événements spéciaux ?",a:["Ninja","xQc","Ibai","AuronPlay"],c:0,f:""},
+  {q:"Quel événement annuel de Twitch propose des abonnements à prix réduit pour les spectateurs ?",a:["Twitch Rivals","Sub-a-thon","TwitchCon","Subtember"],c:3,f:""},
+
+  // Game engines
+  {q:"Quel moteur de jeu développé par Epic Games est utilisé pour Fortnite ?",a:["Unity","CryEngine","Unreal Engine","Godot"],c:2,f:""},
+  {q:"Quel moteur de jeu gratuit et open source est une alternative populaire à Unity ?",a:["CryEngine","Godot","GameMaker","RPG Maker"],c:1,f:""},
+  {q:"Quel moteur de jeu est le plus utilisé pour les jeux mobiles et indépendants ?",a:["Unreal Engine","Unity","Source","CryEngine"],c:1,f:""},
+  {q:"Quel moteur de jeu a été créé par Valve pour Half-Life et Counter-Strike ?",a:["Unreal Engine","id Tech","Source","CryEngine"],c:2,f:""},
+  {q:"Quel moteur de jeu id Tech a été utilisé pour le Doom original en 1993 ?",a:["Unreal Engine","id Tech 1","Source","Build Engine"],c:1,f:""},
+
+  // Indie games (suite)
+  {q:"Quel jeu indépendant de plateforme met en scène Ori dans une forêt enchantée ?",a:["Hollow Knight","Celeste","Ori and the Blind Forest","Rayman Legends"],c:2,f:""},
+  {q:"Quel jeu indépendant roguelike met en scène un personnage dans un donjon qui pleure ?",a:["Spelunky","Enter the Gungeon","The Binding of Isaac","Nuclear Throne"],c:2,f:""},
+  {q:"Dans quel jeu indépendant le joueur explore-t-il une boucle temporelle dans l'espace ?",a:["Returnal","Deathloop","Outer Wilds","No Man's Sky"],c:2,f:""},
+  {q:"Quel jeu indépendant de survie et d'exploration se déroule dans un monde de slimes colorés ?",a:["Stardew Valley","Slime Rancher","My Time at Portia","Astroneer"],c:1,f:""},
+  {q:"Quel jeu indépendant met en scène un renard dans un monde inspiré de Zelda ?",a:["Tunic","Death's Door","Chicory","Hyper Light Drifter"],c:0,f:""},
+
+  // Mixed topics
+  {q:"Quel jeu de Hidetaka Miyazaki et George R.R. Martin est sorti en 2022 ?",a:["Dark Souls IV","Bloodborne 2","Elden Ring","Sekiro 2"],c:2,f:""},
+  {q:"Quel jeu de tir hero shooter de Blizzard est sorti en free-to-play en 2022 ?",a:["Overwatch 2","Valorant","Apex Legends","Paladins"],c:0,f:""},
+  {q:"Quel jeu d'aventure narratif de Quantic Dream met en scène des androïdes à Détroit ?",a:["Heavy Rain","Beyond: Two Souls","Detroit: Become Human","Fahrenheit"],c:2,f:""},
+  {q:"Dans quel jeu le joueur incarne-t-il un facteur dans un monde post-apocalyptique signé Kojima ?",a:["Metal Gear Solid V","Cyberpunk 2077","Death Stranding","Control"],c:2,f:""},
+  {q:"Quel jeu de Larian Studios a remporté de nombreux prix en 2023 pour son RPG au tour par tour ?",a:["Divinity: Original Sin 2","Solasta","Baldur's Gate 3","Pathfinder"],c:2,f:""},
+  {q:"Quel jeu de Nintendo propose de cuisiner, explorer et capturer dans un monde ouvert avec Pikachu ?",a:["Pokémon Épée","Pokémon Arceus","Pokémon Écarlate et Violet","Pokémon GO"],c:2,f:""},
+  {q:"Quel jeu a popularisé le genre battle royale avec 100 joueurs sur une île ?",a:["Fortnite","H1Z1","PUBG","Apex Legends"],c:2,f:""},
+  {q:"Comment s'appelle le mode créatif de Fortnite qui permet de créer ses propres îles ?",a:["Fortnite Workshop","Fortnite Creative","Fortnite Sandbox","Fortnite Builder"],c:1,f:""},
+  {q:"Quel jeu de rythme japonais utilise un tambour comme contrôleur ?",a:["Guitar Hero","Taiko no Tatsujin","Dance Dance Revolution","Osu!"],c:1,f:""},
 ];

@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════
-   questions/sport.js — Sport — 100 questions
+   questions/sport.js — Sport — 200 questions
    ════════════════════════════════════════ */
 QUESTIONS.sport = [
   {q:"Combien de joueurs y a-t-il sur le terrain par équipe au football ?",a:["9","10","11","12"],c:2,f:""},
@@ -89,4 +89,151 @@ QUESTIONS.sport = [
   {q:"Dans quel sport est célèbre Thierry Henry ?",a:["Rugby","Football","Tennis","Cyclisme"],c:1,f:""},
   {q:"Quel pays a remporté le plus de médailles aux JO d'hiver ?",a:["Canada","Russie","Norvège","Allemagne"],c:2,f:""},
   {q:"Dans quel sport est célèbre Jean-Pierre Papin ?",a:["Rugby","Football","Tennis","Natation"],c:1,f:""},
+
+  // ─── NEW QUESTIONS (89–200) ─────────────────────────────────
+
+  // MMA / UFC
+  {q:"Quel combattant UFC est surnommé 'The Notorious' ?",a:["Khabib Nurmagomedov","Conor McGregor","Jon Jones","Anderson Silva"],c:1,f:""},
+  {q:"Dans quelle catégorie de poids Khabib Nurmagomedov a-t-il pris sa retraite invaincu ?",a:["Poids plume","Poids léger","Poids welter","Poids moyen"],c:1,f:""},
+  {q:"Quel combattant détient le record du plus long règne en tant que champion UFC des poids lourds ?",a:["Stipe Miocic","Brock Lesnar","Jon Jones","Daniel Cormier"],c:0,f:""},
+  {q:"Combien de catégories de poids masculines y a-t-il en UFC ?",a:["6","8","10","12"],c:1,f:""},
+  {q:"Quel pays est originaire du combattant UFC Khabib Nurmagomedov ?",a:["Tchétchénie","Russie","Kazakhstan","Ouzbékistan"],c:1,f:""},
+  {q:"Quel combattant est surnommé 'The Spider' en MMA ?",a:["Jon Jones","Georges St-Pierre","Anderson Silva","BJ Penn"],c:2,f:""},
+  {q:"Qui est considéré comme le plus grand combattant de MMA canadien ?",a:["Rory MacDonald","Georges St-Pierre","Patrick Côté","Mark Hominick"],c:1,f:""},
+
+  // Formule 1
+  {q:"Quel pilote de F1 détient le record de titres de champion du monde ?",a:["Ayrton Senna","Michael Schumacher","Lewis Hamilton","Max Verstappen"],c:2,f:""},
+  {q:"Combien de tours comporte habituellement le Grand Prix de Monaco ?",a:["58","66","72","78"],c:3,f:""},
+  {q:"Quelle écurie de F1 est basée à Maranello en Italie ?",a:["McLaren","Red Bull","Ferrari","Mercedes"],c:2,f:""},
+  {q:"Quel pilote de F1 est surnommé 'Le Professeur' ?",a:["Niki Lauda","Alain Prost","Ayrton Senna","Nelson Piquet"],c:1,f:""},
+  {q:"En quelle année la Formule 1 a-t-elle été créée ?",a:["1946","1950","1955","1960"],c:1,f:""},
+  {q:"Quel Grand Prix de F1 se déroule dans les rues de la Principauté ?",a:["GP de Singapour","GP de Bakou","GP de Monaco","GP de Las Vegas"],c:2,f:""},
+  {q:"Combien de points rapporte une victoire en Grand Prix de F1 ?",a:["20","25","30","15"],c:1,f:""},
+
+  // Voile / Sailing
+  {q:"Comment s'appelle la plus célèbre course transatlantique en solitaire ?",a:["Vendée Globe","Route du Rhum","Volvo Ocean Race","Transat Jacques Vabre"],c:1,f:""},
+  {q:"Le Vendée Globe est une course autour du monde en solitaire. D'où part-elle ?",a:["Brest","La Rochelle","Les Sables-d'Olonne","Saint-Malo"],c:2,f:""},
+  {q:"Quelle compétition de voile est la plus ancienne du sport international ?",a:["Vendée Globe","America's Cup","Volvo Ocean Race","Route du Rhum"],c:1,f:""},
+  {q:"Quel navigateur français a remporté le Vendée Globe 2020-2021 ?",a:["Armel Le Cléac'h","Yannick Bestaven","François Gabart","Thomas Coville"],c:1,f:""},
+
+  // Surf
+  {q:"Sur quelle île hawaïenne se trouve le spot de surf mythique de Pipeline ?",a:["Maui","Oahu","Big Island","Kauai"],c:1,f:""},
+  {q:"Quel surfeur brésilien est triple champion du monde WSL ?",a:["Adriano de Souza","Gabriel Medina","Italo Ferreira","Filipe Toledo"],c:1,f:""},
+  {q:"En quelle année le surf est-il devenu sport olympique ?",a:["2016","2020","2024","Il ne l'est pas encore"],c:1,f:""},
+
+  // Skateboard
+  {q:"Quel skateur américain est célèbre pour avoir réussi le premier 900 en compétition ?",a:["Rodney Mullen","Nyjah Huston","Tony Hawk","Bob Burnquist"],c:2,f:""},
+  {q:"Combien de degrés représente un '900' en skateboard ?",a:["720","810","900","1080"],c:2,f:""},
+  {q:"En quelle année le skateboard est-il devenu sport olympique ?",a:["2016","2020","2024","2028"],c:1,f:""},
+
+  // Escalade / Climbing
+  {q:"Quelles sont les trois disciplines de l'escalade olympique ?",a:["Bloc, difficulté, vitesse","Bloc, lead, boulder","Vitesse, slackline, bloc","Difficulté, cascade de glace, vitesse"],c:0,f:""},
+  {q:"Quel grimpeur tchèque a dominé l'escalade de difficulté mondiale ?",a:["Tomoa Narasaki","Adam Ondra","Jakob Schubert","Janja Garnbret"],c:1,f:""},
+  {q:"Quelle grimpeuse slovène a remporté l'or olympique en escalade à Tokyo 2020 ?",a:["Shauna Coxsey","Janja Garnbret","Akiyo Noguchi","Miho Nonaka"],c:1,f:""},
+
+  // Histoire olympique
+  {q:"En quelle année ont eu lieu les premiers Jeux Olympiques modernes ?",a:["1892","1896","1900","1904"],c:1,f:""},
+  {q:"Dans quelle ville se sont tenus les premiers JO modernes ?",a:["Paris","Rome","Athènes","Londres"],c:2,f:""},
+  {q:"Quels JO ont été annulés à cause de la Seconde Guerre mondiale ?",a:["1936 et 1940","1940 et 1944","1944 et 1948","1940 uniquement"],c:1,f:""},
+  {q:"Quel athlète a remporté 9 médailles d'or olympiques en athlétisme ?",a:["Usain Bolt","Carl Lewis","Paavo Nurmi","Jesse Owens"],c:2,f:""},
+  {q:"En quelle année les femmes ont-elles participé pour la première fois aux JO ?",a:["1896","1900","1908","1912"],c:1,f:""},
+  {q:"Quel pays a accueilli les JO d'été de 2008 ?",a:["Japon","Corée du Sud","Chine","Australie"],c:2,f:""},
+  {q:"Combien d'anneaux composent le symbole olympique ?",a:["4","5","6","7"],c:1,f:""},
+
+  // Jeux Paralympiques
+  {q:"En quelle année les premiers Jeux Paralympiques officiels ont-ils eu lieu ?",a:["1948","1952","1960","1964"],c:2,f:""},
+  {q:"Dans quelle ville se sont tenus les premiers Jeux Paralympiques ?",a:["Tokyo","Londres","Rome","Athènes"],c:2,f:""},
+  {q:"Quel sport paralympique utilise des fauteuils roulants sur un terrain de basket ?",a:["Boccia","Basket fauteuil","Rugby fauteuil","Tennis fauteuil"],c:1,f:""},
+  {q:"Quel nageur paralympique brésilien a remporté de nombreuses médailles d'or ?",a:["Daniel Dias","Clodoaldo Silva","André Brasil","Nely Miranda"],c:0,f:""},
+
+  // Esports
+  {q:"Quel jeu est au centre de la compétition esport 'The International' ?",a:["League of Legends","Counter-Strike","Dota 2","Valorant"],c:2,f:""},
+  {q:"Quel jeu esport a pour compétition majeure les 'Worlds' organisés par Riot Games ?",a:["Dota 2","Fortnite","League of Legends","Overwatch"],c:2,f:""},
+  {q:"Dans quel pays l'esport est-il le plus populaire culturellement ?",a:["États-Unis","Japon","Corée du Sud","Chine"],c:2,f:""},
+  {q:"Quel jeu de tir tactique de Valve est un pilier de l'esport depuis 2000 ?",a:["Call of Duty","Valorant","Counter-Strike","Rainbow Six"],c:2,f:""},
+
+  // Légendes de la boxe
+  {q:"Quel boxeur est surnommé 'Sugar' et a dominé les poids welters dans les années 1980 ?",a:["Sugar Ray Robinson","Sugar Ray Leonard","Oscar De La Hoya","Tommy Hearns"],c:1,f:""},
+  {q:"Quel boxeur a battu Muhammad Ali lors du 'Combat du siècle' en 1971 ?",a:["George Foreman","Sonny Liston","Joe Frazier","Ken Norton"],c:2,f:""},
+  {q:"Dans quel pays le combat 'Rumble in the Jungle' entre Ali et Foreman a-t-il eu lieu ?",a:["Nigeria","Zaïre","Kenya","Afrique du Sud"],c:1,f:""},
+  {q:"Combien de rounds dure un combat de boxe professionnel au maximum ?",a:["10","12","15","8"],c:1,f:""},
+  {q:"Quel boxeur mexicain est considéré comme le meilleur livre pour livre des années 2020 ?",a:["Juan Manuel Marquez","Manny Pacquiao","Canelo Alvarez","Oscar De La Hoya"],c:2,f:""},
+
+  // Arts martiaux
+  {q:"De quel pays est originaire le taekwondo ?",a:["Japon","Chine","Corée du Sud","Thaïlande"],c:2,f:""},
+  {q:"Quel art martial brésilien est à la base du combat au sol en MMA ?",a:["Capoeira","Jiu-jitsu brésilien","Luta livre","Vale tudo"],c:1,f:""},
+  {q:"De quel pays est originaire le muay thaï ?",a:["Cambodge","Vietnam","Indonésie","Thaïlande"],c:3,f:""},
+  {q:"Quel art martial japonais utilise principalement des projections ?",a:["Karaté","Aïkido","Judo","Kendo"],c:2,f:""},
+  {q:"Combien de ceintures de couleur y a-t-il traditionnellement avant la ceinture noire en judo ?",a:["5","6","7","8"],c:1,f:""},
+
+  // Sports d'hiver
+  {q:"Combien d'épreuves compose le biathlon en combinant ski de fond et tir ?",a:["3","5","7","11"],c:3,f:""},
+  {q:"Quel pays domine historiquement le saut à ski ?",a:["Norvège","Autriche","Allemagne","Finlande"],c:1,f:""},
+  {q:"Dans quel sport d'hiver utilise-t-on des balais pour guider une pierre sur la glace ?",a:["Hockey","Curling","Patinage","Bobsleigh"],c:1,f:""},
+  {q:"Quel patineur artistique français a été champion olympique en 2022 ?",a:["Brian Joubert","Philippe Candeloro","Florent Amodio","Guillaume Cizeron"],c:3,f:""},
+  {q:"Quelle station française a accueilli les JO d'hiver de 1992 ?",a:["Chamonix","Grenoble","Albertville","Courchevel"],c:2,f:""},
+  {q:"Quel sport combine ski de fond et tir à la carabine ?",a:["Combiné nordique","Biathlon","Pentathlon","Ski alpin"],c:1,f:""},
+  {q:"Combien de joueurs par équipe sur la glace en curling ?",a:["2","3","4","5"],c:2,f:""},
+
+  // Courses hippiques
+  {q:"Comment s'appelle la course hippique la plus prestigieuse de France ?",a:["Grand Steeple-Chase","Prix de l'Arc de Triomphe","Prix du Jockey Club","Prix d'Amérique"],c:1,f:""},
+  {q:"Sur quel hippodrome se court le Prix de l'Arc de Triomphe ?",a:["Chantilly","Longchamp","Vincennes","Auteuil"],c:1,f:""},
+  {q:"Quelle est la distance classique du Derby d'Epsom en Angleterre ?",a:["1 600 m","2 000 m","2 400 m","3 200 m"],c:2,f:""},
+  {q:"Dans quelle discipline hippique les chevaux trottent-ils au lieu de galoper ?",a:["Plat","Obstacle","Trot","Cross-country"],c:2,f:""},
+
+  // Tour de France (détails)
+  {q:"Quelle est la couleur du maillot du meilleur grimpeur au Tour de France ?",a:["Jaune","Vert","Blanc à pois rouges","Blanc"],c:2,f:""},
+  {q:"Que récompense le maillot vert au Tour de France ?",a:["Le meilleur grimpeur","Le meilleur sprinter","Le meilleur jeune","Le classement général"],c:1,f:""},
+  {q:"En quelle année le premier Tour de France a-t-il eu lieu ?",a:["1896","1900","1903","1910"],c:2,f:""},
+  {q:"Quel cycliste détient le record de victoires au Tour de France ?",a:["Eddy Merckx","Bernard Hinault","Jacques Anquetil","Ils sont à égalité à 5 victoires"],c:3,f:""},
+  {q:"Combien d'étapes compte environ le Tour de France ?",a:["15","18","21","24"],c:2,f:""},
+  {q:"Quel col mythique des Pyrénées est souvent au programme du Tour de France ?",a:["Col du Galibier","Col du Tourmalet","Alpe d'Huez","Mont Ventoux"],c:1,f:""},
+  {q:"Que récompense le maillot blanc au Tour de France ?",a:["Le meilleur sprinter","Le plus combatif","Le meilleur jeune","Le meilleur grimpeur"],c:2,f:""},
+
+  // Triathlon
+  {q:"Dans quel ordre se déroulent les épreuves d'un triathlon ?",a:["Course, vélo, natation","Natation, vélo, course","Vélo, natation, course","Natation, course, vélo"],c:1,f:""},
+  {q:"Quelle est la distance totale d'un Ironman ?",a:["140,6 miles","120 miles","100 miles","160 miles"],c:0,f:""},
+  {q:"Quelle est la distance de natation dans un Ironman ?",a:["1,5 km","2,4 km","3,8 km","4,2 km"],c:2,f:""},
+  {q:"Dans quelle ville hawaïenne se déroule l'Ironman World Championship ?",a:["Honolulu","Maui","Kona","Hilo"],c:2,f:""},
+  {q:"Quel triathlète britannique a remporté deux titres olympiques consécutifs ?",a:["Jonny Brownlee","Alistair Brownlee","Simon Whitfield","Jan Frodeno"],c:1,f:""},
+
+  // Questions variées supplémentaires
+  {q:"Quel sport se pratique sur un halfpipe enneigé ?",a:["Ski freestyle","Snowboard","Luge","Skeleton"],c:1,f:""},
+  {q:"Quel combattant UFC est surnommé 'Bones' ?",a:["Kamaru Usman","Jon Jones","Israel Adesanya","Francis Ngannou"],c:1,f:""},
+  {q:"Quel pilote de F1 néerlandais a dominé la saison 2023 ?",a:["Charles Leclerc","Lewis Hamilton","Lando Norris","Max Verstappen"],c:3,f:""},
+  {q:"Quel surfeur américain a remporté 11 titres mondiaux ?",a:["Andy Irons","John John Florence","Kelly Slater","Mick Fanning"],c:2,f:""},
+  {q:"Quel est le nom de la ligue professionnelle d'esport sur League of Legends en Europe ?",a:["LCS","LPL","LEC","LCK"],c:2,f:""},
+  {q:"Quel boxeur a été champion du monde dans 8 catégories de poids différentes ?",a:["Floyd Mayweather","Oscar De La Hoya","Manny Pacquiao","Sugar Ray Leonard"],c:2,f:""},
+  {q:"Dans quel sport olympique d'hiver glisse-t-on tête la première sur une piste glacée ?",a:["Luge","Bobsleigh","Skeleton","Curling"],c:2,f:""},
+  {q:"Comment appelle-t-on une figure à 360 degrés en skateboard ?",a:["Kickflip","Ollie","360 flip","Shove-it"],c:2,f:""},
+  {q:"Quel pays a remporté le plus de médailles paralympiques dans l'histoire ?",a:["Chine","États-Unis","Grande-Bretagne","Australie"],c:2,f:""},
+  {q:"Combien de disciplines compose le décathlon ?",a:["8","10","12","15"],c:1,f:""},
+  {q:"Quel navigateur français a réalisé le tour du monde en solitaire le plus rapide en 2017 ?",a:["François Gabart","Thomas Coville","Francis Joyon","Armel Le Cléac'h"],c:0,f:""},
+  {q:"Quel Grand Prix de F1 se court sur le circuit de Spa-Francorchamps ?",a:["GP des Pays-Bas","GP de France","GP de Belgique","GP du Luxembourg"],c:2,f:""},
+  {q:"Quel art martial olympique utilise un sabre, un fleuret ou une épée ?",a:["Kendo","Escrime","Taekwondo","Judo"],c:1,f:""},
+  {q:"Quelle ville accueillera les JO d'été de 2028 ?",a:["Brisbane","Paris","Los Angeles","Tokyo"],c:2,f:""},
+  {q:"Quel est le nom du trophée remis au vainqueur de l'America's Cup ?",a:["La Coupe de l'America","L'Aiguière d'Argent","Le Bol d'Or","Le Trophée Jules Verne"],c:0,f:""},
+  {q:"Quel sport de combat japonais utilise des armures et des sabres en bambou ?",a:["Judo","Sumo","Karaté","Kendo"],c:3,f:""},
+  {q:"Combien de chevaux participent généralement au Prix de l'Arc de Triomphe ?",a:["8 à 12","12 à 20","20 à 30","Plus de 30"],c:1,f:""},
+  {q:"Quel skieur autrichien détient le record de victoires en Coupe du monde de ski alpin ?",a:["Hermann Maier","Marcel Hirscher","Franz Klammer","Toni Sailer"],c:1,f:""},
+  {q:"Quel combattant MMA camerounais est devenu champion UFC des poids lourds ?",a:["Ciryl Gane","Alistair Overeem","Francis Ngannou","Derrick Lewis"],c:2,f:""},
+  {q:"Quel est le nom du circuit de F1 situé à Silverstone ?",a:["GP d'Allemagne","GP de Grande-Bretagne","GP d'Autriche","GP des Pays-Bas"],c:1,f:""},
+  {q:"Quelle compétition de voile en équipage fait le tour du monde avec escales ?",a:["Vendée Globe","America's Cup","The Ocean Race","Route du Rhum"],c:2,f:""},
+  {q:"Quel pays a inventé le sumo ?",a:["Chine","Corée du Sud","Japon","Mongolie"],c:2,f:""},
+  {q:"Quel sport paralympique se joue avec des boules en cuir sur un terrain intérieur ?",a:["Pétanque","Boccia","Bowling","Goalball"],c:1,f:""},
+  {q:"Dans quel jeu esport des équipes de 5 s'affrontent sur une carte appelée Summoner's Rift ?",a:["Dota 2","Valorant","League of Legends","Overwatch"],c:2,f:""},
+  {q:"Quel boxeur est resté invaincu en 50 combats professionnels et a pris sa retraite en 2017 ?",a:["Manny Pacquiao","Canelo Alvarez","Floyd Mayweather","Lennox Lewis"],c:2,f:""},
+  {q:"Combien d'étapes de montagne y a-t-il environ au Tour de France ?",a:["3 à 4","5 à 7","8 à 10","Plus de 10"],c:1,f:""},
+  {q:"Quel alpiniste néo-zélandais a été le premier à atteindre le sommet de l'Everest ?",a:["Reinhold Messner","Edmund Hillary","Tenzing Norgay","George Mallory"],c:1,f:""},
+  {q:"Quel est le sport national du Canada ?",a:["Hockey sur glace","Baseball","Lacrosse","Curling"],c:2,f:""},
+  {q:"Dans quel sport d'hiver les athlètes descendent-ils une piste glacée dans un engin à 4 places ?",a:["Luge","Skeleton","Bobsleigh","Curling"],c:2,f:""},
+  {q:"Quel pilote de F1 a remporté 7 titres mondiaux avec Ferrari et Benetton ?",a:["Lewis Hamilton","Alain Prost","Michael Schumacher","Sebastian Vettel"],c:2,f:""},
+  {q:"Quel est le nom de la figure de base en skateboard consistant à sauter sans les mains ?",a:["Kickflip","Ollie","Heelflip","Pop shove-it"],c:1,f:""},
+  {q:"Quelle ville accueillera les JO d'été de 2032 ?",a:["Istanbul","Budapest","Brisbane","New Delhi"],c:2,f:""},
+  {q:"Quel sport pour malvoyants se joue avec un ballon sonore en salle ?",a:["Cécifoot","Goalball","Boccia","Tennis de table adapté"],c:1,f:""},
+  {q:"Quel cavalier français est multiple champion olympique en équitation ?",a:["Kevin Staut","Philippe Rozier","Nicolas Touzaint","Aucun n'est multiple champion"],c:3,f:""},
+  {q:"Combien de manches comporte une saison de Coupe du monde de surf WSL (Championship Tour) ?",a:["5","7","10","12"],c:2,f:""},
+  {q:"Quel sport de combat olympique oppose deux lutteurs sur un tapis circulaire ?",a:["Judo","Taekwondo","Lutte","Boxe"],c:2,f:""},
+  {q:"Quel est le record du monde féminin du 100m ?",a:["10.49s","10.62s","10.70s","10.81s"],c:0,f:""},
+  {q:"Quel pays organise le Grand Prix de F1 sur le circuit de Suzuka ?",a:["Chine","Corée du Sud","Japon","Singapour"],c:2,f:""},
 ];

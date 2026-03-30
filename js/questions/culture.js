@@ -1,6 +1,6 @@
 /* ════════════════════════════════════════
    questions/culture.js — Culture Générale
-   100 questions
+   200 questions
    { q:"Question ?", a:["A","B","C","D"], c:2, f:"" }
    c = index de la bonne réponse (0=A 1=B 2=C 3=D)
    ════════════════════════════════════════ */
@@ -104,4 +104,133 @@ QUESTIONS.culture = [
   {q:"Qui a peint Le Cri ?",a:["Vincent van Gogh","Edvard Munch","Gustav Klimt","Paul Gauguin"],c:1,f:""},
   {q:"Quelle est la capitale de l'Inde ?",a:["Mumbai","Kolkata","Chennai","New Delhi"],c:3,f:""},
   {q:"Quel est le plus petit os du corps humain ?",a:["Péroné","Étrier","Radius","Coccyx"],c:1,f:""},
+
+  // ─── Questions 101-200 ───────────────────────────────────────────────
+
+  // Mythologie
+  {q:"Dans la mythologie grecque, qui est le dieu de la mer ?",a:["Zeus","Hadès","Poséidon","Arès"],c:2,f:""},
+  {q:"Quel héros grec est connu pour ses douze travaux ?",a:["Achille","Ulysse","Héraclès","Persée"],c:2,f:""},
+  {q:"Dans la mythologie nordique, quel est le nom du marteau de Thor ?",a:["Gungnir","Excalibur","Mjöllnir","Gram"],c:2,f:""},
+  {q:"Qui est le dieu égyptien des morts à tête de chacal ?",a:["Osiris","Horus","Râ","Anubis"],c:3,f:""},
+  {q:"Dans la mythologie grecque, qui a ouvert une boîte libérant tous les maux ?",a:["Méduse","Pandore","Hélène","Aphrodite"],c:1,f:""},
+  {q:"Quel est le nom du cheval ailé de la mythologie grecque ?",a:["Centaure","Minotaure","Pégase","Cerbère"],c:2,f:""},
+  {q:"Dans la mythologie romaine, comment s'appelle le dieu de la guerre ?",a:["Mars","Neptune","Pluton","Mercure"],c:0,f:""},
+  {q:"Quel monstre mythologique a un corps de lion et un visage de femme ?",a:["Harpie","Méduse","Chimère","Sphinx"],c:3,f:""},
+
+  // Inventions
+  {q:"Qui a inventé l'imprimerie à caractères mobiles en Europe ?",a:["Léonard de Vinci","Johannes Gutenberg","Galilée","Isaac Newton"],c:1,f:""},
+  {q:"En quelle année les frères Lumière ont-ils présenté le cinématographe ?",a:["1885","1895","1905","1915"],c:1,f:""},
+  {q:"Qui a inventé la dynamite ?",a:["Alfred Nobel","Albert Einstein","Louis Pasteur","James Watt"],c:0,f:""},
+  {q:"Quel ingénieur écossais a perfectionné la machine à vapeur ?",a:["Thomas Newcomen","Robert Fulton","James Watt","George Stephenson"],c:2,f:""},
+  {q:"Qui a inventé le World Wide Web ?",a:["Steve Jobs","Bill Gates","Tim Berners-Lee","Vint Cerf"],c:2,f:""},
+  {q:"Dans quel pays le zéro a-t-il été inventé comme nombre ?",a:["Chine","Grèce","Inde","Égypte"],c:2,f:""},
+  {q:"Qui a inventé la radio ?",a:["Alexander Graham Bell","Guglielmo Marconi","Thomas Edison","Nikola Tesla"],c:1,f:""},
+  {q:"Quelle invention de 1903 est attribuée aux frères Wright ?",a:["L'automobile","L'avion","Le sous-marin","Le dirigeable"],c:1,f:""},
+
+  // Citations célèbres
+  {q:"Qui a dit « Je pense, donc je suis » ?",a:["Voltaire","Jean-Jacques Rousseau","René Descartes","Blaise Pascal"],c:2,f:""},
+  {q:"Qui a prononcé « I have a dream » ?",a:["Nelson Mandela","Martin Luther King Jr.","Malcolm X","Barack Obama"],c:1,f:""},
+  {q:"À quel philosophe attribue-t-on « La vie sans examen ne vaut pas la peine d'être vécue » ?",a:["Platon","Aristote","Socrate","Épicure"],c:2,f:""},
+  {q:"Qui a dit « L'État, c'est moi » ?",a:["Napoléon Bonaparte","Louis XIV","Charles de Gaulle","Richelieu"],c:1,f:""},
+
+  // Records du monde
+  {q:"Quel est le bâtiment le plus haut du monde (2024) ?",a:["Shanghai Tower","One World Trade","Burj Khalifa","Taipei 101"],c:2,f:""},
+  {q:"Quel est l'animal le plus venimeux au monde ?",a:["Cobra royal","Mamba noir","Méduse-boîte","Araignée veuve noire"],c:2,f:""},
+  {q:"Quel est le lac le plus profond du monde ?",a:["Lac Tanganyika","Lac Supérieur","Lac Baïkal","Lac Titicaca"],c:2,f:""},
+  {q:"Quelle est la cascade la plus haute du monde ?",a:["Chutes du Niagara","Chutes Victoria","Salto Ángel","Chutes d'Iguazú"],c:2,f:""},
+
+  // Animaux
+  {q:"Quel est le seul mammifère capable de voler ?",a:["Écureuil volant","Chauve-souris","Colibri","Polatouche"],c:1,f:""},
+  {q:"Combien de cœurs possède une pieuvre ?",a:["1","2","3","4"],c:2,f:""},
+  {q:"Quel animal possède les empreintes digitales les plus similaires à celles de l'homme ?",a:["Chimpanzé","Gorille","Koala","Orang-outan"],c:2,f:""},
+  {q:"Quel est l'animal terrestre le plus lourd ?",a:["Hippopotame","Rhinocéros blanc","Éléphant d'Afrique","Girafe"],c:2,f:""},
+  {q:"Quel oiseau est incapable de voler et vit en Antarctique ?",a:["Autruche","Manchot empereur","Kiwi","Émeu"],c:1,f:""},
+  {q:"Quel insecte est responsable de la pollinisation de la majorité des cultures ?",a:["Papillon","Mouche","Abeille","Coccinelle"],c:2,f:""},
+  {q:"Quel animal peut régénérer ses membres perdus ?",a:["Lézard","Étoile de mer","Axolotl","Les trois"],c:3,f:""},
+  {q:"Combien de pattes a une araignée ?",a:["6","8","10","12"],c:1,f:""},
+
+  // Espace
+  {q:"Quel est le nom de la première femme dans l'espace ?",a:["Sally Ride","Valentina Terechkova","Mae Jemison","Peggy Whitson"],c:1,f:""},
+  {q:"Combien de temps met la lumière du Soleil pour atteindre la Terre ?",a:["8 secondes","8 minutes","80 minutes","8 heures"],c:1,f:""},
+  {q:"Quelle est la planète la plus proche du Soleil ?",a:["Vénus","Mars","Mercure","Terre"],c:2,f:""},
+  {q:"En quelle année l'homme a-t-il marché sur la Lune pour la première fois ?",a:["1965","1969","1972","1975"],c:1,f:""},
+  {q:"Comment s'appelle la galaxie dans laquelle se trouve le système solaire ?",a:["Andromède","Voie lactée","Triangle","Sombrero"],c:1,f:""},
+  {q:"Quelle sonde spatiale a quitté le système solaire en premier ?",a:["Pioneer 10","Voyager 1","Voyager 2","New Horizons"],c:1,f:""},
+  {q:"Quel est le nom de la station spatiale internationale ?",a:["Mir","Skylab","ISS","Tiangong"],c:2,f:""},
+  {q:"Quelle planète tourne sur elle-même dans le sens inverse des autres ?",a:["Uranus","Neptune","Vénus","Pluton"],c:2,f:""},
+
+  // Technologie
+  {q:"Quel langage de programmation a été créé par Guido van Rossum ?",a:["Java","C++","Python","Ruby"],c:2,f:""},
+  {q:"En quelle année le premier iPhone a-t-il été commercialisé ?",a:["2005","2007","2009","2010"],c:1,f:""},
+  {q:"Que signifie l'acronyme « GPS » ?",a:["Global Positioning System","General Protocol Standard","Geo Point Satellite","Global Program Software"],c:0,f:""},
+  {q:"Quel réseau social a été fondé par Mark Zuckerberg en 2004 ?",a:["Twitter","MySpace","Facebook","Instagram"],c:2,f:""},
+  {q:"Quelle entreprise a fabriqué le premier ordinateur personnel grand public, l'Apple II ?",a:["IBM","Microsoft","Apple","Hewlett-Packard"],c:2,f:""},
+  {q:"Que signifie « HTML » ?",a:["HyperText Markup Language","High Tech Modern Language","Hyper Transfer Mail Link","Home Tool Markup Language"],c:0,f:""},
+  {q:"Quel moteur de recherche domine le marché mondial ?",a:["Bing","Yahoo","Google","DuckDuckGo"],c:2,f:""},
+  {q:"Qu'est-ce qu'un « firewall » en informatique ?",a:["Un antivirus","Un pare-feu réseau","Un processeur","Un câble réseau"],c:1,f:""},
+
+  // Art
+  {q:"Quel mouvement artistique Salvador Dalí représentait-il ?",a:["Impressionnisme","Cubisme","Surréalisme","Pop Art"],c:2,f:""},
+  {q:"Qui a sculpté Le Penseur ?",a:["Michel-Ange","Donatello","Auguste Rodin","Constantin Brâncuși"],c:2,f:""},
+  {q:"Quel artiste est célèbre pour ses boîtes de soupe Campbell's ?",a:["Roy Lichtenstein","Andy Warhol","Jean-Michel Basquiat","Keith Haring"],c:1,f:""},
+  {q:"Dans quel musée se trouve La Joconde ?",a:["British Museum","Musée du Prado","Musée du Louvre","Galerie des Offices"],c:2,f:""},
+  {q:"Quel peintre impressionniste est célèbre pour ses nymphéas ?",a:["Edgar Degas","Claude Monet","Pierre-Auguste Renoir","Camille Pissarro"],c:1,f:""},
+  {q:"Quel architecte a conçu la Sagrada Família à Barcelone ?",a:["Le Corbusier","Frank Lloyd Wright","Antoni Gaudí","Oscar Niemeyer"],c:2,f:""},
+  {q:"Quel style architectural est caractérisé par des arcs-boutants et des vitraux ?",a:["Roman","Gothique","Baroque","Renaissance"],c:1,f:""},
+  {q:"Qui a peint le plafond de la chapelle Sixtine ?",a:["Raphaël","Léonard de Vinci","Le Caravage","Michel-Ange"],c:3,f:""},
+
+  // Philosophie
+  {q:"Quel philosophe grec a fondé l'Académie à Athènes ?",a:["Socrate","Platon","Aristote","Épicure"],c:1,f:""},
+  {q:"Qui a écrit « Le Prince », traité politique célèbre ?",a:["Thomas Hobbes","Jean-Jacques Rousseau","Nicolas Machiavel","John Locke"],c:2,f:""},
+  {q:"Quel philosophe allemand est l'auteur de Ainsi parlait Zarathoustra ?",a:["Karl Marx","Georg Hegel","Friedrich Nietzsche","Arthur Schopenhauer"],c:2,f:""},
+  {q:"Quel philosophe est considéré comme le père de l'existentialisme français ?",a:["Albert Camus","Simone de Beauvoir","Jean-Paul Sartre","Maurice Merleau-Ponty"],c:2,f:""},
+  {q:"Quel penseur chinois a fondé le confucianisme ?",a:["Lao Tseu","Sun Tzu","Confucius","Mencius"],c:2,f:""},
+  {q:"Quel philosophe a écrit la Critique de la raison pure ?",a:["Descartes","Hume","Kant","Leibniz"],c:2,f:""},
+
+  // Langues
+  {q:"Quel est l'alphabet utilisé par la langue russe ?",a:["Latin","Arabe","Cyrillique","Grec"],c:2,f:""},
+  {q:"Combien de langues officielles l'ONU reconnaît-elle ?",a:["4","5","6","8"],c:2,f:""},
+  {q:"Quelle langue est la plus parlée en Amérique du Sud ?",a:["Espagnol","Portugais","Anglais","Français"],c:0,f:""},
+  {q:"Dans quelle langue le mot « sushi » a-t-il son origine ?",a:["Chinois","Coréen","Japonais","Thaïlandais"],c:2,f:""},
+  {q:"Quel pays a le plus de langues officielles au monde ?",a:["Inde","Afrique du Sud","Bolivie","Zimbabwe"],c:1,f:""},
+  {q:"Quelle est la langue officielle du Brésil ?",a:["Espagnol","Portugais","Français","Anglais"],c:1,f:""},
+
+  // Religions
+  {q:"Quelle est la religion la plus pratiquée au monde ?",a:["Islam","Hindouisme","Christianisme","Bouddhisme"],c:2,f:""},
+  {q:"Dans quelle ville se trouve le Mur des Lamentations ?",a:["La Mecque","Istanbul","Jérusalem","Le Caire"],c:2,f:""},
+  {q:"Quel est le livre sacré de l'islam ?",a:["La Torah","La Bible","Le Coran","Les Védas"],c:2,f:""},
+  {q:"Qui est le fondateur du bouddhisme ?",a:["Confucius","Lao Tseu","Siddhartha Gautama","Mahâvîra"],c:2,f:""},
+  {q:"Combien de piliers compte l'islam ?",a:["3","4","5","7"],c:2,f:""},
+  {q:"Quelle fête chrétienne célèbre la résurrection du Christ ?",a:["Noël","Pâques","Ascension","Pentecôte"],c:1,f:""},
+
+  // ONU et organisations internationales
+  {q:"En quelle année l'Organisation des Nations Unies a-t-elle été fondée ?",a:["1919","1939","1945","1950"],c:2,f:""},
+  {q:"Où se trouve le siège principal de l'ONU ?",a:["Genève","Paris","New York","La Haye"],c:2,f:""},
+  {q:"Combien de pays membres compte l'ONU (environ) ?",a:["150","175","193","210"],c:2,f:""},
+  {q:"Quel organisme international est chargé de la santé mondiale ?",a:["UNICEF","OMS","FAO","UNESCO"],c:1,f:""},
+  {q:"Quelle organisation internationale décerne le prix Nobel de la Paix ?",a:["ONU","Comité Nobel norvégien","UNESCO","Croix-Rouge"],c:1,f:""},
+  {q:"Quel traité a créé l'Union européenne sous ce nom ?",a:["Traité de Rome","Traité de Maastricht","Traité de Lisbonne","Traité de Versailles"],c:1,f:""},
+
+  // Sujets variés supplémentaires
+  {q:"Quel pays est surnommé le « pays du Soleil-Levant » ?",a:["Chine","Corée du Sud","Japon","Thaïlande"],c:2,f:""},
+  {q:"Quel instrument de musique possède des cordes et un archet et se joue assis ?",a:["Violon","Contrebasse","Violoncelle","Alto"],c:2,f:""},
+  {q:"Quelle est la température d'ébullition de l'eau au niveau de la mer ?",a:["90 °C","95 °C","100 °C","110 °C"],c:2,f:""},
+  {q:"Quel philosophe grec est le précepteur d'Alexandre le Grand ?",a:["Socrate","Platon","Aristote","Diogène"],c:2,f:""},
+  {q:"Quel est le plus long fleuve d'Europe ?",a:["Danube","Rhin","Volga","Dniepr"],c:2,f:""},
+  {q:"Quel mathématicien a formulé le dernier théorème resté non prouvé pendant 350 ans ?",a:["Euler","Gauss","Fermat","Pythagore"],c:2,f:""},
+  {q:"Quel gaz est indispensable à la respiration humaine ?",a:["Azote","Dioxyde de carbone","Hélium","Oxygène"],c:3,f:""},
+  {q:"Quelle mer intérieure sépare l'Europe de l'Afrique à son point le plus étroit ?",a:["Mer Noire","Mer Rouge","Mer Méditerranée","Mer Baltique"],c:2,f:""},
+  {q:"Qui a écrit l'opéra Carmen ?",a:["Giuseppe Verdi","Georges Bizet","Richard Wagner","Giacomo Puccini"],c:1,f:""},
+  {q:"Quel est le nom du processus par lequel les plantes fabriquent leur nourriture grâce à la lumière ?",a:["Fermentation","Respiration","Photosynthèse","Osmose"],c:2,f:""},
+  {q:"Dans quel pays se trouvent les Pyramides de Gizeh ?",a:["Soudan","Libye","Égypte","Jordanie"],c:2,f:""},
+  {q:"Qui a peint Les Tournesols ?",a:["Paul Gauguin","Vincent van Gogh","Claude Monet","Henri Matisse"],c:1,f:""},
+  {q:"Quel est le plus petit continent du monde ?",a:["Europe","Antarctique","Océanie","Amérique du Sud"],c:2,f:""},
+  {q:"Quel physicien a découvert la radioactivité avec Marie Curie ?",a:["Henri Becquerel","Max Planck","Pierre Curie","Ernest Rutherford"],c:2,f:""},
+  {q:"Quel empire a régné sur la majeure partie de l'Amérique du Sud avant l'arrivée des Espagnols ?",a:["Empire aztèque","Empire maya","Empire inca","Empire olmèque"],c:2,f:""},
+  {q:"Combien de chromosomes possède une cellule humaine normale ?",a:["23","44","46","48"],c:2,f:""},
+  {q:"Quel dieu hindou est représenté avec une tête d'éléphant ?",a:["Vishnou","Shiva","Ganesh","Brahma"],c:2,f:""},
+  {q:"Quel est le nom de la première intelligence artificielle à battre un champion du monde d'échecs ?",a:["AlphaGo","Watson","Deep Blue","Siri"],c:2,f:""},
+  {q:"Quelle organisation internationale a pour mission de préserver le patrimoine mondial ?",a:["UNICEF","OMS","UNESCO","FAO"],c:2,f:""},
+  {q:"Quel est l'animal le plus grand jamais ayant existé sur Terre ?",a:["Tyrannosaure","Baleine bleue","Brachiosaure","Mégalodon"],c:1,f:""},
+  {q:"Combien de langues sont parlées approximativement dans le monde ?",a:["500","2 000","7 000","15 000"],c:2,f:""},
 ];

@@ -1,7 +1,8 @@
 /* ════════════════════════════════════════
-   questions/music.js — Musique — 100 questions
+   questions/music.js — Musique — 200 questions
    ════════════════════════════════════════ */
 QUESTIONS.music = [
+  // ── Existing 98 questions ──
   {q:"Quel groupe a chanté 'Bohemian Rhapsody' ?",a:["The Beatles","Queen","The Rolling Stones","Pink Floyd"],c:1,f:""},
   {q:"Quel chanteur est surnommé 'The King of Pop' ?",a:["Prince","Elvis Presley","Michael Jackson","Stevie Wonder"],c:2,f:""},
   {q:"Quel instrument possède généralement 6 cordes ?",a:["Violon","Guitare","Harpe","Piano"],c:1,f:""},
@@ -99,4 +100,139 @@ QUESTIONS.music = [
   {q:"Qui chante 'Lose Yourself' ?",a:["Jay-Z","Kanye West","Eminem","50 Cent"],c:2,f:""},
   {q:"Quel groupe a chanté 'Should I Stay or Should I Go' ?",a:["The Clash","Sex Pistols","The Jam","The Buzzcocks"],c:0,f:""},
   {q:"Qui chante 'Titanium' ?",a:["Sia ft. David Guetta","Adele","Beyoncé","Pink"],c:0,f:""},
+
+  // ── 102 nouvelles questions ──
+
+  // Rap / Hip-hop
+  {q:"Quel rappeur américain a sorti l'album 'The Marshall Mathers LP' ?",a:["50 Cent","Dr. Dre","Eminem","Snoop Dogg"],c:2,f:""},
+  {q:"Quel rappeur est connu pour le titre 'HUMBLE.' ?",a:["J. Cole","Kendrick Lamar","Drake","Travis Scott"],c:1,f:""},
+  {q:"Quel groupe de hip-hop new-yorkais a sorti 'C.R.E.A.M.' ?",a:["Wu-Tang Clan","A Tribe Called Quest","Mobb Deep","Run-DMC"],c:0,f:""},
+  {q:"Qui a rappé 'Juicy' en 1994 ?",a:["Tupac","Jay-Z","The Notorious B.I.G.","Nas"],c:2,f:""},
+  {q:"Quel rappeur a popularisé le terme 'YOLO' ?",a:["Lil Wayne","Drake","Kanye West","Nicki Minaj"],c:1,f:""},
+  {q:"Quel est le vrai prénom de Jay-Z ?",a:["Shawn","Calvin","Andre","Marshall"],c:0,f:""},
+  {q:"Quel rappeur a sorti l'album 'Astroworld' ?",a:["Post Malone","Travis Scott","Lil Uzi Vert","21 Savage"],c:1,f:""},
+  {q:"Quel duo de rap est composé d'André 3000 et Big Boi ?",a:["Mobb Deep","OutKast","Run the Jewels","Clipse"],c:1,f:""},
+
+  // French rap
+  {q:"Quel rappeur français a sorti l'album 'Civilisation' ?",a:["Booba","Orelsan","Nekfeu","Jul"],c:1,f:""},
+  {q:"Quel groupe de rap marseillais est connu pour 'Badge' ?",a:["NTM","IAM","Fonky Family","113"],c:1,f:""},
+  {q:"Quel rappeur français est surnommé 'le Duc de Boulogne' ?",a:["Orelsan","Nekfeu","Booba","Kaaris"],c:2,f:""},
+  {q:"Qui a rappé 'Bande organisée' en 2020 ?",a:["PNL","Jul et d'autres rappeurs marseillais","Nekfeu","Soprano seul"],c:1,f:""},
+  {q:"Quel duo de rap français est connu pour 'Le monde de demain' ?",a:["Bigflo et Oli","PNL","NTM","113"],c:2,f:""},
+  {q:"Quel rappeur français a sorti l'album 'JVLIVS' ?",a:["Ninho","Damso","SCH","Booba"],c:2,f:""},
+  {q:"Quel groupe de rap français a chanté 'Ma Benz' ?",a:["IAM","NTM","Assassin","Ministère A.M.E.R."],c:1,f:""},
+  {q:"Quel rappeur belge francophone a sorti 'Batterie faible' ?",a:["Angèle","Stromae","Damso","Roméo Elvis"],c:2,f:""},
+
+  // Electronic music
+  {q:"Quel DJ français a produit 'One More Time' ?",a:["David Guetta","Daft Punk","Justice","Martin Solveig"],c:1,f:""},
+  {q:"Quel DJ néerlandais était connu pour 'Levels' ?",a:["Tiësto","Armin van Buuren","Avicii","Martin Garrix"],c:2,f:""},
+  {q:"Quel genre de musique électronique est originaire de Detroit ?",a:["House","Trance","Techno","Drum and Bass"],c:2,f:""},
+  {q:"Quel duo électronique français a composé la B.O. de Tron: Legacy ?",a:["Justice","Air","Daft Punk","M83"],c:2,f:""},
+  {q:"Quel DJ a produit 'Scary Monsters and Nice Sprites' ?",a:["Deadmau5","Skrillex","Diplo","Marshmello"],c:1,f:""},
+  {q:"Dans quelle ville est née la musique house ?",a:["New York","Detroit","Chicago","Los Angeles"],c:2,f:""},
+  {q:"Quel artiste électronique a sorti l'album 'Play' en 1999 ?",a:["Fatboy Slim","Moby","The Chemical Brothers","Aphex Twin"],c:1,f:""},
+  {q:"Quel groupe électronique allemand est pionnier de la musique électronique avec 'Autobahn' ?",a:["Tangerine Dream","Can","Kraftwerk","Neu!"],c:2,f:""},
+
+  // K-pop
+  {q:"Quel groupe de K-pop est composé de 7 membres dont RM et Jungkook ?",a:["EXO","BTS","BLACKPINK","SEVENTEEN"],c:1,f:""},
+  {q:"Quel groupe féminin de K-pop a chanté 'DDU-DU DDU-DU' ?",a:["TWICE","Red Velvet","BLACKPINK","ITZY"],c:2,f:""},
+  {q:"De quel pays vient la K-pop ?",a:["Japon","Chine","Corée du Sud","Thaïlande"],c:2,f:""},
+  {q:"Quel artiste solo de K-pop a chanté 'Gangnam Style' ?",a:["PSY","G-Dragon","Rain","Jay Park"],c:0,f:""},
+  {q:"Quel groupe de K-pop féminin est connu pour 'TT' et 'Cheer Up' ?",a:["BLACKPINK","Red Velvet","TWICE","aespa"],c:2,f:""},
+  {q:"Comment appelle-t-on les fans de BTS ?",a:["Blinks","Once","ARMY","Exo-L"],c:2,f:""},
+
+  // Latin music
+  {q:"Quel chanteur portoricain a popularisé le reggaeton mondial ?",a:["J Balvin","Bad Bunny","Daddy Yankee","Ozuna"],c:2,f:""},
+  {q:"Quel chanteur colombien est connu pour 'Hips Don't Lie' ?",a:["Juanes","Maluma","J Balvin","Shakira"],c:3,f:""},
+  {q:"Quel genre musical latino combine reggae et hip-hop ?",a:["Salsa","Bachata","Reggaeton","Cumbia"],c:2,f:""},
+  {q:"Quel artiste portoricain a dominé les charts avec 'Un Verano Sin Ti' ?",a:["Daddy Yankee","J Balvin","Bad Bunny","Ozuna"],c:2,f:""},
+  {q:"De quel pays est originaire la cumbia ?",a:["Mexique","Argentine","Colombie","Cuba"],c:2,f:""},
+  {q:"Quel chanteur dominicain est associé à la bachata moderne ?",a:["Daddy Yankee","Romeo Santos","Marc Anthony","Enrique Iglesias"],c:1,f:""},
+
+  // Jazz legends
+  {q:"Quel trompettiste de jazz est surnommé 'Satchmo' ?",a:["Miles Davis","Dizzy Gillespie","Louis Armstrong","Chet Baker"],c:2,f:""},
+  {q:"Quel saxophoniste a enregistré l'album 'A Love Supreme' ?",a:["Charlie Parker","Sonny Rollins","John Coltrane","Ornette Coleman"],c:2,f:""},
+  {q:"Quelle chanteuse de jazz est connue pour 'Strange Fruit' ?",a:["Ella Fitzgerald","Billie Holiday","Sarah Vaughan","Nina Simone"],c:1,f:""},
+  {q:"Quel trompettiste a révolutionné le jazz avec 'Kind of Blue' ?",a:["Louis Armstrong","Chet Baker","Miles Davis","Wynton Marsalis"],c:2,f:""},
+  {q:"Quel pianiste de jazz est connu pour 'Take the A Train' ?",a:["Thelonious Monk","Count Basie","Duke Ellington","Oscar Peterson"],c:2,f:""},
+  {q:"Dans quelle ville américaine le jazz est-il né ?",a:["Chicago","New York","La Nouvelle-Orléans","Memphis"],c:2,f:""},
+
+  // Classical composers
+  {q:"Qui a composé 'Les Quatre Saisons' ?",a:["Bach","Handel","Vivaldi","Telemann"],c:2,f:""},
+  {q:"Quel compositeur autrichien est mort à 35 ans en 1791 ?",a:["Haydn","Schubert","Mozart","Beethoven"],c:2,f:""},
+  {q:"Qui a composé 'Le Lac des cygnes' ?",a:["Stravinsky","Rachmaninov","Tchaïkovski","Prokofiev"],c:2,f:""},
+  {q:"Quel compositeur allemand a écrit 'La Chevauchée des Walkyries' ?",a:["Brahms","Wagner","Strauss","Mahler"],c:1,f:""},
+  {q:"Qui a composé 'Clair de lune' pour piano ?",a:["Ravel","Debussy","Satie","Fauré"],c:1,f:""},
+  {q:"Quel compositeur polonais est célèbre pour ses nocturnes et polonaises ?",a:["Liszt","Chopin","Schumann","Mendelssohn"],c:1,f:""},
+  {q:"Qui a composé 'Le Sacre du printemps' ?",a:["Prokofiev","Stravinsky","Bartók","Ravel"],c:1,f:""},
+  {q:"Quel compositeur a écrit 'Le Boléro' ?",a:["Debussy","Satie","Ravel","Fauré"],c:2,f:""},
+
+  // Music theory
+  {q:"Comment appelle-t-on un groupe de 4 musiciens ?",a:["Trio","Quatuor","Quintette","Sextuor"],c:1,f:""},
+  {q:"Combien de demi-tons contient une octave ?",a:["7","10","12","14"],c:2,f:""},
+  {q:"Quel terme italien indique de jouer doucement ?",a:["Forte","Allegro","Piano","Adagio"],c:2,f:""},
+  {q:"Quel signe musical augmente la durée d'une note de moitié ?",a:["Le bémol","Le dièse","Le point","La liaison"],c:2,f:""},
+  {q:"Comment appelle-t-on la vitesse d'un morceau de musique ?",a:["La nuance","Le tempo","Le timbre","L'harmonie"],c:1,f:""},
+  {q:"Combien de lignes possède une portée musicale ?",a:["4","5","6","7"],c:1,f:""},
+  {q:"Quel terme désigne deux notes jouées simultanément ?",a:["Mélodie","Accord","Intervalle","Arpège"],c:2,f:""},
+  {q:"Quelle clé est la plus utilisée pour les instruments aigus ?",a:["Clé de fa","Clé d'ut","Clé de sol","Clé d'ut 4"],c:2,f:""},
+
+  // Eurovision
+  {q:"Quel pays a remporté l'Eurovision le plus de fois ?",a:["Suède","France","Irlande","Royaume-Uni"],c:2,f:""},
+  {q:"Quel groupe suédois a gagné l'Eurovision 1974 avec 'Waterloo' ?",a:["Roxette","ABBA","Ace of Base","Europe"],c:1,f:""},
+  {q:"Quel pays a accueilli l'Eurovision 2023 au nom de l'Ukraine ?",a:["Pologne","Allemagne","Royaume-Uni","Suède"],c:2,f:""},
+  {q:"Quelle chanteuse a représenté la France en 2024 avec 'Mon amour' ?",a:["Aya Nakamura","Slimane","Amir","Angèle"],c:1,f:""},
+  {q:"Quel chanteur canadien a gagné l'Eurovision 1988 pour la Suisse ?",a:["Garou","Céline Dion","Roch Voisine","Lara Fabian"],c:1,f:""},
+  {q:"Dans quelle ville se déroule traditionnellement la finale de l'Eurovision ?",a:["Toujours à Genève","Dans le pays vainqueur de l'année précédente","Toujours à Paris","Toujours à Stockholm"],c:1,f:""},
+
+  // Grammy Awards
+  {q:"Quel artiste a remporté le plus de Grammy Awards de tous les temps ?",a:["Quincy Jones","Georg Solti","Beyoncé","Stevie Wonder"],c:2,f:""},
+  {q:"Quel album de Michael Jackson a remporté 8 Grammy en 1984 ?",a:["Bad","Off the Wall","Thriller","Dangerous"],c:2,f:""},
+  {q:"Quel rappeur a remporté le Pulitzer de la musique en 2018 ?",a:["Jay-Z","Kanye West","Kendrick Lamar","J. Cole"],c:2,f:""},
+  {q:"Dans quelle ville se tient habituellement la cérémonie des Grammy Awards ?",a:["New York","Nashville","Los Angeles","Las Vegas"],c:2,f:""},
+
+  // Music festivals
+  {q:"Dans quel pays se déroule le festival de Glastonbury ?",a:["États-Unis","Australie","Angleterre","Irlande"],c:2,f:""},
+  {q:"Quel célèbre festival de musique se tient dans le désert californien chaque avril ?",a:["Burning Man","Lollapalooza","Coachella","Bonnaroo"],c:2,f:""},
+  {q:"Dans quelle ville française se déroulent les Francofolies ?",a:["Lyon","Bordeaux","La Rochelle","Nantes"],c:2,f:""},
+  {q:"Quel festival de musique électronique belge rassemble des centaines de milliers de personnes ?",a:["Pukkelpop","Rock Werchter","Tomorrowland","Dour Festival"],c:2,f:""},
+  {q:"Quel festival français de rock se tient près de Clisson ?",a:["Les Vieilles Charrues","Hellfest","Garorock","Solidays"],c:1,f:""},
+  {q:"Dans quel pays a lieu le festival de Roskilde ?",a:["Suède","Norvège","Danemark","Finlande"],c:2,f:""},
+
+  // Musical instruments
+  {q:"Combien de touches possède un piano standard ?",a:["76","82","88","92"],c:2,f:""},
+  {q:"Quel instrument à vent est en forme de J ?",a:["Hautbois","Clarinette","Saxophone","Basson"],c:2,f:""},
+  {q:"Quel instrument indien à cordes est associé à Ravi Shankar ?",a:["Tabla","Sitar","Sarangi","Veena"],c:1,f:""},
+  {q:"Quel instrument à percussion est typique de la samba brésilienne ?",a:["Djembé","Surdo","Cajón","Bodhrán"],c:1,f:""},
+  {q:"Quel instrument à anche double fait partie de la famille des bois ?",a:["Clarinette","Flûte traversière","Hautbois","Saxophone"],c:2,f:""},
+  {q:"Combien de cordes possède un violon ?",a:["3","4","5","6"],c:1,f:""},
+
+  // Opera
+  {q:"Qui a composé l'opéra 'Carmen' ?",a:["Verdi","Puccini","Bizet","Rossini"],c:2,f:""},
+  {q:"Quel compositeur italien a écrit 'La Traviata' ?",a:["Puccini","Rossini","Verdi","Donizetti"],c:2,f:""},
+  {q:"Dans quel opéra de Mozart retrouve-t-on l'air 'La Reine de la nuit' ?",a:["Don Giovanni","Les Noces de Figaro","La Flûte enchantée","Così fan tutte"],c:2,f:""},
+  {q:"Quel ténor italien surnommé 'Big Luciano' a popularisé l'opéra ?",a:["Andrea Bocelli","Plácido Domingo","Luciano Pavarotti","José Carreras"],c:2,f:""},
+  {q:"Qui a composé l'opéra 'La Bohème' ?",a:["Verdi","Puccini","Rossini","Bellini"],c:1,f:""},
+  {q:"Quel terme désigne la voix féminine la plus grave à l'opéra ?",a:["Soprano","Mezzo-soprano","Contralto","Baryton"],c:2,f:""},
+
+  // Film soundtracks
+  {q:"Qui a composé la musique de 'Star Wars' ?",a:["Hans Zimmer","Howard Shore","John Williams","Danny Elfman"],c:2,f:""},
+  {q:"Quel compositeur a écrit la bande originale de 'The Dark Knight' ?",a:["John Williams","Howard Shore","Hans Zimmer","James Horner"],c:2,f:""},
+  {q:"Qui a composé la célèbre musique du film 'Psychose' ?",a:["John Williams","Bernard Herrmann","Jerry Goldsmith","Ennio Morricone"],c:1,f:""},
+  {q:"Quel compositeur italien est célèbre pour les musiques de westerns spaghetti ?",a:["Nino Rota","Ennio Morricone","Nicola Piovani","Ludovico Einaudi"],c:1,f:""},
+  {q:"Qui a composé la musique du film 'Le Seigneur des anneaux' ?",a:["Hans Zimmer","John Williams","Howard Shore","James Horner"],c:2,f:""},
+  {q:"Quel compositeur français a écrit la B.O. du film 'Amélie Poulain' ?",a:["Alexandre Desplat","Jean-Michel Jarre","Yann Tiersen","Ludovico Einaudi"],c:2,f:""},
+
+  // More variety topics
+  {q:"Quel rappeur a fondé le label 'Beats Electronics' ?",a:["Jay-Z","Eminem","Dr. Dre","Kanye West"],c:2,f:""},
+  {q:"Quel chanteur reggaeton est surnommé 'El Conejo Malo' ?",a:["J Balvin","Daddy Yankee","Bad Bunny","Ozuna"],c:2,f:""},
+  {q:"Quel groupe de K-pop masculin est surnommé 'les rois du K-pop' et compte EXO parmi eux ?",a:["BTS","BIGBANG","EXO","Super Junior"],c:2,f:""},
+  {q:"Quel style de jazz rapide est apparu dans les années 1940 ?",a:["Cool jazz","Swing","Bebop","Free jazz"],c:2,f:""},
+  {q:"Quel compositeur a écrit la 'Symphonie du Nouveau Monde' ?",a:["Smetana","Janáček","Dvořák","Brahms"],c:2,f:""},
+  {q:"Quel terme musical signifie jouer en reprenant progressivement du volume ?",a:["Diminuendo","Sforzando","Crescendo","Staccato"],c:2,f:""},
+  {q:"Quel pays a accueilli le tout premier concours Eurovision en 1956 ?",a:["France","Italie","Suisse","Pays-Bas"],c:2,f:""},
+  {q:"Quel album de Beyoncé sorti en 2016 aborde des thèmes sociaux et personnels ?",a:["4","Beyoncé","Lemonade","Renaissance"],c:2,f:""},
+  {q:"Quel festival français se déroule chaque été à Carhaix en Bretagne ?",a:["Hellfest","Solidays","Les Vieilles Charrues","Rock en Seine"],c:2,f:""},
+  {q:"Quel instrument de musique japonais ressemble à une cithare à 13 cordes ?",a:["Shamisen","Koto","Biwa","Shakuhachi"],c:1,f:""},
+  {q:"Qui a composé l'opéra 'Le Barbier de Séville' ?",a:["Verdi","Mozart","Rossini","Puccini"],c:2,f:""},
 ];

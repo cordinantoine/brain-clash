@@ -1,5 +1,5 @@
 /* ════════════════════════════════════════
-   questions/histoire.js — Histoire — 100 questions
+   questions/histoire.js — Histoire — 200 questions
    ════════════════════════════════════════ */
 QUESTIONS.histoire = [
   {q:"Qui était le premier empereur des Français ?",a:["Louis XIV","Napoléon Bonaparte","Louis XVI","Charles de Gaulle"],c:1,f:""},
@@ -35,7 +35,7 @@ QUESTIONS.histoire = [
   {q:"En quelle année a été signée la Déclaration d'indépendance américaine ?",a:["1774","1775","1776","1777"],c:2,f:""},
   {q:"Quel général a reconquis la France après la bataille de la Marne en 1914 ?",a:["Foch","Joffre","Pétain","Gallieni"],c:1,f:""},
   {q:"Quelle est la date du débarquement en Normandie ?",a:["6 juin 1944","6 mai 1944","6 juin 1943","6 août 1944"],c:0,f:""},
-  {q:"Qui était le premier président de la République française ?",a:["Louis-Napoléon Bonaparte","Adolphe Thiers","Patrice de Mac-Mahon","Jules Grévy"],c:0,f:""},
+  {q:"Qui a été le premier président de la République française ?",a:["Louis-Napoléon Bonaparte","Adolphe Thiers","Patrice de Mac-Mahon","Jules Grévy"],c:0,f:""},
   {q:"En quelle année a été construite la Tour Eiffel ?",a:["1879","1887","1889","1891"],c:2,f:""},
   {q:"Quelle empire avait Rome comme capitale ?",a:["Empire grec","Empire romain","Empire byzantin","Empire ottoman"],c:1,f:""},
   {q:"Qui a conduit les Alliés vers la victoire en Europe lors de la 2e GM ?",a:["MacArthur","Eisenhower","Montgomery","Patton"],c:1,f:""},
@@ -98,4 +98,141 @@ QUESTIONS.histoire = [
   {q:"Quelle guerre a opposé la Corée du Nord et la Corée du Sud ?",a:["Guerre du Vietnam","Guerre de Corée","Guerre froide","Guerre du Pacifique"],c:1,f:""},
   {q:"En quelle année a eu lieu la révolution de 1848 en France ?",a:["1846","1847","1848","1849"],c:2,f:""},
   {q:"Qui a été le premier ministre de l'Intérieur à instaurer la police nationale française ?",a:["Talleyrand","Fouché","Carnot","Sieyès"],c:1,f:""},
+
+  // ── Nouvelles questions (101-200) ──
+
+  // Mésopotamie & civilisations anciennes
+  {q:"Quelle civilisation antique a fondé la ville de Babylone ?",a:["Sumériens","Assyriens","Babyloniens","Perses"],c:2,f:""},
+  {q:"Quel roi babylonien est célèbre pour son code de lois gravé sur une stèle ?",a:["Nabuchodonosor II","Hammurabi","Sargon d'Akkad","Gilgamesh"],c:1,f:""},
+  {q:"Dans quelle région du monde se trouvait la Mésopotamie ?",a:["Afrique du Nord","Asie du Sud-Est","Moyen-Orient (Irak actuel)","Amérique centrale"],c:2,f:""},
+  {q:"Quelle invention majeure est attribuée aux Sumériens vers 3500 av. J.-C. ?",a:["La boussole","La roue","La poudre à canon","Le papier"],c:1,f:""},
+  {q:"Quel empire mésopotamien a dominé le Proche-Orient entre le IXe et le VIIe siècle av. J.-C. ?",a:["Empire perse","Empire babylonien","Empire assyrien","Empire hittite"],c:2,f:""},
+
+  // Aztèques & Incas
+  {q:"Quelle était la capitale de l'Empire aztèque ?",a:["Cuzco","Tenochtitlan","Chichén Itzá","Tikal"],c:1,f:""},
+  {q:"Quel conquistador espagnol a conquis l'Empire aztèque ?",a:["Francisco Pizarro","Hernán Cortés","Pedro de Alvarado","Gonzalo Jiménez"],c:1,f:""},
+  {q:"Quelle était la capitale de l'Empire inca ?",a:["Tenochtitlan","Machu Picchu","Cuzco","Quito"],c:2,f:""},
+  {q:"Quel conquistador a renversé l'Empire inca ?",a:["Hernán Cortés","Vasco Núñez de Balboa","Francisco Pizarro","Diego de Almagro"],c:2,f:""},
+  {q:"Quel système de cordes nouées les Incas utilisaient-ils pour la comptabilité ?",a:["Les glyphes","Les quipus","Les codex","Les stèles"],c:1,f:""},
+  {q:"Sur quel lac les Aztèques ont-ils bâti leur capitale ?",a:["Lac Titicaca","Lac Texcoco","Lac Atitlán","Lac Chapala"],c:1,f:""},
+
+  // Chine ancienne et impériale
+  {q:"Quelle dynastie chinoise a unifié la Chine et construit la Grande Muraille ?",a:["Dynastie Han","Dynastie Qin","Dynastie Tang","Dynastie Ming"],c:1,f:""},
+  {q:"Quel empereur chinois est enterré avec une armée de terre cuite ?",a:["Wu Zetian","Kangxi","Qin Shi Huang","Kublai Khan"],c:2,f:""},
+  {q:"Quelle dynastie chinoise est connue pour avoir inventé le papier et la boussole ?",a:["Dynastie Qin","Dynastie Han","Dynastie Song","Dynastie Yuan"],c:1,f:""},
+  {q:"En quelle année la dernière dynastie impériale chinoise (Qing) a-t-elle pris fin ?",a:["1898","1905","1912","1920"],c:2,f:""},
+  {q:"Quelle philosophie chinoise, fondée par Confucius, a influencé la société pendant des millénaires ?",a:["Le taoïsme","Le bouddhisme","Le confucianisme","Le légisme"],c:2,f:""},
+
+  // Guerre froide
+  {q:"Quel plan américain a aidé à reconstruire l'Europe après 1945 ?",a:["Plan Dawes","Plan Marshall","Plan Schlieffen","Plan Morgenthau"],c:1,f:""},
+  {q:"Quelle crise de 1962 a failli provoquer une guerre nucléaire entre les USA et l'URSS ?",a:["Crise de Suez","Crise de Berlin","Crise des missiles de Cuba","Crise du canal de Panama"],c:2,f:""},
+  {q:"Quel dirigeant soviétique a lancé la politique de glasnost et perestroïka ?",a:["Léonid Brejnev","Nikita Khrouchtchev","Mikhaïl Gorbatchev","Iouri Andropov"],c:2,f:""},
+  {q:"Quelle alliance militaire occidentale a été créée en 1949 face au bloc soviétique ?",a:["Pacte de Varsovie","OTAN","SEATO","CENTO"],c:1,f:""},
+  {q:"Quel pays a été divisé en deux zones d'occupation après 1945 : une communiste et une capitaliste ?",a:["Pologne","Corée","Autriche","Tchécoslovaquie"],c:1,f:""},
+  {q:"Quel président américain a prononcé le discours 'Ich bin ein Berliner' en 1963 ?",a:["Dwight Eisenhower","John F. Kennedy","Richard Nixon","Lyndon Johnson"],c:1,f:""},
+  {q:"En quelle année le Pacte de Varsovie a-t-il été dissous ?",a:["1989","1990","1991","1992"],c:2,f:""},
+
+  // Course à l'espace
+  {q:"Quelle chienne a été le premier être vivant envoyé en orbite en 1957 ?",a:["Belka","Strelka","Laïka","Zvezdochka"],c:2,f:""},
+  {q:"Quel Américain a été le premier à effectuer un vol spatial suborbital en 1961 ?",a:["John Glenn","Alan Shepard","Gus Grissom","Scott Carpenter"],c:1,f:""},
+  {q:"Quelle mission Apollo a posé les premiers hommes sur la Lune ?",a:["Apollo 8","Apollo 11","Apollo 13","Apollo 15"],c:1,f:""},
+  {q:"Quelle première femme est allée dans l'espace en 1963 ?",a:["Sally Ride","Svetlana Savitskaïa","Valentina Terechkova","Mae Jemison"],c:2,f:""},
+  {q:"Quel programme spatial soviétique a précédé les missions habitées Vostok ?",a:["Soyouz","Voskhod","Spoutnik","Mir"],c:2,f:""},
+
+  // Décolonisation
+  {q:"En quelle année l'Inde a-t-elle obtenu son indépendance du Royaume-Uni ?",a:["1945","1947","1950","1952"],c:1,f:""},
+  {q:"Quel pays africain, ancien Congo belge, est devenu indépendant en 1960 sous Patrice Lumumba ?",a:["Congo-Brazzaville","République démocratique du Congo","Rwanda","Burundi"],c:1,f:""},
+  {q:"Les accords d'Évian de 1962 ont mis fin à quelle guerre ?",a:["Guerre d'Indochine","Guerre d'Algérie","Guerre du Rif","Crise de Suez"],c:1,f:""},
+  {q:"Quel leader a mené le mouvement d'indépendance du Ghana en 1957 ?",a:["Jomo Kenyatta","Julius Nyerere","Kwame Nkrumah","Léopold Sédar Senghor"],c:2,f:""},
+  {q:"En quelle année l'Indochine française a-t-elle obtenu son indépendance après Diên Biên Phu ?",a:["1950","1952","1954","1956"],c:2,f:""},
+  {q:"Quel pays d'Afrique du Nord a obtenu son indépendance de la France en 1956 ?",a:["Algérie","Tunisie","Libye","Égypte"],c:1,f:""},
+
+  // Révolution industrielle
+  {q:"Qui a inventé la machine à vapeur améliorée qui a lancé la Révolution industrielle ?",a:["Thomas Edison","James Watt","Robert Fulton","George Stephenson"],c:1,f:""},
+  {q:"Dans quel pays la Révolution industrielle a-t-elle débuté ?",a:["France","Allemagne","Angleterre","États-Unis"],c:2,f:""},
+  {q:"Quel moyen de transport révolutionnaire George Stephenson a-t-il développé ?",a:["L'automobile","Le bateau à vapeur","La locomotive à vapeur","L'avion"],c:2,f:""},
+  {q:"Quelle invention textile a mécanisé le filage du coton en 1764 ?",a:["Le métier Jacquard","La Spinning Jenny","Le Cotton Gin","Le Power Loom"],c:1,f:""},
+  {q:"En quelle année la première ligne de chemin de fer publique a-t-elle ouvert en Angleterre ?",a:["1815","1825","1835","1845"],c:1,f:""},
+
+  // Vikings
+  {q:"De quelle région du monde les Vikings étaient-ils originaires ?",a:["Europe de l'Est","Scandinavie","Îles britanniques","Sibérie"],c:1,f:""},
+  {q:"Quel chef viking a fondé la première colonie au Groenland vers 985 ?",a:["Leif Erikson","Ragnar Lodbrok","Erik le Rouge","Harald à la Belle Chevelure"],c:2,f:""},
+  {q:"Comment appelle-t-on les bateaux longs utilisés par les Vikings ?",a:["Galères","Drakkars","Caravelles","Jonques"],c:1,f:""},
+  {q:"Quel peuple viking a fondé le duché de Normandie en 911 ?",a:["Les Danois","Les Suédois","Les Norvégiens (Normands)","Les Islandais"],c:2,f:""},
+  {q:"Quel chef viking a reçu la Normandie du roi de France Charles le Simple ?",a:["Ragnar Lodbrok","Ivar le Désossé","Rollon","Cnut le Grand"],c:2,f:""},
+  {q:"Quelle terre les Vikings ont-ils appelée 'Vinland' vers l'an 1000 ?",a:["L'Islande","Le Groenland","L'Amérique du Nord","Les îles Féroé"],c:2,f:""},
+
+  // Empire ottoman
+  {q:"En quelle année l'Empire ottoman a-t-il pris Constantinople ?",a:["1389","1421","1453","1481"],c:2,f:""},
+  {q:"Quel sultan ottoman a conquis Constantinople en 1453 ?",a:["Soliman le Magnifique","Mehmed II","Bayezid Ier","Murad II"],c:1,f:""},
+  {q:"Quel sultan est considéré comme l'apogée de l'Empire ottoman au XVIe siècle ?",a:["Mehmed II","Selim Ier","Soliman le Magnifique","Murad IV"],c:2,f:""},
+  {q:"En quelle année l'Empire ottoman a-t-il officiellement pris fin ?",a:["1918","1920","1922","1924"],c:2,f:""},
+  {q:"Qui a fondé la République de Turquie après la chute de l'Empire ottoman ?",a:["Enver Pacha","Mustafa Kemal Atatürk","Ismet Inönü","Talaat Pacha"],c:1,f:""},
+
+  // Histoire du Japon
+  {q:"Comment s'appelle la période de paix et d'isolement du Japon de 1603 à 1868 ?",a:["Période Meiji","Période Heian","Période Edo","Période Kamakura"],c:2,f:""},
+  {q:"Quel événement de 1868 a modernisé le Japon ?",a:["La guerre du Pacifique","La restauration Meiji","La révolution Taishō","Le traité de Kanagawa"],c:1,f:""},
+  {q:"Quel amiral américain a forcé l'ouverture du Japon au commerce en 1853 ?",a:["John Paul Jones","Chester Nimitz","Matthew Perry","George Dewey"],c:2,f:""},
+  {q:"Quelle classe de guerriers dominait le Japon féodal ?",a:["Les ninjas","Les daimyos","Les samouraïs","Les shoguns"],c:2,f:""},
+  {q:"Quelle ville japonaise a été la première cible d'une bombe atomique le 6 août 1945 ?",a:["Nagasaki","Tokyo","Hiroshima","Osaka"],c:2,f:""},
+  {q:"Quel shogunat a gouverné le Japon pendant la période Edo ?",a:["Shogunat Ashikaga","Shogunat Kamakura","Shogunat Tokugawa","Shogunat Minamoto"],c:2,f:""},
+
+  // Empires africains
+  {q:"Quel empire africain médiéval était célèbre pour la richesse de son roi Mansa Moussa ?",a:["Empire Songhaï","Empire du Mali","Empire du Ghana","Royaume du Kongo"],c:1,f:""},
+  {q:"Quel empire africain avait Tombouctou comme centre intellectuel ?",a:["Empire du Mali","Empire Songhaï","Empire du Ghana","Empire Ashanti"],c:0,f:""},
+  {q:"Quel roi du Mali a fait un célèbre pèlerinage à La Mecque en 1324 ?",a:["Soundiata Keïta","Mansa Moussa","Askia Mohammed","Sonni Ali Ber"],c:1,f:""},
+  {q:"Quel empire a succédé à l'Empire du Mali en Afrique de l'Ouest ?",a:["Empire du Ghana","Royaume du Bénin","Empire Songhaï","Empire Ashanti"],c:2,f:""},
+  {q:"Quelle cité antique d'Éthiopie était la capitale d'un puissant royaume chrétien ?",a:["Carthage","Aksoum","Méroé","Tombouctou"],c:1,f:""},
+  {q:"Quel royaume africain, situé au Zimbabwe actuel, a bâti de grandes ruines en pierre ?",a:["Royaume Zoulou","Grand Zimbabwe","Royaume du Kongo","Empire Lunda"],c:1,f:""},
+
+  // Chute du mur de Berlin & histoire moderne
+  {q:"Quel dirigeant est-allemand a annoncé par erreur l'ouverture des frontières le 9 novembre 1989 ?",a:["Erich Honecker","Egon Krenz","Günter Schabowski","Walter Ulbricht"],c:2,f:""},
+  {q:"Quel chancelier allemand a supervisé la réunification de l'Allemagne en 1990 ?",a:["Willy Brandt","Helmut Schmidt","Helmut Kohl","Gerhard Schröder"],c:2,f:""},
+  {q:"En quelle année l'URSS s'est-elle officiellement dissoute ?",a:["1989","1990","1991","1993"],c:2,f:""},
+  {q:"Quel accord de 1993 a établi un processus de paix entre Israël et l'OLP ?",a:["Accords de Camp David","Accords d'Oslo","Accords de Genève","Accords de Madrid"],c:1,f:""},
+  {q:"En quelle année l'apartheid a-t-il officiellement pris fin en Afrique du Sud ?",a:["1990","1991","1993","1994"],c:2,f:""},
+  {q:"Quel événement a conduit à la création de l'Union européenne en 1992 ?",a:["Traité de Rome","Traité de Maastricht","Traité de Lisbonne","Traité de Nice"],c:1,f:""},
+
+  // Découvertes archéologiques
+  {q:"Qui a découvert le tombeau de Toutankhamon dans la Vallée des Rois ?",a:["Jean-François Champollion","Howard Carter","Heinrich Schliemann","Arthur Evans"],c:1,f:""},
+  {q:"Quel archéologue a découvert les ruines de Troie en Turquie ?",a:["Arthur Evans","Howard Carter","Heinrich Schliemann","Flinders Petrie"],c:2,f:""},
+  {q:"Quelle découverte archéologique de 1947 a révélé des manuscrits bibliques anciens ?",a:["La pierre de Rosette","Les manuscrits de la mer Morte","Les tablettes de Gilgamesh","Le trésor de Priam"],c:1,f:""},
+  {q:"Quelle pierre a permis de déchiffrer les hiéroglyphes égyptiens ?",a:["Pierre de Rosette","Pierre de Moabite","Pierre de Soleil","Pierre d'Oppenheim"],c:0,f:""},
+  {q:"Qui a déchiffré les hiéroglyphes égyptiens grâce à la pierre de Rosette ?",a:["Howard Carter","Jean-François Champollion","Auguste Mariette","Gaston Maspero"],c:1,f:""},
+  {q:"Dans quel pays a-t-on découvert l'armée de terre cuite en 1974 ?",a:["Japon","Inde","Chine","Corée du Sud"],c:2,f:""},
+  {q:"Quel site archéologique crétois a été fouillé par Arthur Evans ?",a:["Mycènes","Cnossos","Troie","Delphes"],c:1,f:""},
+
+  // Questions variées supplémentaires
+  {q:"Quel fleuve a vu naître les premières civilisations en Mésopotamie ?",a:["Le Nil","Le Gange","Le Tigre et l'Euphrate","Le Yangtsé"],c:2,f:""},
+  {q:"Quelle guerre de 1950-1953 a divisé la péninsule coréenne ?",a:["Guerre sino-japonaise","Guerre de Corée","Guerre du Vietnam","Guerre du Pacifique"],c:1,f:""},
+  {q:"Quel mouvement a réclamé les droits civiques des Noirs américains dans les années 1960 ?",a:["Mouvement ouvrier","Mouvement hippie","Mouvement des droits civiques","Mouvement féministe"],c:2,f:""},
+  {q:"Qui a prononcé le discours 'I have a dream' en 1963 ?",a:["Malcolm X","Martin Luther King","Rosa Parks","Jesse Jackson"],c:1,f:""},
+  {q:"Quel traité de 1648 a mis fin à la guerre de Trente Ans en Europe ?",a:["Traité de Westphalie","Traité d'Utrecht","Traité de Vienne","Traité de Tordesillas"],c:0,f:""},
+  {q:"Quel empereur romain a divisé l'Empire en deux parties en 285 ap. J.-C. ?",a:["Auguste","Néron","Dioclétien","Constantin"],c:2,f:""},
+  {q:"Quel événement a marqué le début de la Reconquista en Espagne ?",a:["La chute de Grenade","La bataille de Covadonga","La prise de Tolède","La bataille de Las Navas"],c:1,f:""},
+  {q:"En quelle année Christophe Colomb est-il arrivé en Amérique ?",a:["1488","1490","1492","1494"],c:2,f:""},
+  {q:"Quelle civilisation précolombienne a construit la cité de Chichén Itzá ?",a:["Aztèques","Incas","Mayas","Olmèques"],c:2,f:""},
+  {q:"Quel pays européen a été le premier à établir un empire colonial maritime au XVe siècle ?",a:["Espagne","Angleterre","Portugal","France"],c:2,f:""},
+  {q:"Quel navigateur portugais a atteint l'Inde par la mer en 1498 ?",a:["Bartolomeu Dias","Vasco de Gama","Pedro Álvares Cabral","Ferdinand Magellan"],c:1,f:""},
+  {q:"Quelle peste a décimé un tiers de la population européenne au XIVe siècle ?",a:["La variole","La peste noire","Le choléra","La grippe espagnole"],c:1,f:""},
+  {q:"En quelle année a eu lieu le génocide rwandais ?",a:["1990","1992","1994","1996"],c:2,f:""},
+  {q:"Quel mur séparait Berlin-Est de Berlin-Ouest pendant la Guerre froide ?",a:["Le rideau de fer","Le mur de Berlin","La ligne Siegfried","La ligne Maginot"],c:1,f:""},
+
+  // ── Questions supplémentaires (186-200) ──
+
+  {q:"Quel système d'écriture les Aztèques utilisaient-ils pour consigner leur histoire ?",a:["L'écriture cunéiforme","Les hiéroglyphes","Les codex pictographiques","Les quipus"],c:2,f:""},
+  {q:"Quelle ziggourat mésopotamienne est souvent associée à la Tour de Babel biblique ?",a:["Ziggourat d'Ur","Ziggourat de Babylone (Etemenanki)","Ziggourat de Tchoga Zanbil","Ziggourat d'Eridu"],c:1,f:""},
+  {q:"Quel programme spatial américain a succédé à Apollo pour les missions en navette ?",a:["Gemini","Mercury","Space Shuttle","Skylab"],c:2,f:""},
+  {q:"Quel pays africain n'a jamais été colonisé par une puissance européenne (avec le Libéria) ?",a:["Ghana","Éthiopie","Nigeria","Sénégal"],c:1,f:""},
+  {q:"Quelle machine textile inventée par Edmund Cartwright en 1785 a mécanisé le tissage ?",a:["La Spinning Jenny","Le Cotton Gin","Le Power Loom","Le métier Jacquard"],c:2,f:""},
+  {q:"Quel explorateur viking est considéré comme le premier Européen à atteindre l'Amérique vers l'an 1000 ?",a:["Erik le Rouge","Ragnar Lodbrok","Harald Hardrada","Leif Erikson"],c:3,f:""},
+  {q:"Quel siège ottoman de 1683 a marqué le début du déclin de l'Empire ottoman en Europe ?",a:["Siège de Constantinople","Siège de Vienne","Siège de Budapest","Siège de Belgrade"],c:1,f:""},
+  {q:"Quelle période de l'histoire japonaise est connue pour les guerres civiles entre seigneurs féodaux (1467-1615) ?",a:["Période Heian","Période Sengoku","Période Nara","Période Taishō"],c:1,f:""},
+  {q:"Quel empire africain, fondé par Soundiata Keïta au XIIIe siècle, a précédé l'Empire Songhaï ?",a:["Empire du Ghana","Empire du Mali","Empire Ashanti","Royaume du Bénin"],c:1,f:""},
+  {q:"Quel site archéologique péruvien, redécouvert par Hiram Bingham en 1911, est une cité inca perchée ?",a:["Nazca","Cuzco","Machu Picchu","Chan Chan"],c:2,f:""},
+  {q:"Quel traité de 1987 entre les USA et l'URSS a éliminé les missiles nucléaires à portée intermédiaire ?",a:["Traité SALT I","Traité START","Traité INF","Accords d'Helsinki"],c:2,f:""},
+  {q:"Quelle dynastie chinoise (618-907) est considérée comme l'âge d'or de la civilisation chinoise ?",a:["Dynastie Song","Dynastie Ming","Dynastie Tang","Dynastie Yuan"],c:2,f:""},
+  {q:"Quel incident de 1989 est symbolisé par un homme seul face à une colonne de chars à Pékin ?",a:["Révolution culturelle","Massacre de la place Tiananmen","Grand Bond en avant","Incident de Xi'an"],c:1,f:""},
+  {q:"Quelle grotte préhistorique découverte en 1940 en Dordogne contient des peintures vieilles de 17 000 ans ?",a:["Grotte Chauvet","Grotte d'Altamira","Grotte de Lascaux","Grotte Cosquer"],c:2,f:""},
+  {q:"Quel unificateur du Japon au XVIe siècle a instauré la paix avant l'ère Tokugawa ?",a:["Oda Nobunaga","Tokugawa Ieyasu","Toyotomi Hideyoshi","Takeda Shingen"],c:2,f:""},
 ];
