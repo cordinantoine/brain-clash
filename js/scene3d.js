@@ -458,7 +458,6 @@ function _setTheme(themeId) {
 
   if (_state.particlePoints && _state.particlePoints.material) {
     _state.particlePoints.material.color.setHex(theme.partCol);
-    _state.particlePoints.material.emissive.setHex(theme.partCol);
   }
 }
 
