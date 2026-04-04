@@ -42,7 +42,7 @@ function setBG(tid) {
 // ════════════════════════════════════════════
 function Home() {
   setBG("culture");
-  if (window.SCENE3D) { window.SCENE3D.idle(); window.SCENE3D.showLogo(true); }
+  if (window.SCENE3D) { window.SCENE3D.resetScreen(); window.SCENE3D.idle(); window.SCENE3D.showLogo(true); }
   R(`<div class="sc"><div class="float" style="text-align:center;margin-bottom:10px"><div style="font-size:4.5rem">🧠</div><p style="color:rgba(255,255,255,.42);font-size:.8rem;letter-spacing:.25em;font-weight:600;margin-top:5px">LE JEU DE QUIZ ULTIME</p></div><div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px"><button class="btn" id="bC" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);color:white;width:100%;padding:16px">🏠 Créer une partie</button><button class="btn" id="bJ" style="background:linear-gradient(135deg,#0891b2,#22d3ee);color:white;width:100%;padding:16px">🚪 Rejoindre une partie</button></div><p style="color:rgba(255,255,255,.18);font-size:.7rem">Multi-appareils · 9 thèmes · 250 questions</p></div>`);
   on("bC","click",()=>{ if(window.SCENE3D) window.SCENE3D.showLogo(false); Create(1); });
   on("bJ","click",()=>{ if(window.SCENE3D) window.SCENE3D.showLogo(false); Join(); });
@@ -146,7 +146,7 @@ async function doJoin() {
 function Lobby(room) {
   const t   = THEMES[room.theme] || THEMES.culture;
   setBG(room.theme);
-  if (window.SCENE3D) { window.SCENE3D.idle(); window.SCENE3D.showLogo(false); }
+  if (window.SCENE3D) { window.SCENE3D.resetScreen(); window.SCENE3D.idle(); window.SCENE3D.showLogo(false); }
 
   const pathParts = window.location.pathname.split('/');
   pathParts[pathParts.length - 1] = 'player.html';
@@ -187,7 +187,7 @@ async function doLaunch() {
 function Wait(room) {
   const t = THEMES[room.theme] || THEMES.culture;
   setBG(room.theme);
-  if (window.SCENE3D) { window.SCENE3D.idle(); window.SCENE3D.showLogo(false); }
+  if (window.SCENE3D) { window.SCENE3D.resetScreen(); window.SCENE3D.idle(); window.SCENE3D.showLogo(false); }
   function draw(cur) {
     const rows = toArr(cur.players).map((p,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:9px;background:rgba(255,255,255,.04)"><div style="width:22px;height:22px;border-radius:50%;background:${COL[i%8].bg};flex-shrink:0"></div><span style="font-size:.84rem;font-weight:600">${p.name}</span>${p.isHost?`<span style="margin-left:auto;font-size:.62rem;color:${t.accent};font-weight:700">HÔTE</span>`:""}</div>`).join("");
     R(`<div class="sc"><div class="float" style="text-align:center"><div style="font-size:2.8rem">⏳</div><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;margin-top:4px">En attente…</h2><p style="color:rgba(255,255,255,.42);margin-top:3px;font-size:.84rem">L'hôte n'a pas encore lancé</p></div><div class="glass" style="padding:17px 19px;text-align:center;max-width:320px;width:100%"><p style="color:${t.accent};font-weight:700;margin-bottom:4px">Code : ${room.code}</p><p style="color:rgba(255,255,255,.48);font-size:.82rem">Vous jouez en tant que <strong>${ME}</strong></p><div style="margin-top:12px;display:grid;gap:6px">${rows}</div></div><button class="btn" id="bLv" style="background:rgba(255,255,255,.07);color:white;padding:11px 24px;font-size:.84rem">Quitter</button></div>`);
@@ -209,7 +209,7 @@ function Wait(room) {
 function drawLoading(room) {
   const t = THEMES[room.theme] || THEMES.culture;
   setBG(room.theme || "culture");
-  if (window.SCENE3D) { window.SCENE3D.idle(); window.SCENE3D.showLogo(false); }
+  if (window.SCENE3D) { window.SCENE3D.resetScreen(); window.SCENE3D.idle(); window.SCENE3D.showLogo(false); }
   R(`<div class="sc"><div class="float" style="font-size:4rem">${t.emoji}</div><h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;text-align:center">${t.name}</h2><div style="position:relative;width:58px;height:58px"><svg width="58" height="58" style="transform:rotate(-90deg);animation:spinArc 1.2s linear infinite;position:absolute"><circle cx="29" cy="29" r="23" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="5"/><circle cx="29" cy="29" r="23" fill="none" stroke="${t.accent}" stroke-width="5" stroke-dasharray="144.5" stroke-linecap="round"/></svg></div><p style="color:rgba(255,255,255,.42);font-size:.88rem">Chargement des questions…</p></div>`);
 }
 
