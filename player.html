@@ -42,11 +42,7 @@
     .game-timer.urgent{color:#f87171}
     .scores-strip{width:100%;padding:8px 16px;display:flex;gap:6px;overflow-x:auto;flex-shrink:0;background:#06080f;border-bottom:1px solid #1e2a4022;scrollbar-width:none}
     .scores-strip::-webkit-scrollbar{display:none}
-    .score-pill{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;padding:6px 10px;background:#0e1422;border:1px solid #1e2a40;border-radius:10px;min-width:60px}
-    .score-pill.me{border-color:var(--accent);background:var(--accent-glow);border-width:2px;box-shadow:0 0 10px var(--accent-glow)}
-    .score-pill-name{font-size:.7rem;color:#4a5a7a;font-weight:500;white-space:nowrap;max-width:60px;overflow:hidden;text-overflow:ellipsis}
-    .score-pill.me .score-pill-name{color:var(--accent)}
-    .score-pill-val{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;line-height:1}
+    /* score-pill défini plus bas avec avatar */
     .game-body{flex:1;width:100%;display:flex;flex-direction:column;overflow:hidden;position:relative}
     .game-body::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,var(--accent-glow) 0%,transparent 70%);opacity:.3;pointer-events:none;animation:bgPulse 4s ease-in-out infinite}
     @keyframes bgPulse{0%,100%{opacity:.2}50%{opacity:.4}}
@@ -120,6 +116,25 @@
     .final-winner span{color:var(--accent)}
     .pc0{background:#ef4444}.pc1{background:#3b82f6}.pc2{background:#22c55e}.pc3{background:#f59e0b}
     .pc4{background:#a855f7}.pc5{background:#ec4899}.pc6{background:#14b8a6}.pc7{background:#f97316}
+
+    /* ── Sélecteur d'avatar (écran join) ── */
+    .avatar-picker{width:100%;max-width:300px;display:flex;flex-direction:column;gap:8px}
+    .avatar-grid-pick{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+    .avatar-opt{width:54px;height:54px;border-radius:14px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0;position:relative}
+    .avatar-opt img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+    .avatar-opt.selected{border-color:#fff;box-shadow:0 0 0 3px var(--accent),0 0 16px var(--accent-glow);transform:scale(1.1)}
+    .avatar-opt:active{transform:scale(0.95)}
+
+    /* ── Avatar dans la barre de score ── */
+    .score-pill{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;padding:5px 8px 6px;background:#0e1422;border:2px solid #1e2a40;border-radius:12px;min-width:56px;transition:border-color .3s,box-shadow .3s}
+    .score-pill-avatar{width:32px;height:32px;border-radius:50%;object-fit:cover;object-position:center top;flex-shrink:0;display:block}
+    .score-pill.me{border-color:var(--accent) !important;background:var(--accent-glow) !important;box-shadow:0 0 10px var(--accent-glow) !important}
+    .score-pill-name{font-size:.62rem;color:#4a5a7a;font-weight:500;white-space:nowrap;max-width:56px;overflow:hidden;text-overflow:ellipsis}
+    .score-pill.me .score-pill-name{color:var(--accent)}
+    .score-pill-val{font-family:'Bebas Neue',sans-serif;font-size:1rem;line-height:1}
+
+    /* ── Avatar dans le lobby ── */
+    .lobby-av{width:28px;height:28px;border-radius:8px;object-fit:cover;object-position:center top;flex-shrink:0}
   </style>
 </head>
 <body>
@@ -136,6 +151,10 @@
       <p class="field-label">Code de la salle</p>
       <input id="input-code" class="field-input" placeholder="AB12C" maxlength="5" autocomplete="off"/>
     </div>
+  </div>
+  <div class="avatar-picker">
+    <p class="field-label">Ton avatar</p>
+    <div class="avatar-grid-pick" id="avatar-grid-pick"></div>
   </div>
   <button class="btn-primary" id="btn-join">Rejoindre →</button>
   <p class="error-msg" id="join-error"></p>
@@ -225,6 +244,23 @@ const RT = [
 
 const COLORS = ['#ef4444','#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899','#14b8a6','#f97316'];
 
+const AVATARS = [
+  { file:'av01.png', bg:'#2d8040' },  // archéologue
+  { file:'av02.png', bg:'#8b2fd0' },  // DJ
+  { file:'av03.png', bg:'#7ac420' },  // ado téléphone
+  { file:'av04.png', bg:'#6b70cc' },  // mamie
+  { file:'av05.png', bg:'#00b8c8' },  // couturière
+  { file:'av06.png', bg:'#f5d000' },  // agent immobilier
+  { file:'av07.png', bg:'#c0185c' },  // infirmière
+  { file:'av08.png', bg:'#6020a0' },  // samouraï
+  { file:'av09.png', bg:'#b81820' },  // viking
+  { file:'av10.png', bg:'#7ac420' },  // scientifique fou
+  { file:'av11.png', bg:'#e8a800' },  // sheriff
+  { file:'av12.png', bg:'#c04020' },  // chef cuisto
+  { file:'av13.png', bg:'#1848c0' },  // astronaute
+  { file:'av14.png', bg:'#009890' },  // pirate
+];
+
 // ════════════════════════════════════════════
 //  FIREBASE — copie de firebase.js
 // ════════════════════════════════════════════
@@ -279,6 +315,8 @@ function fl(path, cb) {
 //  ÉTAT LOCAL
 // ════════════════════════════════════════════
 let ME = "", CODE = "", MY_INDEX = -1;
+let MY_AVATAR = 0;
+let PLAYER_AVATARS = [];
 let STOP_LISTENER = null;
 let TIMER_IV = null;
 let LAST_KEY = "";
@@ -305,6 +343,24 @@ function setAccent(theme) {
   document.documentElement.style.setProperty('--accent-dark', t.dark);
   document.documentElement.style.setProperty('--accent-glow', t.accent + '33');
 }
+
+// ════════════════════════════════════════════
+//  AVATARS
+// ════════════════════════════════════════════
+function buildAvatarGrid() {
+  G('avatar-grid-pick').innerHTML = AVATARS.map((av, i) =>
+    `<div class="avatar-opt ${i===0?'selected':''}" id="av-opt-${i}" onclick="selectAvatar(${i})" style="background:${av.bg}">
+      <img src="JS/assets/avatars/${av.file}" alt="avatar ${i+1}" loading="lazy">
+    </div>`
+  ).join('');
+}
+function selectAvatar(i) {
+  document.querySelectorAll('.avatar-opt').forEach(el => el.classList.remove('selected'));
+  const opt = G('av-opt-'+i);
+  if (opt) opt.classList.add('selected');
+  MY_AVATAR = i;
+}
+buildAvatarGrid();
 
 // ════════════════════════════════════════════
 //  ÉCRAN JOIN
@@ -349,7 +405,7 @@ async function doJoin() {
   }
 
   // Écrire le joueur
-  const newPlayers = [...players, { name, isHost: false }];
+  const newPlayers = [...players, { name, isHost: false, avatar: MY_AVATAR }];
   const writeOk = await fs(`rooms/${code}/players`, newPlayers);
 
   if (!writeOk) {
@@ -409,12 +465,17 @@ function enterLobby(room) {
 }
 
 function renderLobbyPlayers(players) {
-  G('lobby-players-list').innerHTML = players.map((p, i) => `
-    <div class="lobby-player-row">
-      <div class="player-dot" style="background:${COLORS[i%8]}"></div>
-      <span style="font-size:.9rem;font-weight:${p.name===ME?700:400};color:${p.name===ME?'#e8edf5':'#8a9ab5'}">${p.name}</span>
-    </div>
-  `).join('');
+  G('lobby-players-list').innerHTML = players.map(p => {
+    const avIdx = (p.avatar !== undefined) ? p.avatar : 0;
+    const av = AVATARS[avIdx] || AVATARS[0];
+    const isMe = p.name === ME;
+    return `
+      <div class="lobby-player-row">
+        <img class="lobby-av" src="JS/assets/avatars/${av.file}" alt="" style="background:${av.bg};border:2px solid ${av.bg}">
+        <span style="font-size:.9rem;font-weight:${isMe?700:400};color:${isMe?'#e8edf5':'#8a9ab5'}">${p.name}${isMe?' (toi)':''}</span>
+      </div>
+    `;
+  }).join('');
 }
 
 // ════════════════════════════════════════════
@@ -427,6 +488,13 @@ function watchGame() {
     const gs = room.gameState;
     MY_INDEX = toArr(gs.players).indexOf(ME);
     setAccent(room.theme || 'culture');
+
+    // Construire le tableau d'avatars parallèle à gs.players
+    const roomPlayers = toArr(room.players);
+    PLAYER_AVATARS = toArr(gs.players).map(name => {
+      const rp = roomPlayers.find(p => p.name === name);
+      return (rp && rp.avatar !== undefined) ? rp.avatar : 0;
+    });
 
     const key = [gs.phase, gs.roundIdx, gs.qIdx, gs.buzzed, gs.revealed, gs.pickTarget, gs.patateHolder||'', gs.chronoRanking?'r':'', gs.countdownStart||'', gs.patateExplosion||'', JSON.stringify(gs.ready||{}), JSON.stringify(gs.result||{})].join('-');
     if (key === LAST_KEY) return;
@@ -474,12 +542,21 @@ function startTimer(gs, room) {
 
 function updateScores(gs) {
   const players = toArr(gs.players);
-  G('scores-strip').innerHTML = players.map((p, i) => `
-    <div class="score-pill ${p === ME ? 'me' : ''}">
-      <span class="score-pill-name">${p === ME ? 'Toi' : p}</span>
-      <span class="score-pill-val">${gs.scores[i] || 0}</span>
-    </div>
-  `).join('');
+  G('scores-strip').innerHTML = players.map((p, i) => {
+    const avIdx = PLAYER_AVATARS[i] ?? 0;
+    const av = AVATARS[avIdx] || AVATARS[0];
+    const isMe = p === ME;
+    const colorStyle = isMe
+      ? ''
+      : `border-color:${av.bg};box-shadow:0 0 10px ${av.bg}55,0 0 20px ${av.bg}22`;
+    return `
+      <div class="score-pill ${isMe ? 'me' : ''}" style="${colorStyle}">
+        <img class="score-pill-avatar" src="JS/assets/avatars/${av.file}" alt="" style="border:2px solid ${av.bg}">
+        <span class="score-pill-name">${isMe ? 'Toi' : p}</span>
+        <span class="score-pill-val">${gs.scores[i] || 0}</span>
+      </div>
+    `;
+  }).join('');
 }
 
 function renderState(room, gs) {
