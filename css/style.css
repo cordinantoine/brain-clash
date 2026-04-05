@@ -19,6 +19,8 @@ html,body { height:100%; font-family:'Poppins',sans-serif; background:#0f0f1a; c
 @keyframes correctPulse { 0%{box-shadow:0 0 0 0 rgba(34,197,94,.7)} 100%{box-shadow:0 0 0 18px rgba(34,197,94,0)} }
 @keyframes wrongShake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)} }
 @keyframes fadeIn     { from{opacity:0} to{opacity:1} }
+@keyframes ledPulse   { 0%,100%{opacity:.7} 50%{opacity:1} }
+@keyframes ledSweep   { 0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%} }
 
 /* Countdown 3-2-1-GO */
 @keyframes countdownPop {

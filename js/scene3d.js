@@ -1,11 +1,7 @@
 /* ════════════════════════════════════════════
    scene3d.js — BRAIN CLASH
-   Contient : scène Three.js, silhouette 3D,
-              ambiances par thème, animations
-              + écran question & scoreboard 3D
+   Scène Three.js : silhouette 3D + plateau TV
    Dépend de  : three.min.js (chargé avant)
-   Expose     : window.SCENE3D { setTheme, talk, react, idle,
-                  updateQuestion, updateReveal, updateScores, resetScreen }
    ════════════════════════════════════════════ */
 
 // ── Couleurs et ambiance par thème ──
@@ -41,102 +37,124 @@ _camera.position.set(0, 2.0, 7.0);
 _camera.lookAt(0, 1.6, 0);
 
 window.addEventListener('resize', () => {
-  _camera.aspect = window.innerWidth / window.innerHeight;
-  _camera.updateProjectionMatrix();
-  _renderer.setSize(window.innerWidth, window.innerHeight);
+  _resizeCanvas(!_gameMode);
 });
 
 // ════════════════════════════════════════════
-//  PERSONNAGE (silhouette)
+//  PERSONNAGE AJ — GLTFLoader + AnimationMixer
 // ════════════════════════════════════════════
 const _siloGroup = new THREE.Group();
 _scene.add(_siloGroup);
 
-function _mkMesh(geo, col = 0x08051a) {
-  return new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color:col, roughness:.92, metalness:.04 }));
+let _mixer        = null;
+let _actions      = {};
+let _currentAction = null;
+let _animState    = 'idle';
+let _ajLoaded     = false;
+
+const _ANIM_FILES = {
+  idle    : 'JS/assets/models/Idle.glb',
+  talk    : 'JS/assets/models/Talking.glb',
+  react   : 'JS/assets/models/Clapping.glb',
+  defeated: 'JS/assets/models/Defeated.glb',
+  think   : 'JS/assets/models/Thinking.glb',
+  dance   : 'JS/assets/models/Dance.glb',
+};
+
+function _setAnim(name) {
+  _animState = name;
+  if (!_mixer || !_actions[name]) return;
+  const next = _actions[name];
+  if (_currentAction === next) return;
+  if (_currentAction) _currentAction.fadeOut(0.3);
+  next.reset().fadeIn(0.3).play();
+  _currentAction = next;
 }
 
-const _head  = _mkMesh(new THREE.SphereGeometry(.27, 16, 16));   _head.position.set(0, 3.1, 0); _head.castShadow = true;
-const _neck  = _mkMesh(new THREE.CylinderGeometry(.09, .11, .18, 8)); _neck.position.set(0, 2.78, 0);
-const _torso = _mkMesh(new THREE.BoxGeometry(.7, .88, .3));        _torso.position.set(0, 2.2, 0); _torso.castShadow = true;
-const _hips  = _mkMesh(new THREE.BoxGeometry(.58, .28, .26));      _hips.position.set(0, 1.66, 0);
-
-const _lSh = new THREE.Group(); _lSh.position.set(-.42, 2.58, 0);
-const _rSh = new THREE.Group(); _rSh.position.set( .42, 2.58, 0);
-
-function _makeArm(side) {
-  const g  = new THREE.Group();
-  const up = _mkMesh(new THREE.CylinderGeometry(.085, .075, .52, 8));
-  up.position.set(side * -.1, -.26, 0); up.rotation.z = side * .18;
-  const lo = _mkMesh(new THREE.CylinderGeometry(.07, .06, .46, 8));
-  lo.position.set(side * -.05, -.78, .04);
-  const ha = _mkMesh(new THREE.SphereGeometry(.08, 8, 8));
-  ha.position.set(side * -.03, -1.08, .07);
-  g.add(up, lo, ha);
-  return g;
+function _loadAnimations(model) {
+  _mixer = new THREE.AnimationMixer(model);
+  _mixer.addEventListener('finished', () => {
+    if (_animState === 'react' || _animState === 'defeated') _setAnim('idle');
+  });
+  const loader = new THREE.GLTFLoader();
+  let loaded = 0, total = Object.keys(_ANIM_FILES).length;
+  Object.entries(_ANIM_FILES).forEach(([name, path]) => {
+    loader.load(path, (gltf) => {
+      if (gltf.animations && gltf.animations.length > 0) {
+        const action = _mixer.clipAction(gltf.animations[0]);
+        if (name === 'react' || name === 'defeated') {
+          action.setLoop(THREE.LoopOnce, 1);
+          action.clampWhenFinished = true;
+        }
+        _actions[name] = action;
+      }
+      if (++loaded === total) _setAnim('idle');
+    }, undefined, (e) => { console.warn('[AJ anim]', name, e); ++loaded; });
+  });
 }
-_lSh.add(_makeArm(-1));
-_rSh.add(_makeArm(1));
 
-const _lLeg = new THREE.Group(); _lLeg.position.set(-.17, 1.5, 0);
-const _rLeg = new THREE.Group(); _rLeg.position.set( .17, 1.5, 0);
+(function _loadAJ() {
+  const loader = new THREE.GLTFLoader();
+  loader.load('JS/assets/models/Aj.glb', (gltf) => {
+    const model = gltf.scene;
+    model.rotation.y = Math.PI;
+    model.traverse(c => {
+      if (c.isMesh) { c.castShadow = true; c.receiveShadow = true; }
+    });
+    _siloGroup.add(model);
+    _siloGroup.position.set(0, -1.02, -0.3);
+    _siloGroup.scale.set(2.2, 2.2, 2.2);
+    _ajLoaded = true;
+    _loadAnimations(model);
+    // Glow du thème courant
+    const t = THEME3D[_currentThemeId] || THEME3D.culture;
+    model.traverse(c => {
+      if (c.isMesh && c.material && !c.material.transparent) {
+        c.material.emissive = new THREE.Color(t.glowCol);
+        c.material.emissiveIntensity = 0.04;
+      }
+    });
+  }, undefined, (e) => console.error('[AJ model]', e));
+})();
 
-function _makeLeg(side) {
-  const g  = new THREE.Group();
-  const th = _mkMesh(new THREE.CylinderGeometry(.105, .095, .52, 8)); th.position.set(0, -.26, 0);
-  const sh = _mkMesh(new THREE.CylinderGeometry(.082, .072, .48, 8)); sh.position.set(0, -.78, 0);
-  const fo = _mkMesh(new THREE.BoxGeometry(.13, .085, .24));           fo.position.set(side*.02, -1.08, .05);
-  g.add(th, sh, fo);
-  return g;
-}
-_lLeg.add(_makeLeg(-1));
-_rLeg.add(_makeLeg(1));
-
-_siloGroup.add(_head, _neck, _torso, _hips, _lSh, _rSh, _lLeg, _rLeg);
-_siloGroup.position.set(0, -.65, -1.2);
-
-// Sol réfléchissant
+// Sol
 const _floor = new THREE.Mesh(
   new THREE.PlaneGeometry(22, 22),
   new THREE.MeshStandardMaterial({ color:0x080618, roughness:.35, metalness:.5 })
 );
 _floor.rotation.x = -Math.PI / 2;
-_floor.position.y = -.64;
+_floor.position.y = -1.02;
 _floor.receiveShadow = true;
 _scene.add(_floor);
-
-// Reflet
-const _refl = _siloGroup.clone();
-_refl.scale.set(1, -0.28, 1);
-_refl.position.y = -1.3;
-_refl.traverse(c => {
-  if (c.isMesh) { c.material = c.material.clone(); c.material.opacity = .1; c.material.transparent = true; }
-});
-_scene.add(_refl);
 
 // ════════════════════════════════════════════
 //  LUMIÈRES
 // ════════════════════════════════════════════
-const _ambLight  = new THREE.AmbientLight(0x3a2f7a, .55);
+const _ambLight  = new THREE.AmbientLight(0x3a2f7a, 1.4);
 _scene.add(_ambLight);
 
-const _spotLight = new THREE.SpotLight(0xa78bfa, 2.4, 20, Math.PI/5, .4, 1.4);
-_spotLight.position.set(0, 8, 2.5);
+const _spotLight = new THREE.SpotLight(0xa78bfa, 5.0, 20, Math.PI/5, .4, 1.2);
+_spotLight.position.set(0, 7, 3);
 _spotLight.castShadow = true;
 _scene.add(_spotLight);
 
 const _spotTarget = new THREE.Object3D();
-_spotTarget.position.set(0, 1.6, -.5);
+_spotTarget.position.set(0, 0.5, -.5);
 _scene.add(_spotTarget);
 _spotLight.target = _spotTarget;
 
-const _rimLight  = new THREE.PointLight(0x7c3aed, 1.4, 12);
-_rimLight.position.set(-2.8, 3.2, -3.5);
+const _rimLight  = new THREE.PointLight(0x7c3aed, 2.2, 12);
+_rimLight.position.set(-2.8, 3.2, -2);
 _scene.add(_rimLight);
 
-const _fillLight = new THREE.PointLight(0xa78bfa, .7, 8);
-_fillLight.position.set(0, -.3, .8);
+const _fillLight = new THREE.PointLight(0xa78bfa, 1.2, 10);
+_fillLight.position.set(0, 1.0, 3);
 _scene.add(_fillLight);
+
+// Lumière clé fixe (toujours active, non modifiée par les thèmes)
+const _keyLight = new THREE.PointLight(0xffffff, 3.0, 14);
+_keyLight.position.set(0, 3, 4);
+_scene.add(_keyLight);
 
 // ════════════════════════════════════════════
 //  PARTICULES
@@ -167,6 +185,7 @@ _renderer.setClearColor(0x0a0918);
 //  THÈME
 // ════════════════════════════════════════════
 let _currentThemeId = 'culture';
+let _gameMode = false;
 
 function _applyTheme3d(tid) {
   _currentThemeId = tid;
@@ -178,69 +197,31 @@ function _applyTheme3d(tid) {
   _rimLight.color.setHex(t.rimCol);    _rimLight.intensity = t.rimInt;
   _fillLight.color.setHex(t.glowCol);
   _floor.material.color.setHex(t.floorCol);
+  // Emissive glow uniquement (ne pas écraser les couleurs du costume)
   _siloGroup.traverse(c => {
     if (c.isMesh && !c.material.transparent) {
-      c.material.color.setHex(t.siloCol);
       c.material.emissive = new THREE.Color(t.glowCol);
-      c.material.emissiveIntensity = .045;
+      c.material.emissiveIntensity = .03;
     }
   });
   _buildParticles(t.partCol);
+  // Met à jour les éléments du plateau si actif
+  if (_gameMode) _updateSetColors(t);
 }
 _applyTheme3d('culture');
 
 // ════════════════════════════════════════════
-//  ANIMATIONS PERSONNAGE
+//  ANIMATIONS PERSONNAGE (délégué au mixer AJ)
 // ════════════════════════════════════════════
-let _animState = 'idle';
-let _animTime  = 0;
-
-function _setAnim(state) { _animState = state; _animTime = 0; }
-
 function _tickCharacter(t) {
-  _animTime += .016;
-
-  if (_animState === 'idle') {
-    _siloGroup.position.y = -.65 + Math.sin(t*.75) * .014;
-    _torso.rotation.z     = Math.sin(t*.55) * .013;
-    _head.rotation.y      = Math.sin(t*.38) * .07;
-    _head.rotation.x      = 0;
-    _lSh.rotation.z       = Math.sin(t*.65+.4) * .05;
-    _rSh.rotation.z       = -Math.sin(t*.65+.4) * .05;
-    _lSh.rotation.x = _rSh.rotation.x = 0;
-    _lLeg.rotation.x = _rLeg.rotation.x = 0;
-    _siloGroup.rotation.y = Math.sin(t*.2) * .04;
-
-  } else if (_animState === 'talk') {
-    _siloGroup.position.y = -.65 + Math.sin(t*1.7) * .022;
-    _head.rotation.x      = Math.sin(t*2.1) * .11;
-    _head.rotation.y      = Math.sin(t*1.05) * .17;
-    _torso.rotation.z     = Math.sin(t*1.25) * .038;
-    _torso.rotation.x     = Math.sin(t*.85) * .022;
-    _lSh.rotation.x = -.55 + Math.sin(t*1.95) * .32;
-    _lSh.rotation.z =  .28 + Math.sin(t*1.45+.9) * .18;
-    _rSh.rotation.x = -.28 + Math.sin(t*1.55+.75) * .42;
-    _rSh.rotation.z = -.38 + Math.sin(t*2.05) * .22;
-    _siloGroup.rotation.y = Math.sin(t*.45) * .07;
-
-  } else if (_animState === 'react') {
-    const j = Math.max(0, Math.sin(_animTime*4.5)) * .28;
-    _siloGroup.position.y = -.65 + j;
-    _head.rotation.x = -.18 + Math.sin(t*3) * .09;
-    _head.rotation.y = Math.sin(t*2.2) * .13;
-    _lSh.rotation.x = -1.3 + Math.sin(t*3) * .18;   _lSh.rotation.z =  .65;
-    _rSh.rotation.x = -1.3 + Math.sin(t*3.2) * .18; _rSh.rotation.z = -.65;
-    _lLeg.rotation.x =  Math.sin(_animTime*4.5) * .28;
-    _rLeg.rotation.x = -Math.sin(_animTime*4.5) * .28;
-    if (_animTime > 2.5) _setAnim('idle');
-  }
-
-  _refl.position.x = _siloGroup.position.x;
-  _refl.rotation.y = _siloGroup.rotation.y;
+  if (!_ajLoaded) return;
+  const baseY = -1.02;
+  _siloGroup.position.y = baseY + Math.sin(t * .55) * .008;
+  _siloGroup.rotation.y = Math.PI + Math.sin(t * .18) * .055;
 }
 
 // ════════════════════════════════════════════
-//  LOGO 3D
+//  LOGO 3D (accueil uniquement)
 // ════════════════════════════════════════════
 let _logoMesh = null;
 let _logoVisible = false;
@@ -252,31 +233,21 @@ function _buildLogo() {
   const ctx = cvs.getContext('2d');
   ctx.clearRect(0, 0, cvs.width, cvs.height);
   ctx.font = '900 120px "Poppins", sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = '#ffffff';
-  ctx.shadowColor = '#a78bfa';
-  ctx.shadowBlur = 40;
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#ffffff'; ctx.shadowColor = '#a78bfa'; ctx.shadowBlur = 40;
   ctx.fillText('BRAIN', 512, 90);
-  ctx.shadowColor = '#7c3aed';
-  ctx.shadowBlur = 50;
-  ctx.fillStyle = '#a78bfa';
+  ctx.shadowColor = '#7c3aed'; ctx.shadowBlur = 50; ctx.fillStyle = '#a78bfa';
   ctx.fillText('CLASH', 512, 195);
-  const tex = new THREE.CanvasTexture(cvs);
-  tex.needsUpdate = true;
-  const geo = new THREE.PlaneGeometry(5, 1.25);
+  const tex = new THREE.CanvasTexture(cvs); tex.needsUpdate = true;
   const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide, depthWrite: false });
-  _logoMesh = new THREE.Mesh(geo, mat);
+  _logoMesh = new THREE.Mesh(new THREE.PlaneGeometry(5, 1.25), mat);
   _logoMesh.position.set(0, 4.2, -1.2);
   _logoMesh.visible = false;
   _scene.add(_logoMesh);
 }
 _buildLogo();
 
-function _showLogo(visible) {
-  _logoVisible = visible;
-  if (_logoMesh) _logoMesh.visible = visible;
-}
+function _showLogo(v) { _logoVisible = v; if (_logoMesh) _logoMesh.visible = v; }
 
 function _tickLogo(t) {
   if (!_logoMesh || !_logoVisible) return;
@@ -285,215 +256,436 @@ function _tickLogo(t) {
   _logoMesh.material.opacity = 0.85 + Math.sin(t * 1.5) * 0.15;
 }
 
-// ════════════════════════════════════════════
-//  ÉCRAN DE QUESTION (caché par défaut)
-//  Plane avec CanvasTexture, visible uniquement
-//  pendant la phase question
-// ════════════════════════════════════════════
+// ════════════════════════════════════════════════════════════════════
+//  ██████  PLATEAU TV — Game Mode  ██████
+//  Activé uniquement quand un jeu démarre.
+//  Contient : fond coloré, spots, pupitre, public, bannière,
+//             écran question, scoreboard
+// ════════════════════════════════════════════════════════════════════
+const _setGroup = new THREE.Group();   // tout le décor plateau
+_setGroup.visible = false;
+_scene.add(_setGroup);
+
+// ── Extras lumières plateau ──
+const _setSpots = [];
+
+// ── Fond dégradé coloré ──
+let _backdropMesh = null;
+
+// ── Public (silhouettes) ──
+const _audienceFigures = [];
+
+// ── Pupitre ──
+let _podiumGroup = null;
+
+// ── Bannière BRAIN CLASH ──
+let _bannerMesh = null;
+
+// ── Écrans ──
 let _qCanvas = null, _qTexture = null, _qMesh = null;
 let _sbCanvas = null, _sbTexture = null, _sbMesh = null;
 let _currentQuestion = null;
 
-function _buildScreens() {
-  // Écran question — à droite du personnage, incliné légèrement
+function _buildGameSet() {
+  // ── 1. FOND COLORÉ (grande toile derrière la scène) ──
+  const bdCvs = document.createElement('canvas');
+  bdCvs.width = 512; bdCvs.height = 512;
+  const bdCtx = bdCvs.getContext('2d');
+  const grad = bdCtx.createRadialGradient(256, 300, 20, 256, 256, 400);
+  grad.addColorStop(0, '#1e3a8a');
+  grad.addColorStop(0.3, '#4338ca');
+  grad.addColorStop(0.6, '#7e22ce');
+  grad.addColorStop(0.8, '#0f172a');
+  grad.addColorStop(1, '#020617');
+  bdCtx.fillStyle = grad;
+  bdCtx.fillRect(0, 0, 512, 512);
+  // Bandes colorées
+  const colors = ['#3b82f6','#a855f7','#ec4899','#22c55e','#eab308'];
+  colors.forEach((c, i) => {
+    bdCtx.globalAlpha = 0.12;
+    bdCtx.fillStyle = c;
+    bdCtx.fillRect(0, 80 + i * 80, 512, 50);
+  });
+  bdCtx.globalAlpha = 1;
+
+  const bdTex = new THREE.CanvasTexture(bdCvs);
+  _backdropMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(20, 10),
+    new THREE.MeshBasicMaterial({ map: bdTex, fog: false })
+  );
+  _backdropMesh.position.set(0, 3, -6);
+  _setGroup.add(_backdropMesh);
+
+  // ── 2. SPOTS LUMINEUX (cônes transparents) ──
+  const spotPositions = [
+    { x:-4, col:0x3b82f6 }, { x:-2, col:0xa855f7 },
+    { x: 0, col:0xffffff }, { x: 2, col:0xec4899 }, { x: 4, col:0x22c55e }
+  ];
+  spotPositions.forEach(sp => {
+    const cone = new THREE.Mesh(
+      new THREE.ConeGeometry(1.2, 6, 16, 1, true),
+      new THREE.MeshBasicMaterial({ color: sp.col, transparent: true, opacity: 0.06, side: THREE.DoubleSide, fog: false, depthWrite: false })
+    );
+    cone.position.set(sp.x, 5.5, -3);
+    cone.rotation.x = Math.PI;
+    _setGroup.add(cone);
+    _setSpots.push(cone);
+
+    // Petite lumière pointLight à la base
+    const pl = new THREE.PointLight(sp.col, 0.6, 8);
+    pl.position.set(sp.x, 8, -3);
+    _setGroup.add(pl);
+  });
+
+  // ── 5. BANNIÈRE BRAIN CLASH (haut du plateau) ──
+  const bCvs = document.createElement('canvas');
+  bCvs.width = 1024; bCvs.height = 192;
+  const bCtx = bCvs.getContext('2d');
+  // Fond
+  const bGrad = bCtx.createLinearGradient(0, 0, 1024, 0);
+  bGrad.addColorStop(0, '#1e1b4b'); bGrad.addColorStop(0.5, '#312e81'); bGrad.addColorStop(1, '#1e1b4b');
+  bCtx.fillStyle = bGrad;
+  bCtx.roundRect(0, 0, 1024, 192, 16); bCtx.fill();
+  // Bordure
+  bCtx.strokeStyle = '#a78bfa'; bCtx.lineWidth = 6;
+  bCtx.roundRect(3, 3, 1018, 186, 14); bCtx.stroke();
+  // Texte
+  bCtx.font = '900 90px "Poppins", Arial, sans-serif';
+  bCtx.textAlign = 'center'; bCtx.textBaseline = 'middle';
+  bCtx.shadowColor = '#a78bfa'; bCtx.shadowBlur = 30;
+  bCtx.fillStyle = '#ffffff';
+  bCtx.fillText('BRAIN CLASH', 512, 100);
+
+  const bTex = new THREE.CanvasTexture(bCvs);
+  _bannerMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(6, 1.125),
+    new THREE.MeshBasicMaterial({ map: bTex, transparent: true, fog: false, depthWrite: false })
+  );
+  _bannerMesh.position.set(0, 5.8, -4);
+  _setGroup.add(_bannerMesh);
+
+  // ── 6. ÉCRAN QUESTION (droite) ──
   _qCanvas = document.createElement('canvas');
   _qCanvas.width = 1024; _qCanvas.height = 768;
   _qTexture = new THREE.CanvasTexture(_qCanvas);
   const qMat = new THREE.MeshBasicMaterial({ map: _qTexture, transparent: true, side: THREE.DoubleSide, depthWrite: false });
-  _qMesh = new THREE.Mesh(new THREE.PlaneGeometry(4.5, 3.375), qMat);
-  _qMesh.position.set(3.2, 2.2, -2);
-  _qMesh.rotation.y = -Math.PI / 8;
+  _qMesh = new THREE.Mesh(new THREE.PlaneGeometry(5.2, 3.9), qMat);
+  _qMesh.position.set(3.8, 2.8, -3.5);
+  _qMesh.rotation.y = -0.15;
   _qMesh.visible = false;
-  _scene.add(_qMesh);
+  _setGroup.add(_qMesh);
 
-  // Scoreboard — à gauche
+  // ── 7. SCOREBOARD (gauche) ──
   _sbCanvas = document.createElement('canvas');
   _sbCanvas.width = 512; _sbCanvas.height = 768;
   _sbTexture = new THREE.CanvasTexture(_sbCanvas);
   const sbMat = new THREE.MeshBasicMaterial({ map: _sbTexture, transparent: true, side: THREE.DoubleSide, depthWrite: false });
-  _sbMesh = new THREE.Mesh(new THREE.PlaneGeometry(2, 3), sbMat);
-  _sbMesh.position.set(-3.5, 2.2, -2);
-  _sbMesh.rotation.y = Math.PI / 8;
+  _sbMesh = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 3.6), sbMat);
+  _sbMesh.position.set(-4.2, 2.8, -3.5);
+  _sbMesh.rotation.y = 0.15;
   _sbMesh.visible = false;
-  _scene.add(_sbMesh);
+  _setGroup.add(_sbMesh);
 }
-_buildScreens();
+_buildGameSet();
 
-// ── Utilitaires canvas ──
-function _hexToRgb(hex) {
-  return { r: (hex >> 16) & 255, g: (hex >> 8) & 255, b: hex & 255 };
+// Mise à jour couleurs du plateau selon le thème
+function _updateSetColors(t) {
+  // Update backdrop gradient
+  if (_backdropMesh) {
+    const bdCvs = document.createElement('canvas');
+    bdCvs.width = 512; bdCvs.height = 512;
+    const ctx = bdCvs.getContext('2d');
+    const grad = ctx.createRadialGradient(256, 300, 20, 256, 256, 400);
+    const accent = _hexStr(t.accentCol);
+    const rim    = _hexStr(t.rimCol);
+    grad.addColorStop(0, accent);
+    grad.addColorStop(0.4, rim);
+    grad.addColorStop(0.7, '#0f172a');
+    grad.addColorStop(1, '#020617');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 512, 512);
+    _backdropMesh.material.map = new THREE.CanvasTexture(bdCvs);
+    _backdropMesh.material.needsUpdate = true;
+  }
 }
 
-function _hexStr(hex) {
-  const { r, g, b } = _hexToRgb(hex);
-  return `rgb(${r},${g},${b})`;
+// ════════════════════════════════════════════
+//  ENTER / EXIT GAME MODE
+// ════════════════════════════════════════════
+let _gamePlayerCount = 4;
+
+function _resizeCanvas(fullscreen) {
+  if (fullscreen) {
+    _canvas.style.inset = '0';
+    _canvas.style.left = '';
+    _canvas.style.bottom = '';
+    _canvas.style.width = '';
+    _canvas.style.height = '';
+    _renderer.setSize(window.innerWidth, window.innerHeight);
+    _camera.aspect = window.innerWidth / window.innerHeight;
+  } else {
+    // Largeur = 28% (alignée avec le panneau scores en haut à gauche)
+    const w = Math.round(window.innerWidth * 0.28);
+    // Hauteur dynamique : écran total − hauteur panneau scores − marge
+    // Panneau scores : header ~54px + n×50px par joueur + 6px gap inter-rangées
+    const scoreH = 54 + _gamePlayerCount * 50 + (_gamePlayerCount - 1) * 6 + 32; // +32 marges
+    const h = Math.max(200, window.innerHeight - scoreH - 16);
+    _canvas.style.inset = 'auto';
+    _canvas.style.left = '0';
+    _canvas.style.bottom = '0';
+    _canvas.style.width = w + 'px';
+    _canvas.style.height = h + 'px';
+    _renderer.setSize(w, h);
+    _camera.aspect = w / h;
+  }
+  _camera.updateProjectionMatrix();
 }
+
+// Appelé depuis drawQ_host quand le nombre de joueurs est connu
+function _setPlayerCount(n) {
+  _gamePlayerCount = Math.max(1, n || 4);
+  if (_gameMode) _resizeCanvas(false);
+}
+
+function _enterGameMode() {
+  if (_gameMode) return;
+  _gameMode = true;
+  _setGroup.visible = true;
+  if (_logoMesh) _logoMesh.visible = false;
+  // AJ : avancé, même taille qu'en home
+  _siloGroup.position.set(0, -1.02, -0.3);
+  _siloGroup.scale.set(2.2, 2.2, 2.2);
+  // Brouillard repoussé
+  _scene.fog.near = 12;
+  _scene.fog.far = 30;
+  // Canvas en bas à gauche
+  _resizeCanvas(false);
+  const t = THEME3D[_currentThemeId] || THEME3D.culture;
+  _updateSetColors(t);
+}
+
+function _exitGameMode() {
+  if (!_gameMode) return;
+  _gameMode = false;
+  _setGroup.visible = false;
+  _currentQuestion = null;
+  if (_qMesh) _qMesh.visible = false;
+  if (_sbMesh) _sbMesh.visible = false;
+  // Restaurer position/taille AJ
+  _siloGroup.position.set(0, -1.02, -0.3);
+  _siloGroup.scale.set(2.2, 2.2, 2.2);
+  // Restaurer brouillard
+  const t = THEME3D[_currentThemeId] || THEME3D.culture;
+  _scene.fog.near = t.fogNear;
+  _scene.fog.far = t.fogFar;
+  // Canvas fullscreen
+  _resizeCanvas(true);
+  if (_logoMesh && _logoVisible) _logoMesh.visible = true;
+}
+
+// ════════════════════════════════════════════
+//  ANIMATION DU PUBLIC
+// ════════════════════════════════════════════
+function _tickAudience(t) {
+  if (!_gameMode) return;
+  _audienceFigures.forEach(fig => {
+    const wave = Math.sin(t * 2.5 + fig._phase) * 0.5 + 0.5; // 0..1
+    // Bras qui se lèvent et s'abaissent
+    fig._armL.rotation.z =  0.3 + wave * 1.2;
+    fig._armR.rotation.z = -0.3 - wave * 1.2;
+    fig._armL.position.y = 0.5 + wave * 0.15;
+    fig._armR.position.y = 0.5 + wave * 0.15;
+  });
+}
+
+// ════════════════════════════════════════════
+//  UTILITAIRES CANVAS
+// ════════════════════════════════════════════
+function _hexToRgb(hex) { return { r:(hex>>16)&255, g:(hex>>8)&255, b:hex&255 }; }
+function _hexStr(hex) { const {r,g,b}=_hexToRgb(hex); return `rgb(${r},${g},${b})`; }
 
 function _wrapText(ctx, text, maxWidth) {
-  const words = text.split(' ');
-  const lines = [];
+  const words = text.split(' '), lines = [];
   let line = '';
   words.forEach(w => {
     const test = line ? line + ' ' + w : w;
-    if (ctx.measureText(test).width > maxWidth && line) {
-      lines.push(line);
-      line = w;
-    } else {
-      line = test;
-    }
+    if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = w; }
+    else line = test;
   });
   if (line) lines.push(line);
   return lines;
 }
 
-// ── Dessiner l'écran question ──
+// ════════════════════════════════════════════
+//  DESSINER L'ÉCRAN QUESTION
+//  Style inspiré de l'image de référence :
+//  boutons colorés A(bleu) B(rouge) C(vert) D(jaune)
+// ════════════════════════════════════════════
+const _answerColors = [
+  { bg: '#1d4ed8', border: '#3b82f6', label: 'A' }, // Bleu
+  { bg: '#b91c1c', border: '#ef4444', label: 'B' }, // Rouge
+  { bg: '#15803d', border: '#22c55e', label: 'C' }, // Vert
+  { bg: '#a16207', border: '#eab308', label: 'D' }, // Jaune
+];
+
 function _drawQuestionCanvas(q, revealIdx) {
-  const cvs = _qCanvas;
-  const ctx = cvs.getContext('2d');
+  const cvs = _qCanvas, ctx = cvs.getContext('2d');
+  const W = cvs.width, H = cvs.height;
   const accent = _hexStr((THEME3D[_currentThemeId] || THEME3D.culture).accentCol);
 
-  // Fond semi-transparent
-  ctx.clearRect(0, 0, cvs.width, cvs.height);
-  ctx.fillStyle = 'rgba(0,0,0,0.82)';
-  ctx.roundRect(10, 10, cvs.width - 20, cvs.height - 20, 24);
-  ctx.fill();
+  // Fond
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = 'rgba(8,8,30,0.92)';
+  ctx.beginPath(); ctx.roundRect(0, 0, W, H, 20); ctx.fill();
 
-  // Bordure colorée
+  // Bordure luminescente
   ctx.strokeStyle = accent;
-  ctx.lineWidth = 4;
-  ctx.roundRect(10, 10, cvs.width - 20, cvs.height - 20, 24);
-  ctx.stroke();
+  ctx.lineWidth = 5;
+  ctx.shadowColor = accent; ctx.shadowBlur = 20;
+  ctx.beginPath(); ctx.roundRect(4, 4, W-8, H-8, 18); ctx.stroke();
+  ctx.shadowBlur = 0;
 
-  // Question
+  // Question texte
   ctx.fillStyle = '#ffffff';
-  ctx.font = 'bold 34px Arial, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'top';
-  const lines = _wrapText(ctx, q.q, cvs.width - 100);
-  let y = 60;
-  lines.forEach(l => { ctx.fillText(l, cvs.width / 2, y); y += 46; });
+  ctx.font = 'bold 38px Arial, sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  const lines = _wrapText(ctx, q.q, W - 80);
+  let y = 50;
+  lines.forEach(l => { ctx.fillText(l, W / 2, y); y += 52; });
 
-  // Séparateur
-  ctx.strokeStyle = accent + '88';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(60, y + 10); ctx.lineTo(cvs.width - 60, y + 10);
-  ctx.stroke();
-  y += 32;
+  // Grille 2×2 des réponses
+  const gapX = 24, gapY = 20;
+  const btnW = (W - gapX * 3) / 2;
+  const btnH = 110;
+  const startY = Math.max(y + 30, 260);
 
-  // Réponses A/B/C/D
-  const labels = ['A', 'B', 'C', 'D'];
-  labels.forEach((lbl, i) => {
+  _answerColors.forEach((ac, i) => {
     if (!q.a || !q.a[i]) return;
-    const oy = y + i * 130;
+    const col = i % 2, row = Math.floor(i / 2);
+    const bx = gapX + col * (btnW + gapX);
+    const by = startY + row * (btnH + gapY);
     const isCorrect = i === q.c;
     const isRevealed = revealIdx !== undefined;
 
     // Fond bouton
-    if (isRevealed) {
-      ctx.fillStyle = isCorrect ? 'rgba(34,197,94,0.3)' : 'rgba(255,255,255,0.06)';
+    if (isRevealed && isCorrect) {
+      ctx.fillStyle = '#15803d';
+    } else if (isRevealed && !isCorrect) {
+      ctx.fillStyle = 'rgba(30,30,50,0.6)';
     } else {
-      ctx.fillStyle = 'rgba(255,255,255,0.08)';
+      ctx.fillStyle = ac.bg;
     }
-    ctx.beginPath();
-    ctx.roundRect(50, oy, cvs.width - 100, 115, 16);
-    ctx.fill();
+    ctx.beginPath(); ctx.roundRect(bx, by, btnW, btnH, 14); ctx.fill();
 
     // Bordure
-    ctx.strokeStyle = isRevealed && isCorrect ? '#22c55e' : (accent + '66');
-    ctx.lineWidth = isRevealed && isCorrect ? 3 : 2;
-    ctx.beginPath();
-    ctx.roundRect(50, oy, cvs.width - 100, 115, 16);
-    ctx.stroke();
+    ctx.strokeStyle = (isRevealed && isCorrect) ? '#4ade80' : (isRevealed ? 'rgba(100,100,120,0.4)' : ac.border);
+    ctx.lineWidth = (isRevealed && isCorrect) ? 4 : 3;
+    ctx.beginPath(); ctx.roundRect(bx, by, btnW, btnH, 14); ctx.stroke();
 
-    // Lettre
-    ctx.fillStyle = accent;
-    ctx.font = 'bold 28px Arial, sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillText(lbl, 80, oy + 38);
+    // Lettre dans un cercle
+    ctx.fillStyle = 'rgba(255,255,255,0.25)';
+    ctx.beginPath();
+    ctx.arc(bx + 40, by + btnH / 2, 22, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 28px Arial';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(ac.label, bx + 40, by + btnH / 2 + 1);
 
     // Texte réponse
-    ctx.fillStyle = '#ffffff';
-    ctx.font = '26px Arial, sans-serif';
-    const aLines = _wrapText(ctx, q.a[i], cvs.width - 200);
-    aLines.forEach((al, ai) => ctx.fillText(al, 130, oy + 34 + ai * 34));
+    ctx.fillStyle = isRevealed && !isCorrect ? 'rgba(255,255,255,0.3)' : '#ffffff';
+    ctx.font = (isRevealed && isCorrect) ? 'bold 26px Arial' : '26px Arial';
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const aLines = _wrapText(ctx, q.a[i], btnW - 90);
+    aLines.forEach((al, ai) => ctx.fillText(al, bx + 72, by + btnH / 2 - (aLines.length - 1) * 16 + ai * 32));
 
-    // Check vert si bonne réponse révélée
+    // Check vert
     if (isRevealed && isCorrect) {
-      ctx.fillStyle = '#22c55e';
-      ctx.font = 'bold 36px Arial';
-      ctx.textAlign = 'right';
-      ctx.fillText('✓', cvs.width - 70, oy + 32);
+      ctx.fillStyle = '#4ade80';
+      ctx.font = 'bold 40px Arial';
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      ctx.fillText('✓', bx + btnW - 20, by + btnH / 2);
     }
   });
 
-  // Fun fact si révélé
+  // Fun fact
   if (revealIdx !== undefined && q.f) {
-    const factY = y + 4 * 130 + 10;
-    ctx.fillStyle = accent + 'cc';
-    ctx.font = 'italic 22px Arial, sans-serif';
-    ctx.textAlign = 'center';
-    const factLines = _wrapText(ctx, '💡 ' + q.f, cvs.width - 100);
-    factLines.slice(0, 2).forEach((fl, fi) => ctx.fillText(fl, cvs.width / 2, factY + fi * 30));
+    const fy = startY + 2 * (btnH + gapY) + 10;
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.beginPath(); ctx.roundRect(gapX, fy, W - gapX * 2, 72, 12); ctx.fill();
+    ctx.fillStyle = accent;
+    ctx.font = 'italic 22px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const factLines = _wrapText(ctx, '💡 ' + q.f, W - 80);
+    factLines.slice(0, 2).forEach((fl, fi) => ctx.fillText(fl, W / 2, fy + 12 + fi * 28));
   }
 
   _qTexture.needsUpdate = true;
 }
 
-// ── Dessiner le scoreboard ──
+// ════════════════════════════════════════════
+//  DESSINER LE SCOREBOARD
+// ════════════════════════════════════════════
 function _drawScoreboardCanvas(scores, players) {
-  const cvs = _sbCanvas;
-  const ctx = cvs.getContext('2d');
+  const cvs = _sbCanvas, ctx = cvs.getContext('2d');
+  const W = cvs.width, H = cvs.height;
   const accent = _hexStr((THEME3D[_currentThemeId] || THEME3D.culture).accentCol);
 
-  ctx.clearRect(0, 0, cvs.width, cvs.height);
-  ctx.fillStyle = 'rgba(0,0,0,0.82)';
-  ctx.roundRect(10, 10, cvs.width - 20, cvs.height - 20, 20);
-  ctx.fill();
-  ctx.strokeStyle = accent;
-  ctx.lineWidth = 3;
-  ctx.roundRect(10, 10, cvs.width - 20, cvs.height - 20, 20);
-  ctx.stroke();
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = 'rgba(8,8,30,0.92)';
+  ctx.beginPath(); ctx.roundRect(0, 0, W, H, 16); ctx.fill();
+  ctx.strokeStyle = accent; ctx.lineWidth = 4;
+  ctx.shadowColor = accent; ctx.shadowBlur = 15;
+  ctx.beginPath(); ctx.roundRect(3, 3, W-6, H-6, 14); ctx.stroke();
+  ctx.shadowBlur = 0;
 
-  ctx.fillStyle = accent;
-  ctx.font = 'bold 36px Arial, sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('SCORES', cvs.width / 2, 55);
+  // Titre
+  ctx.fillStyle = '#fbbf24';
+  ctx.font = 'bold 28px Arial'; ctx.textAlign = 'center';
+  ctx.fillText('CLASSEMENT', W / 2, 40);
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '18px Arial';
+  ctx.fillText('DES JOUEURS', W / 2, 65);
 
-  ctx.strokeStyle = accent + '66';
-  ctx.lineWidth = 2;
-  ctx.beginPath();
-  ctx.moveTo(40, 75); ctx.lineTo(cvs.width - 40, 75);
-  ctx.stroke();
+  // Séparateur
+  ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(30, 82); ctx.lineTo(W - 30, 82); ctx.stroke();
 
-  const playerColors = ['#ef4444','#f97316','#eab308','#22c55e','#06b6d4','#8b5cf6','#ec4899','#14b8a6'];
-  const sorted = scores.map((s, i) => ({ score: s, name: players?.[i] || ('P' + (i+1)), i }))
+  const pColors = ['#ef4444','#f97316','#eab308','#22c55e','#06b6d4','#8b5cf6','#ec4899','#14b8a6'];
+  const sorted = scores.map((s, i) => ({ score: s, name: players?.[i] || ('P'+(i+1)), i }))
     .sort((a, b) => b.score - a.score).slice(0, 8);
 
   sorted.forEach((p, rank) => {
-    const py = 110 + rank * 78;
-    const col = playerColors[p.i % 8];
+    const py = 100 + rank * 78;
+    const col = pColors[p.i % 8];
 
-    ctx.fillStyle = col + '22';
-    ctx.roundRect(30, py - 10, cvs.width - 60, 65, 12);
-    ctx.fill();
+    // Fond ligne
+    ctx.fillStyle = col + '18';
+    ctx.beginPath(); ctx.roundRect(16, py, W - 32, 65, 10); ctx.fill();
+
+    // Avatar (cercle coloré)
+    ctx.fillStyle = col;
+    ctx.beginPath(); ctx.arc(48, py + 32, 18, 0, Math.PI * 2); ctx.fill();
+    // Initiale dans le cercle
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 18px Arial'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(p.name.charAt(0).toUpperCase(), 48, py + 33);
 
     // Rang
-    ctx.fillStyle = rank === 0 ? '#fbbf24' : 'rgba(255,255,255,0.4)';
-    ctx.font = 'bold 22px Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText(rank === 0 ? '🥇' : (rank + 1) + '.', 45, py + 30);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillStyle = rank < 3 ? '#fbbf24' : 'rgba(255,255,255,0.4)';
+    ctx.font = 'bold 16px Arial';
+    const medals = ['🥇','🥈','🥉'];
+    ctx.fillText(rank < 3 ? medals[rank] : (rank + 1) + '.', 20, py + 4);
 
     // Nom
-    ctx.fillStyle = col;
-    ctx.font = 'bold 24px Arial';
-    ctx.fillText(p.name.substring(0, 10), 90, py + 30);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 22px Arial';
+    ctx.fillText(p.name.substring(0, 9), 76, py + 14);
 
     // Score
-    ctx.fillStyle = '#ffffff';
-    ctx.textAlign = 'right';
-    ctx.font = 'bold 28px Arial';
-    ctx.fillText(p.score, cvs.width - 45, py + 32);
+    ctx.fillStyle = col;
+    ctx.font = 'bold 14px Arial';
+    ctx.fillText(p.score.toLocaleString() + ' pts', 76, py + 42);
   });
 
   _sbTexture.needsUpdate = true;
@@ -503,20 +695,31 @@ function _drawScoreboardCanvas(scores, players) {
 //  BOUCLE D'ANIMATION
 // ════════════════════════════════════════════
 const _clock3d = new THREE.Clock();
+let _prevT = 0;
 
 function _loop3d() {
   requestAnimationFrame(_loop3d);
-  const t = _clock3d.getElapsedTime();
+  const t     = _clock3d.getElapsedTime();
+  const delta = t - _prevT;
+  _prevT = t;
 
+  if (_mixer) _mixer.update(delta);
   _tickCharacter(t);
   _tickLogo(t);
 
-  // Légère oscillation des écrans
+  // Oscillation écrans
   if (_qMesh && _qMesh.visible) {
-    _qMesh.position.y = 2.2 + Math.sin(t * 0.6) * 0.04;
+    _qMesh.position.y = 2.8 + Math.sin(t * 0.6) * 0.04;
   }
   if (_sbMesh && _sbMesh.visible) {
-    _sbMesh.position.y = 2.2 + Math.sin(t * 0.5 + 1) * 0.04;
+    _sbMesh.position.y = 2.8 + Math.sin(t * 0.5 + 1) * 0.04;
+  }
+
+  // Rotation légère des cônes de spot
+  if (_gameMode) {
+    _setSpots.forEach((cone, i) => {
+      cone.rotation.z = Math.sin(t * 0.3 + i * 1.2) * 0.08;
+    });
   }
 
   // Particules
@@ -531,33 +734,38 @@ function _loop3d() {
     _particles.rotation.y += .0004;
   }
 
-  _camera.position.x = Math.sin(t*.1) * .2;
-  _camera.position.y = 2.0 + Math.sin(t*.15) * .07;
-  _camera.lookAt(0, 1.6, 0);
+  if (_gameMode) {
+    // Petit canvas en bas à gauche : zoom serré sur AJ, tête visible
+    _camera.position.x = Math.sin(t*.09) * .05;
+    _camera.position.y = 1.2 + Math.sin(t*.12) * .03;
+    _camera.position.z = 4.8;
+    _camera.lookAt(0, 1.0, 0);
+  } else {
+    // Plein écran : AJ cadré entier avec légère hauteur pour voir sa tête
+    _camera.position.x = Math.sin(t*.1) * .12;
+    _camera.position.y = 1.2 + Math.sin(t*.15) * .04;
+    _camera.position.z = 5.5;
+    _camera.lookAt(0, 1.0, 0);
+  }
 
   _renderer.render(_scene, _camera);
 }
 _loop3d();
 
 // ════════════════════════════════════════════
-//  NOUVELLES FONCTIONS API — Questions & Scores
+//  API : Questions & Scores
 // ════════════════════════════════════════════
-
 function _updateQuestion(q) {
   if (!q) return;
   _currentQuestion = q;
   _drawQuestionCanvas(q, undefined);
   _qMesh.visible = true;
-  // Masquer le logo quand une question est affichée
-  if (_logoMesh) _logoMesh.visible = false;
 }
 
 function _updateReveal(revealed, result) {
   if (!revealed || !_currentQuestion) return;
   _drawQuestionCanvas(_currentQuestion, _currentQuestion.c);
-  if (result && ((result.pts || 0) > 0 || result.scorer)) {
-    _setAnim('react');
-  }
+  if (result && ((result.pts || 0) > 0 || result.scorer)) _setAnim('react');
 }
 
 function _updateScores(scores, players) {
@@ -570,7 +778,6 @@ function _resetScreen() {
   _currentQuestion = null;
   if (_qMesh) _qMesh.visible = false;
   if (_sbMesh) _sbMesh.visible = false;
-  // Restaurer le logo si visible précédemment
   if (_logoMesh && _logoVisible) _logoMesh.visible = true;
 }
 
@@ -578,13 +785,18 @@ function _resetScreen() {
 //  API PUBLIQUE
 // ════════════════════════════════════════════
 window.SCENE3D = {
-  setTheme      : _applyTheme3d,
-  talk          : () => _setAnim('talk'),
-  react         : () => _setAnim('react'),
-  idle          : () => _setAnim('idle'),
-  showLogo      : _showLogo,
-  updateQuestion: _updateQuestion,
-  updateReveal  : _updateReveal,
-  updateScores  : _updateScores,
-  resetScreen   : _resetScreen,
+  setTheme       : _applyTheme3d,
+  talk           : () => _setAnim('talk'),
+  react          : () => _setAnim('react'),
+  idle           : () => _setAnim('idle'),
+  defeated       : () => _setAnim('defeated'),
+  think          : () => _setAnim('think'),
+  showLogo       : _showLogo,
+  updateQuestion : _updateQuestion,
+  updateReveal   : _updateReveal,
+  updateScores   : _updateScores,
+  resetScreen    : _resetScreen,
+  enterGameMode  : _enterGameMode,
+  exitGameMode   : _exitGameMode,
+  setPlayerCount : _setPlayerCount,
 };

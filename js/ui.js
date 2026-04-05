@@ -15,6 +15,63 @@
    Dépend de : config.js, firebase.js, game.js, scene3d.js
    ════════════════════════════════════════════ */
 
+// ════════════════════════════════════════════
+//  AUDIO — Web Audio API
+// ════════════════════════════════════════════
+const _AC = (() => { try { return new (window.AudioContext || window.webkitAudioContext)(); } catch(e) { return null; } })();
+
+function _beep(freq, type, dur, vol, delay=0) {
+  if (!_AC) return;
+  const o = _AC.createOscillator();
+  const g = _AC.createGain();
+  o.connect(g); g.connect(_AC.destination);
+  o.type = type; o.frequency.value = freq;
+  const t = _AC.currentTime + delay;
+  g.gain.setValueAtTime(vol, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t + dur);
+  o.start(t); o.stop(t + dur);
+}
+
+const SFX = {
+  // Bip de timer : tick grave toutes les secondes
+  tick() { _beep(440, 'sine', 0.08, 0.15); },
+  tickUrgent() { _beep(880, 'sine', 0.06, 0.2); },
+
+  // Bonne réponse : accord montant joyeux + ding final
+  correct() {
+    _beep(659, 'sine', 0.12, 0.3, 0.00);
+    _beep(784, 'sine', 0.12, 0.3, 0.08);
+    _beep(1047,'sine', 0.12, 0.4, 0.16);
+    _beep(1318,'sine', 0.4, 0.5, 0.28);
+  },
+
+  // Mauvaise réponse : buzzer grave + chute
+  wrong() {
+    _beep(800, 'square', 0.08, 0.35, 0.00);
+    _beep(200, 'sawtooth', 0.2, 0.4,  0.10);
+    _beep(120, 'square',   0.3, 0.25, 0.32);
+  },
+
+  // Buzz : son court percutant
+  buzz() {
+    _beep(880, 'square', 0.06, 0.4, 0.00);
+    _beep(660, 'square', 0.08, 0.3, 0.07);
+  },
+
+  // Countdown GO
+  go() {
+    _beep(523, 'sine', 0.1, 0.3, 0.0);
+    _beep(784, 'sine', 0.1, 0.3, 0.1);
+    _beep(1047,'sine', 0.3, 0.5, 0.2);
+  },
+};
+
+// Déverrouiller l'AudioContext au premier clic
+document.addEventListener('click', () => { if (_AC && _AC.state === 'suspended') _AC.resume(); }, { once: true });
+
+// RAF id du timer hôte en cours — annulé à chaque nouvelle question
+let _timerRafId = null;
+
 // ── Helpers DOM ──
 const A   = document.getElementById("app");
 const $   = id => document.getElementById(id);
@@ -42,7 +99,8 @@ function setBG(tid) {
 // ════════════════════════════════════════════
 function Home() {
   setBG("culture");
-  if (window.SCENE3D) { window.SCENE3D.resetScreen(); window.SCENE3D.idle(); window.SCENE3D.showLogo(true); }
+  if (window.SCENE3D) { window.SCENE3D.exitGameMode(); window.SCENE3D.resetScreen(); window.SCENE3D.idle(); window.SCENE3D.showLogo(true); }
+  const _fog = document.getElementById('fog3d'); if (_fog) _fog.style.display = '';
   R(`<div class="sc"><div class="float" style="text-align:center;margin-bottom:10px"><div style="font-size:4.5rem">🧠</div><p style="color:rgba(255,255,255,.42);font-size:.8rem;letter-spacing:.25em;font-weight:600;margin-top:5px">LE JEU DE QUIZ ULTIME</p></div><div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px"><button class="btn" id="bC" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);color:white;width:100%;padding:16px">🏠 Créer une partie</button><button class="btn" id="bJ" style="background:linear-gradient(135deg,#0891b2,#22d3ee);color:white;width:100%;padding:16px">🚪 Rejoindre une partie</button></div><p style="color:rgba(255,255,255,.18);font-size:.7rem">Multi-appareils · 9 thèmes · 250 questions</p></div>`);
   on("bC","click",()=>{ if(window.SCENE3D) window.SCENE3D.showLogo(false); Create(1); });
   on("bJ","click",()=>{ if(window.SCENE3D) window.SCENE3D.showLogo(false); Join(); });
@@ -217,7 +275,8 @@ function drawIntro(room, gs) {
   const t     = THEMES[room.theme] || THEMES.culture;
   const rType = room.rounds[gs.roundIdx||0];
   const r     = RT.find(x => x.id === rType) || RT[0];
-  if (window.SCENE3D) window.SCENE3D.talk();
+  if (window.SCENE3D) { window.SCENE3D.enterGameMode(); window.SCENE3D.talk(); }
+  const _fog = document.getElementById('fog3d'); if (_fog) _fog.style.display = 'none';
 
   // Check if countdown is active
   if (gs.countdownStart) {
@@ -253,12 +312,12 @@ function drawIntro(room, gs) {
   }).join("");
 
   R(`<div class="sc">
-    <p style="color:rgba(255,255,255,.36);font-size:.74rem;font-weight:700;letter-spacing:.2em">ROUND ${(gs.roundIdx||0)+1} / ${room.rounds.length}</p>
-    <div class="pop" style="font-size:4.5rem">${r.icon}</div>
-    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(1.8rem,6vw,3rem);text-align:center;text-shadow:0 0 38px ${t.accent}">${r.name}</h2>
-    <p style="color:rgba(255,255,255,.48);text-align:center;max-width:330px;line-height:1.65;font-size:.86rem">${r.desc}</p>
-    <div class="ready-grid" style="margin-top:12px">${playerGrid}</div>
-    <p style="color:rgba(255,255,255,.28);font-size:.72rem;margin-top:4px">${allReady?"Tous prêts ! Lancement…":`${readyCount}/${players.length} prêts`}</p>
+    <p style="color:rgba(255,255,255,.4);font-size:.85rem;font-weight:800;letter-spacing:.25em">ROUND ${(gs.roundIdx||0)+1} / ${room.rounds.length}</p>
+    <div class="pop" style="font-size:7rem">${r.icon}</div>
+    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(2.6rem,7vw,4.2rem);text-align:center;text-shadow:0 0 48px ${t.accent};margin:0">${r.name}</h2>
+    <p style="color:rgba(255,255,255,.72);text-align:center;max-width:680px;line-height:1.7;font-size:clamp(1.1rem,2.5vw,1.5rem);font-weight:500;padding:0 16px">${r.desc}</p>
+    <div class="ready-grid" style="margin-top:18px">${playerGrid}</div>
+    <p style="color:rgba(255,255,255,.35);font-size:.82rem;margin-top:6px">${allReady?"Tous prêts ! Lancement…":`${readyCount}/${players.length} prêts`}</p>
   </div>`);
 }
 
@@ -376,14 +435,33 @@ function drawQ_host(room, gs) {
   const q     = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
   if (!q) return;
 
+  // Annuler le RAF timer précédent
+  if (_timerRafId) { cancelAnimationFrame(_timerRafId); _timerRafId = null; }
+
+  const _wasRevealed = drawQ_host._lastRevealed;
+  const _wasBuzzed   = drawQ_host._lastBuzzed;
+  drawQ_host._lastRevealed = gs.revealed;
+  drawQ_host._lastBuzzed   = gs.buzzed;
+
   if (window.SCENE3D) {
+    window.SCENE3D.resetScreen();
+    // Ajuster la taille du canvas 3D selon le nombre de joueurs
+    window.SCENE3D.setPlayerCount(gs.players?.length || 4);
     if (gs.revealed && gs.result) {
-      window.SCENE3D.updateReveal(true, gs.result);
-      ((gs.result.pts||0) > 0 || gs.result.scorer) ? window.SCENE3D.react() : window.SCENE3D.talk();
+      // scorer non-null = au moins 1 joueur a eu juste → applaudissements, sinon → defeated
+      gs.result.scorer ? window.SCENE3D.react() : window.SCENE3D.defeated();
     } else {
-      window.SCENE3D.updateQuestion(q);
-      window.SCENE3D.talk();
+      // Question posée, en attente de réponse → AJ réfléchit
+      window.SCENE3D.think();
     }
+  }
+
+  // Sons
+  if (gs.revealed && !_wasRevealed) {
+    const isGood = !!gs.result?.scorer;
+    isGood ? SFX.correct() : SFX.wrong();
+  } else if (gs.buzzed && gs.buzzed !== _wasBuzzed) {
+    SFX.buzz();
   }
 
   // Patate explosion
@@ -392,79 +470,117 @@ function drawQ_host(room, gs) {
     return;
   }
 
-  const aHtml = q.a.map((a,i) => {
-    let cls = "";
-    if (gs.revealed) { if(i===q.c) cls=" ok"; else cls=" dim"; }
-    return `<button class="ab${cls}" disabled><span class="lbl">${LB[i]}</span><span style="flex:1">${a}</span>${gs.revealed&&i===q.c?"<span>✅</span>":""}</button>`;
-  }).join("");
-
-  let buzzInd = "";
-  if (gs.buzzed && !gs.revealed && rType !== "patate") {
-    const bI = gs.players.indexOf(gs.buzzed);
-    buzzInd = `<div style="padding:10px 14px;border-radius:11px;background:${COL[bI%8].bg}22;border:2px solid ${COL[bI%8].bg}88;text-align:center;font-size:1rem;font-weight:700;margin-bottom:8px;animation:buzzPulse 1s ease-in-out infinite">🔔 <strong style="color:${COL[bI%8].bg}">${gs.buzzed}</strong> répond…</div>`;
-  }
-
-  // Patate holder indicator (no timer displayed)
-  if (rType==="patate" && gs.patateHolder && !gs.revealed) {
-    const pI = gs.players.indexOf(gs.patateHolder);
-    buzzInd = `<div style="padding:10px 14px;border-radius:11px;background:rgba(251,146,60,.2);border:2px solid rgba(251,146,60,.6);text-align:center;font-size:.95rem;font-weight:700;margin-bottom:8px;animation:buzzPulse 0.8s ease-in-out infinite">🥔 <strong style="color:#fb923c">${gs.patateHolder}</strong> a la patate !</div>`;
-  }
-
-  let res = "";
-  if (gs.result) {
-    const isGood = (gs.result.pts||0)>0||gs.result.scorer;
-    res = `<div class="glass fi" style="padding:13px 16px;border-radius:12px;border-color:${isGood?"rgba(34,197,94,.25)":"rgba(239,68,68,.25)"}"><div style="color:${isGood?"#86efac":"#fca5a5"};font-weight:700;font-size:.9rem">${gs.result.msg}</div></div>`;
-  }
-
-  const sc = gs.players.map((p,i) => `<div style="padding:5px 12px;border-radius:13px;font-size:.78rem;font-weight:700;background:${COL[i%8].bg}28;color:white;border:1px solid ${COL[i%8].bg}44">${p}: <strong>${gs.scores[i]||0}</strong></div>`).join("");
-
-  // Timer — NOT shown for patate (hidden timer)
+  // Timer
   let timerHtml = "";
   if (rType !== "patate" && gs.timerStart && gs.timerDur && !gs.revealed && (!gs.buzzed||rType==="chrono")) {
     const elapsed = Math.min(gs.timerDur,(Date.now()-gs.timerStart)/1000);
     const tl = Math.max(0, Math.round(gs.timerDur-elapsed));
     const col = tl<=5?"#ef4444":tl<=10?"#f59e0b":"#22c55e";
-    const dash = 106.8*(1-tl/gs.timerDur);
-    timerHtml = `<div style="position:relative;width:42px;height:42px;flex-shrink:0"><svg width="42" height="42" style="transform:rotate(-90deg);position:absolute"><circle cx="21" cy="21" r="17" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="4"/><circle cx="21" cy="21" r="17" fill="none" stroke="${col}" stroke-width="4" stroke-dasharray="106.8" stroke-dashoffset="${dash}" stroke-linecap="round" id="timerC"/></svg><div id="timerN" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.78rem;color:${tl<=5?"#ef4444":"white"}">${tl}</div></div>`;
+    const dash = 131.9*(1-tl/gs.timerDur);
+    timerHtml = `<div style="position:relative;width:58px;height:58px;flex-shrink:0"><svg width="58" height="58" style="transform:rotate(-90deg);position:absolute"><circle cx="29" cy="29" r="21" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="6"/><circle cx="29" cy="29" r="21" fill="none" stroke="${col}" stroke-width="6" stroke-dasharray="131.9" stroke-dashoffset="${dash}" stroke-linecap="round" id="timerC"/></svg><div id="timerN" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;color:${tl<=5?"#ef4444":"white"}">${tl}</div></div>`;
     const tS=gs.timerStart, tD=gs.timerDur;
-    function tickTimer(){ const e2=Math.min(tD,(Date.now()-tS)/1000),tl2=Math.max(0,Math.round(tD-e2)); const n=$("timerN"),c=$("timerC"); if(n){n.textContent=tl2;n.style.color=tl2<=5?"#ef4444":"white";} if(c){c.setAttribute("stroke-dashoffset",106.8*(1-tl2/tD));c.setAttribute("stroke",tl2<=5?"#ef4444":tl2<=10?"#f59e0b":"#22c55e");} if(tl2>0) requestAnimationFrame(tickTimer); }
-    requestAnimationFrame(tickTimer);
+    let _lastTick = -1;
+    function tickTimer(){ const e2=Math.min(tD,(Date.now()-tS)/1000),tl2=Math.max(0,Math.round(tD-e2)); const n=$("timerN"),c=$("timerC"); if(n){n.textContent=tl2;n.style.color=tl2<=5?"#ef4444":"white";} if(c){c.setAttribute("stroke-dashoffset",131.9*(1-tl2/tD));c.setAttribute("stroke",tl2<=5?"#ef4444":tl2<=10?"#f59e0b":"#22c55e");} if(tl2>0){ if(tl2 !== _lastTick){ _lastTick=tl2; tl2<=5 ? SFX.tickUrgent() : SFX.tick(); } _timerRafId = requestAnimationFrame(tickTimer); } else { _timerRafId = null; } }
+    _timerRafId = requestAnimationFrame(tickTimer);
   }
 
-  // Balloon bar for carton
+  // Elim / patate bar
   let elimBar = "";
   if (rType==="carton") {
-    const balloons=gs.balloons||gs.players.map(()=>3);
-    const eliminated=gs.roundElim||[];
-    elimBar=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">${gs.players.map((p,i)=>{
-      const b=balloons[i]||0; const dead=eliminated.includes(p);
-      return`<div style="padding:5px 12px;border-radius:12px;font-size:.78rem;font-weight:700;background:${dead?"rgba(239,68,68,.08)":COL[i%8].bg+"22"};color:${dead?"rgba(255,255,255,.25)":"white"};border:1px solid ${dead?"rgba(239,68,68,.3)":COL[i%8].bg+"33"};display:flex;align-items:center;gap:4px"><span style="text-decoration:${dead?"line-through":"none"}">${p}</span><span>${"🎈".repeat(b)}${dead?" 💀":""}</span></div>`;
-    }).join("")}</div>`;
+    const balloons=gs.balloons||gs.players.map(()=>3), eliminated=gs.roundElim||[];
+    elimBar=`<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:6px">${gs.players.map((p,i)=>{ const b=balloons[i]||0,dead=eliminated.includes(p); return`<div style="padding:5px 13px;border-radius:12px;font-size:.78rem;font-weight:700;background:${dead?"rgba(239,68,68,.08)":COL[i%8].bg+"22"};color:${dead?"rgba(255,255,255,.25)":"white"};border:1px solid ${dead?"rgba(239,68,68,.3)":COL[i%8].bg+"44"}">${p} ${"🎈".repeat(b)}${dead?" 💀":""}</div>`; }).join("")}</div>`;
   }
-  // Patate bar
   if (rType==="patate") {
-    elimBar=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center"><span style="font-size:.72rem;color:rgba(255,255,255,.38);font-weight:600">🥔 Manche ${(gs.patateManche||0)+1}/4</span>${gs.players.map((p,i)=>{
-      const h=p===gs.patateHolder;
-      return`<div style="padding:5px 12px;border-radius:12px;font-size:.78rem;font-weight:700;background:${h?"rgba(251,146,60,.3)":COL[i%8].bg+"22"};color:${h?"#fb923c":"rgba(255,255,255,.5)"};border:${h?"2px solid rgba(251,146,60,.7)":"1px solid "+COL[i%8].bg+"33"};animation:${h?"buzzPulse 1s ease-in-out infinite":"none"}">${h?"🥔 ":""}${p}</div>`;
-    }).join("")}</div>`;
+    elimBar=`<div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:6px"><span style="font-size:.75rem;color:rgba(255,255,255,.38);font-weight:600">🥔 Manche ${(gs.patateManche||0)+1}/4</span>${gs.players.map((p,i)=>{ const h=p===gs.patateHolder; return`<div style="padding:5px 13px;border-radius:12px;font-size:.78rem;font-weight:700;background:${h?"rgba(251,146,60,.3)":COL[i%8].bg+"22"};color:${h?"#fb923c":"rgba(255,255,255,.5)"};border:${h?"2px solid rgba(251,146,60,.7)":"1px solid "+COL[i%8].bg+"44"};animation:${h?"buzzPulse 1s ease-in-out infinite":"none"}">${h?"🥔 ":""}${p}</div>`; }).join("")}</div>`;
   }
 
+  // Buzz indicator
+  let buzzInd = "";
+  if (gs.buzzed && !gs.revealed && rType !== "patate") {
+    const bI = gs.players.indexOf(gs.buzzed);
+    buzzInd = `<div style="padding:14px 22px;border-radius:16px;background:${COL[bI%8].bg}22;border:2px solid ${COL[bI%8].bg}99;text-align:center;font-size:1.25rem;font-weight:800;animation:buzzPulse 1s ease-in-out infinite">🔔 <span style="color:${COL[bI%8].bg}">${gs.buzzed}</span> répond…</div>`;
+  }
+  if (rType==="patate" && gs.patateHolder && !gs.revealed) {
+    buzzInd = `<div style="padding:14px 22px;border-radius:16px;background:rgba(251,146,60,.2);border:2px solid rgba(251,146,60,.6);text-align:center;font-size:1.15rem;font-weight:800;animation:buzzPulse 0.8s ease-in-out infinite">🥔 <span style="color:#fb923c">${gs.patateHolder}</span> a la patate !</div>`;
+  }
+
+  // Result
+  let res = "";
+  if (gs.result && gs.revealed) {
+    const isGood = (gs.result.pts||0)>0||gs.result.scorer;
+    res = `<div style="padding:16px 22px;border-radius:16px;border:2px solid ${isGood?"rgba(34,197,94,.5)":"rgba(239,68,68,.5)"};background:${isGood?"rgba(34,197,94,.12)":"rgba(239,68,68,.12)"};text-align:center"><div style="color:${isGood?"#86efac":"#fca5a5"};font-weight:800;font-size:1.2rem">${gs.result.msg}</div>${q.f&&gs.revealed?`<div style="color:rgba(255,255,255,.5);font-size:.85rem;margin-top:6px">💡 ${q.f}</div>`:""}</div>`;
+  }
+
+  // Answer buttons — couleurs A=bleu B=rouge C=vert D=jaune
+  const ANS_COLORS = [
+    { bg:'#1d4ed8', border:'#93c5fd', glow:'#3b82f6', lbl:'A' },
+    { bg:'#dc2626', border:'#fca5a5', glow:'#ef4444', lbl:'B' },
+    { bg:'#16a34a', border:'#86efac', glow:'#22c55e', lbl:'C' },
+    { bg:'#ca8a04', border:'#fde68a', glow:'#eab308', lbl:'D' },
+  ];
+  const aHtml = q.a.map((a,i) => {
+    const ac = ANS_COLORS[i];
+    const isCorrect = i === q.c;
+    const bg   = gs.revealed ? (isCorrect ? '#15803d' : 'rgba(20,20,40,.5)') : ac.bg;
+    const bord = gs.revealed ? (isCorrect ? '#4ade80' : 'rgba(80,80,100,.4)') : ac.border;
+    const opacity = gs.revealed && !isCorrect ? '0.45' : '1';
+    const glow = gs.revealed ? '' : `box-shadow:0 0 18px ${ac.glow}66,inset 0 1px 0 rgba(255,255,255,.2)`;
+    return `<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:16px;background:${bg};border:2px solid ${bord};opacity:${opacity};transition:all .3s;height:100%;min-height:0;box-sizing:border-box;${glow}">
+      <div style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.15rem;flex-shrink:0;box-shadow:0 0 8px rgba(255,255,255,.2)">${ac.lbl}</div>
+      <span style="font-size:clamp(.9rem,1.8vw,1.3rem);font-weight:700;flex:1;line-height:1.35">${a}</span>
+      ${gs.revealed && isCorrect ? `<span style="font-size:1.4rem;flex-shrink:0">✅</span>` : ""}
+    </div>`;
+  }).join("");
+
   const qTotal = (gs.rQs||{})[gs.roundIdx]?.length || 1;
-  R(`<div class="sc" style="justify-content:flex-start;padding:14px;max-width:640px;margin:0 auto;padding-top:18px">
-    <div style="display:flex;align-items:center;gap:9px;width:100%;margin-bottom:8px">
-      <span style="color:rgba(255,255,255,.33);font-size:.72rem;font-weight:700;white-space:nowrap">${rType==="patate"?`🥔 Manche ${(gs.patateManche||0)+1}/4`:rType==="carton"?`🎯 Tir à la Carabine`:`Q${gs.qIdx+1}/${qTotal}`}</span>
-      <div style="flex:1;height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden"><div style="height:100%;width:${((gs.qIdx+1)/qTotal*100)}%;background:linear-gradient(90deg,${t.dark},${t.accent});border-radius:3px"></div></div>
-      ${timerHtml}
+  const sc = gs.players.map((p,i) => `<div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:12px;background:${COL[i%8].bg}22;border:1px solid ${COL[i%8].bg}55"><div style="width:8px;height:8px;border-radius:50%;background:${COL[i%8].bg};flex-shrink:0"></div><span style="font-size:.82rem;font-weight:600;flex:1">${p}</span><span style="font-size:.9rem;font-weight:800;color:${COL[i%8].bg}">${gs.scores[i]||0}</span></div>`).join("");
+
+  R(`<div style="position:fixed;inset:0;overflow:hidden;pointer-events:none">
+
+    <!-- Scores en haut à gauche -->
+    <div style="position:absolute;top:16px;left:16px;width:28%;box-sizing:border-box;z-index:3">
+      <div style="background:rgba(0,0,0,.5);backdrop-filter:blur(14px);border-radius:16px;border:1px solid rgba(255,255,255,.2);padding:12px 14px;display:flex;flex-direction:column;gap:6px">
+        <div style="font-size:.6rem;font-weight:800;color:rgba(255,255,255,.6);letter-spacing:.12em">SCORES</div>
+        ${sc}
+      </div>
     </div>
-    <div style="display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.06);margin-bottom:10px"><span>${r.icon}</span><span style="color:rgba(255,255,255,.48);font-size:.7rem;font-weight:600">${r.name}</span></div>
-    ${elimBar}
-    <div class="glass pop" style="padding:20px 17px;border-radius:17px;width:100%;margin-bottom:12px">
-      <p style="font-size:clamp(.9rem,3vw,1.2rem);font-weight:600;line-height:1.6;text-align:center">${q.q}</p>
-    </div>
-    ${buzzInd}${aHtml}${res}
-    <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:10px">${sc}</div>
-    <div style="margin-top:8px;padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.04);text-align:center">
-      <span style="font-size:.65rem;color:rgba(255,255,255,.2)">📺 Écran hôte — les joueurs répondent sur leur téléphone</span>
+
+    <!-- Panneau question à droite (2/3 de la largeur, toute la hauteur) -->
+    <div style="position:absolute;top:0;right:0;width:65%;height:100%;box-sizing:border-box">
+
+      <!-- LEDs -->
+      <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,${t.accent},#fff,${t.accent},#fff,${t.accent});background-size:200% 100%;animation:ledSweep 2.5s linear infinite;box-shadow:0 0 12px 2px ${t.accent},0 0 24px 4px ${t.accent}88;z-index:2"></div>
+      <div style="position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,${t.accent},#fff,${t.accent},#fff,${t.accent});background-size:200% 100%;animation:ledSweep 2.5s linear infinite reverse;box-shadow:0 0 12px 2px ${t.accent},0 0 24px 4px ${t.accent}88;z-index:2"></div>
+      <div style="position:absolute;top:4px;left:0;bottom:4px;width:4px;background:linear-gradient(180deg,${t.accent},#fff,${t.accent});background-size:100% 200%;animation:ledSweep 3s linear infinite;box-shadow:0 0 12px 2px ${t.accent};z-index:2"></div>
+
+      <!-- Contenu -->
+      <div style="width:100%;height:100%;background:linear-gradient(160deg,rgba(20,20,60,.6) 0%,rgba(10,10,40,.7) 100%);backdrop-filter:blur(16px);border-left:3px solid ${t.accent}cc;display:flex;flex-direction:column;padding:20px 26px 20px 28px;gap:13px;box-sizing:border-box;overflow:hidden;pointer-events:all">
+
+        <!-- Header -->
+        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+          <div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;background:${t.accent}44;border:1px solid ${t.accent}aa;white-space:nowrap;box-shadow:0 0 8px ${t.accent}55"><span>${r.icon}</span><span style="color:white;font-size:.7rem;font-weight:700">${r.name}</span></div>
+          <span style="color:rgba(255,255,255,.75);font-size:.72rem;font-weight:700;white-space:nowrap">${rType==="patate"?`🥔 M.${(gs.patateManche||0)+1}/4`:rType==="carton"?`🎯 Tir`:rType==="orage"?`⚡ Orage`:rType==="chrono"?`⏱ Chrono`:`Q${gs.qIdx+1}/${qTotal}`}</span>
+          <div style="flex:1;height:6px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden"><div style="height:100%;width:${((gs.qIdx+1)/qTotal*100)}%;background:linear-gradient(90deg,${t.dark},${t.accent});border-radius:3px;box-shadow:0 0 6px ${t.accent}"></div></div>
+          ${timerHtml}
+        </div>
+
+        ${elimBar}
+
+        <!-- Question -->
+        <div style="flex-shrink:0;padding:20px 26px;border-radius:18px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);box-shadow:0 4px 30px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2)">
+          <p style="font-size:clamp(1.05rem,2.5vw,1.7rem);font-weight:800;line-height:1.5;text-align:center;color:white;margin:0">${q.q}</p>
+        </div>
+
+        <!-- Réponses 2×2 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;min-height:0">
+          ${aHtml}
+        </div>
+
+        <!-- Buzz / résultat -->
+        ${buzzInd}
+        ${res}
+
+      </div>
     </div>
   </div>`);
 }
