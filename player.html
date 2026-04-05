@@ -47,34 +47,44 @@
     .score-pill-name{font-size:.7rem;color:#4a5a7a;font-weight:500;white-space:nowrap;max-width:60px;overflow:hidden;text-overflow:ellipsis}
     .score-pill.me .score-pill-name{color:var(--accent)}
     .score-pill-val{font-family:'Bebas Neue',sans-serif;font-size:1.1rem;line-height:1}
-    .game-body{flex:1;width:100%;display:flex;flex-direction:column;padding:16px;gap:12px;overflow:hidden;position:relative}
+    .game-body{flex:1;width:100%;display:flex;flex-direction:column;overflow:hidden;position:relative}
     .game-body::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,var(--accent-glow) 0%,transparent 70%);opacity:.3;pointer-events:none;animation:bgPulse 4s ease-in-out infinite}
     @keyframes bgPulse{0%,100%{opacity:.2}50%{opacity:.4}}
-    #state-buzz{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+    #state-buzz{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px}
     .buzz-btn{width:min(200px,55vw);height:min(200px,55vw);border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;transition:transform .1s}
     .buzz-btn:active{transform:scale(0.94)}
     .buzz-btn-inner{width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}
     .buzz-label{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:.1em;color:white}
     .buzz-sublabel{font-size:.65rem;color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase}
     .buzz-hint{font-size:.72rem;color:#2a3a55;text-align:center;max-width:220px;line-height:1.5}
-    #state-answers{flex:1;display:flex;flex-direction:column;gap:10px}
-    .answer-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:center}
-    .answer-btn{border:none;border-radius:16px;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:12px 8px;transition:all .15s}
+
+    /* ── Zone réponses : 75% de l'écran depuis le bas ── */
+    #state-answers{position:absolute;bottom:0;left:0;right:0;height:75vh;display:flex;flex-direction:column;padding:10px 12px 14px}
+    .answer-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;min-height:0}
+
+    /* Bouton : remplit sa cellule, texte fluide */
+    .answer-btn{border:none;border-radius:20px;cursor:pointer;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px;transition:all .15s;position:relative;overflow:hidden}
     .answer-btn:active:not([disabled]){transform:scale(0.96)}
     .answer-btn[disabled]{cursor:default}
-    .answer-letter{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;line-height:1;color:white}
-    .answer-text{font-size:.88rem;font-weight:500;color:rgba(255,255,255,.85);text-align:center;line-height:1.3}
-    .answer-btn.c0{background:#1e3399;border:1.5px solid #3050bb}
-    .answer-btn.c1{background:#991e1e;border:1.5px solid #bb3030}
-    .answer-btn.c2{background:#1e9944;border:1.5px solid #30bb55}
-    .answer-btn.c3{background:#997a1e;border:1.5px solid #bb9930}
-    .answer-btn.ok{background:#14532d!important;border:3px solid #22c55e!important;box-shadow:0 0 25px #22c55e88,0 0 50px #22c55e44;animation:correctGlow 1.2s ease-in-out infinite}
-    .answer-btn.no{background:#7f1d1d!important;border:3px solid #ef4444!important;box-shadow:0 0 20px #ef444488;animation:wrongShake .4s ease}
-    .answer-btn.dim{opacity:.3}
-    .answer-btn.selected{border:3px solid white!important;box-shadow:0 0 15px rgba(255,255,255,0.3);transform:scale(1.03);animation:selectedPulse 1.5s ease-in-out infinite}
-    @keyframes selectedPulse{0%,100%{box-shadow:0 0 15px rgba(255,255,255,0.3)}50%{box-shadow:0 0 25px rgba(255,255,255,0.5)}}
-    .answer-btn.dim-wait{opacity:.35}
-    .answer-sent{font-size:.75rem;color:#4ade80;text-align:center;margin-top:4px;font-weight:600;animation:fadeIn .3s ease}
+    .answer-letter{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,5vw,2rem);line-height:1;color:white;opacity:.9}
+    .answer-text{font-size:clamp(.85rem,3.5vw,1.35rem);font-weight:600;color:rgba(255,255,255,.95);text-align:center;line-height:1.3;word-break:break-word}
+
+    /* Couleurs + glow lumineux par défaut */
+    .answer-btn.c0{background:linear-gradient(145deg,#1e3399,#2a45bb);border:2px solid #4a6ae0;box-shadow:0 0 22px #3050bb66,0 0 50px #1e339933,inset 0 1px 0 rgba(255,255,255,.12)}
+    .answer-btn.c1{background:linear-gradient(145deg,#991e1e,#bb2a2a);border:2px solid #e04a4a;box-shadow:0 0 22px #bb303066,0 0 50px #99101033,inset 0 1px 0 rgba(255,255,255,.12)}
+    .answer-btn.c2{background:linear-gradient(145deg,#1e7a3a,#22994a);border:2px solid #40cc66;box-shadow:0 0 22px #30bb5566,0 0 50px #1e993333,inset 0 1px 0 rgba(255,255,255,.12)}
+    .answer-btn.c3{background:linear-gradient(145deg,#7a5e1e,#997828);border:2px solid #ccaa40;box-shadow:0 0 22px #bb993066,0 0 50px #997a1033,inset 0 1px 0 rgba(255,255,255,.12)}
+    /* Pulse continu sur les boutons non-sélectionnés */
+    .answer-btn.c0,.answer-btn.c1,.answer-btn.c2,.answer-btn.c3{animation:btnGlow 3s ease-in-out infinite}
+    @keyframes btnGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.15)}}
+
+    .answer-btn.ok{background:linear-gradient(145deg,#145228,#1a7a38)!important;border:3px solid #22c55e!important;box-shadow:0 0 30px #22c55e99,0 0 60px #22c55e44!important;animation:correctGlow 1.2s ease-in-out infinite!important}
+    .answer-btn.no{background:linear-gradient(145deg,#7f1d1d,#991e1e)!important;border:3px solid #ef4444!important;box-shadow:0 0 25px #ef444488!important;animation:wrongShake .4s ease!important}
+    .answer-btn.dim{opacity:.28;filter:saturate(.3);animation:none!important}
+    .answer-btn.selected{border:3px solid white!important;box-shadow:0 0 20px rgba(255,255,255,0.45),0 0 40px rgba(255,255,255,0.2)!important;transform:scale(1.03);animation:selectedPulse 1.5s ease-in-out infinite!important}
+    @keyframes selectedPulse{0%,100%{box-shadow:0 0 20px rgba(255,255,255,0.45),0 0 40px rgba(255,255,255,0.2)}50%{box-shadow:0 0 30px rgba(255,255,255,0.65),0 0 60px rgba(255,255,255,0.3)}}
+    .answer-btn.dim-wait{opacity:.35;animation:none!important}
+    .answer-sent{font-size:.8rem;color:#4ade80;text-align:center;margin-top:4px;font-weight:600;animation:fadeIn .3s ease}
     @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
     @keyframes correctGlow{0%,100%{box-shadow:0 0 25px #22c55e88,0 0 50px #22c55e44}50%{box-shadow:0 0 35px #22c55eaa,0 0 70px #22c55e66}}
     @keyframes wrongShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
