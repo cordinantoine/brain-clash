@@ -48,6 +48,27 @@ const COL = [
   { bg:"#f97316", gw:"#f9731655" },
 ];
 
+// ── Avatars joueurs ──
+const AVATARS = [
+  { file:'av01.png', bg:'#2d8040' },  // archéologue
+  { file:'av02.png', bg:'#8b2fd0' },  // DJ
+  { file:'av03.png', bg:'#7ac420' },  // ado téléphone
+  { file:'av04.png', bg:'#6b70cc' },  // mamie
+  { file:'av05.png', bg:'#00b8c8' },  // couturière
+  { file:'av06.png', bg:'#f5d000' },  // agent immobilier
+  { file:'av07.png', bg:'#c0185c' },  // infirmière
+  { file:'av08.png', bg:'#6020a0' },  // samouraï
+  { file:'av09.png', bg:'#b81820' },  // viking
+  { file:'av10.png', bg:'#7ac420' },  // scientifique fou
+  { file:'av11.png', bg:'#e8a800' },  // sheriff
+  { file:'av12.png', bg:'#c04020' },  // chef cuisto
+  { file:'av13.png', bg:'#1848c0' },  // astronaute
+  { file:'av14.png', bg:'#009890' },  // pirate
+];
+
+// Chemin relatif vers les avatars (depuis index.html)
+const AVATAR_PATH = 'JS/assets/avatars/';
+
 // ── Labels des réponses ──
 const LB = ["A", "B", "C", "D"];
 
