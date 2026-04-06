@@ -419,8 +419,9 @@ function drawScore(room, gs, isFinal) {
     window.SCENE3D.updateScores(gs.scores, gs.players);
     isFinal ? window.SCENE3D.react() : window.SCENE3D.idle();
   }
-  const ranked = gs.players.map((p,i)=>({name:p,score:gs.scores[i],i})).sort((a,b)=>b.score-a.score);
-  const rows   = ranked.map((p,rank)=>`<div class="glass su" style="padding:12px 15px;display:flex;align-items:center;gap:11px;animation-delay:${rank*.07}s;border-radius:15px;${rank===0&&isFinal?`border-color:${t.accent};background:${t.accent}10`:""}"><div style="width:38px;height:38px;border-radius:50%;flex-shrink:0;background:${rank===0?`linear-gradient(135deg,${t.dark},${t.accent})`:COL[p.i%8].bg+"44"};display:flex;align-items:center;justify-content:center;font-size:.95rem">${isFinal?(rank===0?"🥇":rank===1?"🥈":rank===2?"🥉":rank+1):rank+1}</div><div style="flex:1;font-weight:700;color:${p.name===ME?"white":"rgba(255,255,255,.8)"}">${p.name}${p.name===ME?" (vous)":""}</div><div style="font-weight:900;font-size:1.35rem;color:${rank===0?t.accent:"rgba(255,255,255,.6)"}">${p.score}</div></div>`).join("");
+  const _rp    = toArr(room.players);
+  const ranked = gs.players.map((p,i)=>{ const rpi=_rp.find(x=>x.name===p); const avIdx=(rpi&&rpi.avatar!==undefined)?rpi.avatar:(i%AVATARS.length); return {name:p,score:gs.scores[i],i,av:AVATARS[avIdx]||AVATARS[0]}; }).sort((a,b)=>b.score-a.score);
+  const rows   = ranked.map((p,rank)=>`<div class="glass su" style="padding:12px 15px;display:flex;align-items:center;gap:11px;animation-delay:${rank*.07}s;border-radius:15px;border:2px solid ${p.av.bg}66;background:${p.av.bg}12;box-shadow:0 0 18px ${p.av.bg}33;${rank===0&&isFinal?`border-color:${t.accent};background:${t.accent}10;box-shadow:0 0 28px ${t.accent}55`:``}"><img src="${AVATAR_PATH}${p.av.file}" style="width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:center top;flex-shrink:0;border:2px solid ${p.av.bg};box-shadow:0 0 10px ${p.av.bg}88" alt=""><div style="flex:1;font-weight:700;color:${p.name===ME?"white":"rgba(255,255,255,.8)"}">${p.name}${p.name===ME?" (vous)":""}</div><div style="font-size:1.1rem;flex-shrink:0">${isFinal?(rank===0?"🥇":rank===1?"🥈":rank===2?"🥉":"#"+(rank+1)):("#"+(rank+1))}</div><div style="font-weight:900;font-size:1.35rem;color:${p.av.bg};text-shadow:0 0 10px ${p.av.bg}99">${p.score}</div></div>`).join("");
   R(`<div class="sc" style="max-width:430px;margin:0 auto;padding:20px;gap:12px"><div class="float" style="text-align:center"><div style="font-size:3rem">${isFinal?"🏆":"📊"}</div><h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-top:4px">${isFinal?"Victoire !":"Scores"}</h2>${isFinal?`<p style="color:${t.accent};font-weight:700;margin-top:3px">🎉 ${ranked[0].name} remporte la partie !</p>`:`<p style="color:rgba(255,255,255,.38);font-size:.82rem;margin-top:2px">Prochain round dans quelques secondes…</p>`}</div><div style="width:100%;display:flex;flex-direction:column;gap:8px">${rows}</div>${isFinal?`<button class="btn" id="bH" style="background:linear-gradient(135deg,${t.dark},${t.accent});color:white;padding:13px 28px">🏠 Retour à l'accueil</button>`:""}</div>`);
   if (isFinal) on("bH","click",()=>{ if(STOP)STOP(); if(HOST && CODE) fd(`rooms/${CODE}`); Home(); });
 }
@@ -533,7 +534,19 @@ function drawQ_host(room, gs) {
   }).join("");
 
   const qTotal = (gs.rQs||{})[gs.roundIdx]?.length || 1;
-  const sc = gs.players.map((p,i) => `<div style="display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:12px;background:${COL[i%8].bg}22;border:1px solid ${COL[i%8].bg}55"><div style="width:8px;height:8px;border-radius:50%;background:${COL[i%8].bg};flex-shrink:0"></div><span style="font-size:.82rem;font-weight:600;flex:1">${p}</span><span style="font-size:.9rem;font-weight:800;color:${COL[i%8].bg}">${gs.scores[i]||0}</span></div>`).join("");
+
+  // Récupérer l'avatar de chaque joueur depuis room.players
+  const _roomPlayers = toArr(room.players);
+  const sc = gs.players.map((p,i) => {
+    const rp  = _roomPlayers.find(x => x.name === p);
+    const avIdx = (rp && rp.avatar !== undefined) ? rp.avatar : (i % AVATARS.length);
+    const av  = AVATARS[avIdx] || AVATARS[0];
+    return `<div style="display:flex;align-items:center;gap:10px;padding:6px 12px;border-radius:12px;background:${av.bg}22;border:2px solid ${av.bg}88;box-shadow:0 0 12px ${av.bg}44,0 0 24px ${av.bg}22;transition:all .3s">
+      <img src="${AVATAR_PATH}${av.file}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;object-position:center top;flex-shrink:0;border:2px solid ${av.bg};box-shadow:0 0 8px ${av.bg}66" alt="">
+      <span style="font-size:.82rem;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p}</span>
+      <span style="font-size:1rem;font-weight:900;color:${av.bg};text-shadow:0 0 8px ${av.bg}88">${gs.scores[i]||0}</span>
+    </div>`;
+  }).join("");
 
   R(`<div style="position:fixed;inset:0;overflow:hidden;pointer-events:none">
 
