@@ -33,7 +33,6 @@ const RT = [
   { id:"steal",  name:"Vol de Points",         icon:"😈",  desc:"Tous répondent ! Le premier correct vole des points à un adversaire." },
   { id:"patate", name:"Patate Chaude",         icon:"🥔",  desc:"Une bombe aléatoire à chaque question… elle explose et ça fait mal !" },
   { id:"carton", name:"Tir à la Carabine",     icon:"🎯",  desc:"Dernier survivant avec des ballons 🎈 gagne ! Bonne réponse → crevez un ballon adverse." },
-  { id:"orage",  name:"Orage de Points",       icon:"⚡",  desc:"60 secondes de questions rapides ! Gros points en jeu !" },
 ];
 
 // ── Couleurs des joueurs ──

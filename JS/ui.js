@@ -353,7 +353,7 @@ function drawQ(room, gs) {
   const aHtml = q.a.map((a,i)=>{
     let cls = "";
     if (gs.revealed) { if(i===q.c) cls=" ok"; else if(i===myAnsIdx) cls=" no"; else cls=" dim"; }
-    const noNeedBuzz = rType==="chrono"||rType==="qcm"||rType==="orage";
+    const noNeedBuzz = rType==="chrono"||rType==="qcm";
     const canClick   = !gs.revealed&&!amElim&&!amOut&&!myAnswered&&(noNeedBuzz||(rType==="patate"?iHavePatate:amBuzzer))&&!gs.pickTarget;
     return `<button class="ab${cls}" ${canClick?"":"disabled"} onclick="${canClick?`G.ans(${i})`:""}""><span class="lbl">${LB[i]}</span><span style="flex:1">${a}</span>${gs.revealed&&i===q.c?"<span>✅</span>":""}${gs.revealed&&i===myAnsIdx&&i!==q.c?"<span>❌</span>":""}</button>`;
   }).join("");
@@ -364,11 +364,10 @@ function drawQ(room, gs) {
     const pickLabel  = rType==="steal"?"😈 Choisissez à qui voler !":rType==="carton"?"🎯 Sur qui tirer ?":"Choisissez une cible !";
     const balloons   = gs.balloons||gs.players.map(()=>3);
     act = `<div class="glass fi" style="padding:15px;border-radius:15px"><p style="font-weight:700;text-align:center;margin-bottom:10px;font-size:.9rem">${pickLabel}</p>${elig.map(p=>{ const pi=gs.players.indexOf(p); const info=rType==="carton"?`${"🎈".repeat(balloons[pi])} (${balloons[pi]})`:`${gs.scores[pi]} pts`; return `<button class="btn" onclick="G.pick('${p}')" style="width:100%;padding:11px 14px;border-radius:13px;background:${COL[pi%8].bg+"33"};border:2px solid ${COL[pi%8].bg+"88"};color:white;justify-content:space-between;margin-bottom:8px;font-size:.88rem"><span>${p}</span><span style="font-size:.8rem;color:${t.accent}">${info}</span></button>`; }).join("")}</div>`;
-  } else if ((rType==="chrono"||rType==="qcm"||rType==="orage") && myAnswered && !gs.revealed) {
+  } else if ((rType==="chrono"||rType==="qcm") && myAnswered && !gs.revealed) {
     act = `<div style="padding:11px 14px;border-radius:11px;background:rgba(34,197,94,.14);border:1px solid rgba(34,197,94,.28);text-align:center;color:#86efac;font-weight:600;font-size:.84rem">✅ Réponse envoyée — En attente des autres…</div>`;
   } else if (!gs.revealed && !gs.pickTarget) {
-    if (rType==="orage") { const oe=gs.orageStart?Math.min(60,Math.round((Date.now()-gs.orageStart)/1000)):0; const ol=Math.max(0,60-oe); const oc=ol<15?"#ef4444":ol<30?"#f59e0b":"#22d3ee"; act=`<div style="padding:8px 12px;border-radius:11px;background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.2);display:flex;align-items:center;gap:10px"><span>⚡</span><div style="flex:1;height:6px;background:rgba(255,255,255,.08);border-radius:3px;overflow:hidden"><div style="height:100%;width:${(ol/60)*100}%;background:${oc};border-radius:3px;transition:width 1s linear"></div></div><span style="color:${oc};font-weight:800;font-size:.85rem">${ol}s</span></div>`; }
-    else if (rType==="patate") { if(iHavePatate){ act=`<div style="padding:13px 16px;border-radius:13px;background:rgba(251,146,60,.2);border:2px solid rgba(251,146,60,.6);text-align:center;font-weight:700;font-size:.95rem;animation:buzzPulse 0.8s ease-in-out infinite">🥔 VOUS AVEZ LA PATATE !<br><span style="font-size:.78rem;font-weight:500;color:rgba(255,255,255,.7)">Répondez juste pour la passer !</span></div>`; } else if(gs.patateHolder){ act=`<div style="padding:11px 14px;border-radius:11px;background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.25);text-align:center;font-size:.86rem;color:rgba(255,255,255,.6)">🥔 <strong style="color:#fb923c">${gs.patateHolder}</strong> a la patate… ⏳</div>`; } }
+    if (rType==="patate") { if(iHavePatate){ act=`<div style="padding:13px 16px;border-radius:13px;background:rgba(251,146,60,.2);border:2px solid rgba(251,146,60,.6);text-align:center;font-weight:700;font-size:.95rem;animation:buzzPulse 0.8s ease-in-out infinite">🥔 VOUS AVEZ LA PATATE !<br><span style="font-size:.78rem;font-weight:500;color:rgba(255,255,255,.7)">Répondez juste pour la passer !</span></div>`; } else if(gs.patateHolder){ act=`<div style="padding:11px 14px;border-radius:11px;background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.25);text-align:center;font-size:.86rem;color:rgba(255,255,255,.6)">🥔 <strong style="color:#fb923c">${gs.patateHolder}</strong> a la patate… ⏳</div>`; } }
     else if (amElim)  { act=`<div style="padding:11px;text-align:center;color:rgba(255,255,255,.3);font-size:.82rem;background:rgba(239,68,68,.08);border-radius:11px">💀 Éliminé(e) de cette manche</div>`; }
     else if (amOut)   { act=`<div style="padding:11px;text-align:center;color:rgba(255,255,255,.3);font-size:.82rem;background:rgba(239,68,68,.06);border-radius:11px">❌ Vous avez déjà tenté votre chance</div>`; }
     else if (!gs.buzzed) { act=`<button class="btn" onclick="G.buzz()" style="width:100%;padding:20px;border-radius:15px;background:${COL[gs.players.indexOf(ME)%8]?.bg||"#7c3aed"};color:white;font-size:1.1rem;animation:buzzPulse 2s ease-in-out infinite;box-shadow:0 4px 22px ${COL[gs.players.indexOf(ME)%8]?.gw||"#7c3aed55"}">🔔 BUZZER !</button>`; }
@@ -400,7 +399,7 @@ function drawQ(room, gs) {
   const qTotal = (gs.rQs||{})[gs.roundIdx]?.length || 1;
   R(`<div class="sc" style="justify-content:flex-start;padding:14px;max-width:640px;margin:0 auto;padding-top:18px">
     <div style="display:flex;align-items:center;gap:9px;width:100%;margin-bottom:8px">
-      <span style="color:rgba(255,255,255,.33);font-size:.72rem;font-weight:700;white-space:nowrap">${rType==="orage"?`⚡ ${Math.max(0,60-Math.round((Date.now()-(gs.orageStart||Date.now()))/1000))}s`:rType==="carton"?`🎯 Tir à la Carabine`:rType==="patate"?`🥔 Manche ${(gs.patateManche||0)+1}/4`:`Q${gs.qIdx+1}/${qTotal}`}</span>
+      <span style="color:rgba(255,255,255,.33);font-size:.72rem;font-weight:700;white-space:nowrap">${rType==="carton"?`🎯 Tir à la Carabine`:rType==="patate"?`🥔 Manche ${(gs.patateManche||0)+1}/4`:`Q${gs.qIdx+1}/${qTotal}`}</span>
       <div style="flex:1;height:5px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden"><div style="height:100%;width:${((gs.qIdx+1)/qTotal*100)}%;background:linear-gradient(90deg,${t.dark},${t.accent});border-radius:3px"></div></div>
       ${timerHtml}
     </div>
@@ -572,7 +571,7 @@ function drawQ_host(room, gs) {
         <!-- Header -->
         <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
           <div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;background:${t.accent}44;border:1px solid ${t.accent}aa;white-space:nowrap;box-shadow:0 0 8px ${t.accent}55"><span>${r.icon}</span><span style="color:white;font-size:.7rem;font-weight:700">${r.name}</span></div>
-          <span style="color:rgba(255,255,255,.75);font-size:.72rem;font-weight:700;white-space:nowrap">${rType==="patate"?`🥔 M.${(gs.patateManche||0)+1}/4`:rType==="carton"?`🎯 Tir`:rType==="orage"?`⚡ Orage`:rType==="chrono"?`⏱ Chrono`:`Q${gs.qIdx+1}/${qTotal}`}</span>
+          <span style="color:rgba(255,255,255,.75);font-size:.72rem;font-weight:700;white-space:nowrap">${rType==="patate"?`🥔 M.${(gs.patateManche||0)+1}/4`:rType==="carton"?`🎯 Tir`:rType==="chrono"?`⏱ Chrono`:`Q${gs.qIdx+1}/${qTotal}`}</span>
           <div style="flex:1;height:6px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden"><div style="height:100%;width:${((gs.qIdx+1)/qTotal*100)}%;background:linear-gradient(90deg,${t.dark},${t.accent});border-radius:3px;box-shadow:0 0 6px ${t.accent}"></div></div>
           ${timerHtml}
         </div>

@@ -95,7 +95,6 @@ async function hostStartQ(room, gs, rQs) {
 
   // Rounds QCM-style
   if (rType === "qcm")    { await roundQCM_start(room, gs, rQs); return; }
-  if (rType === "orage")  { await roundOrage_start(room, gs, rQs); return; }
   if (rType === "chrono") { await roundChrono_start(room, gs, rQs); return; }
   if (rType === "steal")  { await roundSteal_start(room, gs, rQs); return; }
   if (rType === "carton") {
@@ -159,7 +158,6 @@ async function hostProcessAnswer(room, gs, rQs, isOk) {
     await roundBuzzer_process(room, gs, rQs, isOk);
   }
   else if (rType === "qcm")    { await roundQCM_end(room, gs, rQs); }
-  else if (rType === "orage")  { await roundOrage_end(room, gs, rQs); }
   else if (rType === "chrono") { await roundChrono_end(room, gs, rQs); }
   else if (rType === "patate") {
     // DON'T clear HTIMER for patate — explosion timer must keep ticking
@@ -207,8 +205,8 @@ async function actAnswer(ansIdx) {
   const rType = room.rounds[gs.roundIdx];
   const q = gs.rQs[gs.roundIdx][gs.qIdx];
 
-  // QCM-style rounds: chrono, qcm, orage, steal, carton
-  if (["chrono","qcm","orage","steal","carton"].includes(rType)) {
+  // QCM-style rounds: chrono, qcm, steal, carton
+  if (["chrono","qcm","steal","carton"].includes(rType)) {
     if ((gs.answers||{})[ME]!==undefined) return;
     await fp(`rooms/${CODE}`, { [`gameState/answers/${ME}`]:{ ansIdx, time:Date.now() } });
     if (HOST) {
@@ -229,7 +227,6 @@ async function actAnswer(ansIdx) {
         if(HTIMER){clearTimeout(HTIMER);HTIMER=null;}
         if(rType==="chrono") await roundChrono_end(room,upd,gs.rQs);
         else if(rType==="qcm") await roundQCM_end(room,upd,gs.rQs);
-        else if(rType==="orage") await roundOrage_end(room,upd,gs.rQs);
       }
     }
     return;
@@ -305,14 +302,13 @@ function Watch(initialRoom) {
             roundPatate_process(room,{...gs,buzzed:gs.patateHolder},gs.rQs,isOk); return;
           }
 
-          // QCM-style rounds: chrono, qcm, orage
-          if (["chrono","qcm","orage"].includes(rType)) {
+          // QCM-style rounds: chrono, qcm
+          if (["chrono","qcm"].includes(rType)) {
             const alive=toArr(gs.players).filter(p=>!toArr(gs.roundElim).includes(p));
             if(Object.keys(answers).length>=alive.length){
               if(HTIMER){clearTimeout(HTIMER);HTIMER=null;}
               if(rType==="chrono") roundChrono_end(room,gs,gs.rQs);
               else if(rType==="qcm") roundQCM_end(room,gs,gs.rQs);
-              else if(rType==="orage") roundOrage_end(room,gs,gs.rQs);
               return;
             }
           }

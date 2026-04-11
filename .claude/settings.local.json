@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__Claude_Preview__preview_start",
+      "Bash(npx --version)",
+      "Bash(where node:*)",
+      "Bash(where npx:*)",
+      "Bash(while read:*)",
+      "Bash(do echo:*)",
+      "Bash(done)",
+      "Bash(node -e \"QUESTIONS={}; require\\(''./JS/Questions/hp.js''\\); console.log\\(''Count:'', QUESTIONS.hp.length\\); console.log\\(''OK''\\)\")",
+      "Bash(netstat -ano)",
+      "Bash(findstr \":8080\")",
+      "Bash(taskkill /PID 6840 /F)",
+      "Bash(cmd /c \"taskkill /PID 6840 /F\")",
+      "Bash(findstr :8080)",
+      "Bash(taskkill //PID 6840 //F)",
+      "Bash(cp \"C:/Users/cordi/Desktop/Animation AJ/GLB/Aj.glb\" \"C:/Users/cordi/Desktop/Brain Clash/JS/assets/models/\")",
+      "Bash(cp \"C:/Users/cordi/Desktop/Animation AJ/GLB/Idle.glb\" \"C:/Users/cordi/Desktop/Brain Clash/JS/assets/models/\")",
+      "Bash(cp \"C:/Users/cordi/Desktop/Animation AJ/GLB/Talking.glb\" \"C:/Users/cordi/Desktop/Brain Clash/JS/assets/models/\")",
+      "Bash(cp \"C:/Users/cordi/Desktop/Animation AJ/GLB/Clapping.glb\" \"C:/Users/cordi/Desktop/Brain Clash/JS/assets/models/\")",
+      "Bash(cp \"C:/Users/cordi/Desktop/Animation AJ/GLB/Defeated.glb\" \"C:/Users/cordi/Desktop/Brain Clash/JS/assets/models/\")",
+      "Bash(__NEW_LINE_a8b3587047be3f12__ copy:*)",
+      "Bash(__NEW_LINE_a8b3587047be3f12__ echo:*)",
+      "Bash(cmd /c \"copy \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8974.PNG\"\" \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av01.png\"\" && copy \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8975.PNG\"\" \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av02.png\"\" && copy \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8976.PNG\"\" \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av03.png\"\" && copy \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8977.PNG\"\" \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av04.png\"\" && copy \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8978.PNG\"\" \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av05.png\"\" && copy \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8979.PNG\"\" \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av06.png\"\" && copy \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8980.PNG\"\" \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av07.png\"\" && copy \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8981.PNG\"\" \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av08.png\"\" && copy \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8982.PNG\"\" \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av09.png\"\" && copy \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8983.PNG\"\" \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av10.png\"\" && copy \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8984.PNG\"\" \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av11.png\"\" && copy \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8985.PNG\"\" \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av12.png\"\" && copy \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8986.PNG\"\" \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av13.png\"\" && copy \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8987.PNG\"\" \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av14.png\"\" && echo DONE\")",
+      "Bash(cmd /c \"dir \"\"C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\"\"\")",
+      "Bash(powershell -Command \"Copy-Item ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8974.PNG'' ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av01.png''; Copy-Item ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8975.PNG'' ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av02.png''; Copy-Item ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8976.PNG'' ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av03.png''; Copy-Item ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8977.PNG'' ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av04.png''; Copy-Item ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8978.PNG'' ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av05.png''; Copy-Item ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8979.PNG'' ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av06.png''; Copy-Item ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8980.PNG'' ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av07.png''; Copy-Item ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8981.PNG'' ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av08.png''; Copy-Item ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8982.PNG'' ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av09.png''; Copy-Item ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8983.PNG'' ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av10.png''; Copy-Item ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8984.PNG'' ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av11.png''; Copy-Item ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8985.PNG'' ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av12.png''; Copy-Item ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8986.PNG'' ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av13.png''; Copy-Item ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC\\\\IMG_8987.PNG'' ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\av14.png''; Write-Host ''Done''\")",
+      "Bash(powershell -Command \"Get-ChildItem ''C:\\\\Users\\\\cordi\\\\Desktop\\\\Brain Clash\\\\JS\\\\assets\\\\avatars\\\\'' | Select-Object Name, Length\")",
+      "Bash(powershell -Command \"Remove-Item -Path ''C:\\\\Users\\\\cordi\\\\Desktop\\\\VRAC'' -Recurse -Force; Write-Host ''VRAC supprimé''\")"
+    ]
+  }
+}

@@ -239,7 +239,6 @@ const RT = [
   { id:"steal",  name:"Vol de Points",         icon:"😈", desc:"Tous répondent ! Le premier correct vole des points." },
   { id:"patate", name:"Patate Chaude",         icon:"🥔", desc:"Une bombe aléatoire à chaque question !" },
   { id:"carton", name:"Tir à la Carabine",     icon:"🎯", desc:"Dernier survivant avec des ballons 🎈 gagne ! Bonne réponse → crevez un ballon adverse." },
-  { id:"orage",  name:"Orage de Points",       icon:"⚡", desc:"60 secondes de questions rapides !" },
 ];
 
 const COLORS = ['#ef4444','#3b82f6','#22c55e','#f59e0b','#a855f7','#ec4899','#14b8a6','#f97316'];
@@ -614,7 +613,7 @@ function renderState(room, gs) {
   }
 
   // Résultat révélé — QCM-style : montrer les boutons colorés ok/no
-  if (gs.revealed && gs.result && ['qcm','chrono','orage','steal','carton'].includes(rType)) {
+  if (gs.revealed && gs.result && ['qcm','chrono','steal','carton'].includes(rType)) {
     renderAnswers(gs, q);
     // Ajouter le message de résultat sous la grille
     const oldMsg = document.querySelector('.reveal-msg');
@@ -646,8 +645,8 @@ function renderState(room, gs) {
     return;
   }
 
-  // QCM-style rounds: qcm, chrono, orage, steal, carton — tout le monde répond
-  if (['qcm','chrono','orage','steal','carton'].includes(rType)) {
+  // QCM-style rounds: qcm, chrono, steal, carton — tout le monde répond
+  if (['qcm','chrono','steal','carton'].includes(rType)) {
     if (myAns !== undefined) {
       showState('state-waiting');
       G('waiting-text').textContent = '✅ Réponse envoyée ! En attente des autres…';
