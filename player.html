@@ -599,6 +599,7 @@ function renderState(room, gs) {
       </div>`;
     return;
   }
+  if (gs.phase === 'questionResult') { renderInterResult(room, gs); return; }
   if (gs.phase === 'scoreboard') {
     renderScoreboard(gs);
     return;
@@ -765,6 +766,81 @@ function renderResult(gs, q) {
     pts.className = 'result-pts bad'; pts.textContent = gs.result?.pts < 0 ? gs.result.pts : '';
     msg.textContent = q ? `Bonne réponse : ${q.a[q.c]}` : '';
   }
+}
+
+function renderInterResult(room, gs) {
+  showState('state-waiting');
+  const el = G('waiting-text');
+  if (!el) return;
+  const rType = room.rounds[gs.roundIdx] || '';
+  const q = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
+  const myAns = (gs.answers||{})[ME];
+  const isCorrect = myAns !== undefined && myAns.ansIdx === q?.c;
+  const scorer = gs.result?.scorer;
+  const pts = gs.result?.pts || 0;
+
+  // Personal result chip
+  let personalHtml = '';
+  if (rType === 'patate') {
+    const isExplosion = pts < 0 || (gs.result?.msg||'').includes('BOOM');
+    if (isExplosion && scorer === ME) {
+      personalHtml = `<div style="font-size:.95rem;font-weight:700;color:#f87171;padding:8px 14px;border-radius:10px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3)">${pts} pts 💥</div>`;
+    } else {
+      personalHtml = `<div style="font-size:.85rem;color:rgba(255,255,255,.5);padding:6px 12px;border-radius:10px;background:rgba(255,255,255,.05)">En attente…</div>`;
+    }
+  } else if (myAns === undefined && scorer !== ME) {
+    personalHtml = `<div style="font-size:.85rem;color:rgba(255,255,255,.5);padding:6px 12px;border-radius:10px;background:rgba(255,255,255,.05)">⏱️ Temps écoulé</div>`;
+  } else if (isCorrect || scorer === ME) {
+    const gain = (scorer === ME && pts > 0) ? pts : (isCorrect ? pts : 0);
+    personalHtml = `<div style="font-size:1.1rem;font-weight:800;color:#4ade80;padding:8px 16px;border-radius:12px;background:rgba(34,197,94,.15);border:1px solid rgba(34,197,94,.3)">${gain > 0 ? '+' : ''}${gain} pts ✅</div>`;
+  } else {
+    const loss = pts < 0 ? pts : 0;
+    personalHtml = `<div style="font-size:1.1rem;font-weight:800;color:#f87171;padding:8px 16px;border-radius:12px;background:rgba(239,68,68,.15);border:1px solid rgba(239,68,68,.3)">${loss !== 0 ? loss+' pts' : ''} ❌</div>`;
+  }
+
+  // Correct answer reveal
+  let ansHtml = '';
+  if (q && rType !== 'patate' || (rType === 'patate' && gs.revealed)) {
+    const labels = ['A','B','C','D'];
+    if (q) ansHtml = `<div style="padding:8px 14px;border-radius:10px;background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.3);font-size:.82rem;text-align:center">Bonne réponse : <strong style="color:#86efac">${labels[q.c]} — ${q.a[q.c]}</strong></div>`;
+  }
+
+  // Round-specific extra info
+  let extraHtml = '';
+  if (rType === 'chrono' && gs.chronoRanking) {
+    const ranking = toArr(gs.chronoRanking);
+    const myRank = ranking.findIndex(e => e.name === ME);
+    const medals = ['🥇','🥈','🥉'];
+    if (myRank >= 0) {
+      extraHtml = `<div style="font-size:.8rem;color:rgba(255,255,255,.55);padding:6px 12px;border-radius:8px;background:rgba(255,255,255,.05)">${medals[myRank]||('#'+(myRank+1))} ${ME} — ${ranking[myRank].pts>0?'+'+ranking[myRank].pts:'0'} pts</div>`;
+    }
+  } else if (rType === 'steal' && gs.result?.msg) {
+    extraHtml = `<div style="font-size:.78rem;color:rgba(255,255,255,.5);text-align:center;max-width:240px">${gs.result.msg}</div>`;
+  } else if (rType === 'patate') {
+    const holder = gs.patateHolder;
+    if (holder && holder !== ME) {
+      extraHtml = `<div style="font-size:.85rem;color:#fb923c;font-weight:700">🥔 ${holder} a la patate</div>`;
+    } else if (holder === ME) {
+      extraHtml = `<div style="font-size:.85rem;color:#fb923c;font-weight:700;animation:buzzPulse .8s ease-in-out infinite">🥔 Tu as la patate !</div>`;
+    }
+    extraHtml += `<div style="font-size:.7rem;color:rgba(255,255,255,.35)">Manche ${(gs.patateManche||0)}/4</div>`;
+  } else if (rType === 'carton' && gs.balloons) {
+    const balloons = toArr(gs.balloons);
+    const myIdx = toArr(gs.players).indexOf(ME);
+    if (myIdx >= 0) {
+      const b = balloons[myIdx] || 0;
+      extraHtml = `<div style="font-size:.9rem;font-weight:700">${'🎈'.repeat(b)||'💀'} ${b} ballon${b>1?'s':''}</div>`;
+    }
+  }
+
+  el.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;gap:12px;padding:8px;text-align:center;width:100%">
+      <div style="font-size:.65rem;font-weight:800;letter-spacing:.12em;color:rgba(255,255,255,.3);text-transform:uppercase">Résultat</div>
+      ${personalHtml}
+      ${ansHtml}
+      ${extraHtml}
+      <div style="font-size:.65rem;color:rgba(255,255,255,.2);margin-top:4px">Prochaine question dans quelques secondes…</div>
+    </div>`;
 }
 
 function renderScoreboard(gs) {

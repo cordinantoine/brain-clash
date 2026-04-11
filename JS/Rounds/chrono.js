@@ -75,10 +75,11 @@ async function roundChrono_end(room, gs, rQs) {
     }).join("  ");
   }
   await fp(`rooms/${CODE}`, {
+    "gameState/phase":"questionResult",
     "gameState/revealed":true,
     "gameState/result":{ msg, pts:correct.length ? Math.round(BASE * COEFF[0]) : 0, scorer:correct[0]?.[0] || null },
     "gameState/scores":sc,
     "gameState/chronoRanking":ranking
   });
-  setTimeout(() => hostNextQ(room, gs, rQs), 4000);
+  setTimeout(() => hostNextQ(room, gs, rQs), 4500);
 }

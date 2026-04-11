@@ -31,6 +31,6 @@ async function roundQCM_end(room, gs, rQs) {
   const msg = correct.length
     ? `✅ Bonne réponse : ${q.a[q.c]} — ${correct.join(", ")} marquent +${pts} pts !`
     : `❌ Personne ! Bonne réponse : ${q.a[q.c]}`;
-  await fp(`rooms/${CODE}`, { "gameState/revealed":true, "gameState/result":{ msg, pts, scorer:correct[0] || null }, "gameState/scores":sc });
-  setTimeout(() => hostNextQ(room, gs, rQs), 3000);
+  await fp(`rooms/${CODE}`, { "gameState/phase":"questionResult", "gameState/revealed":true, "gameState/result":{ msg, pts, scorer:correct[0] || null }, "gameState/scores":sc });
+  setTimeout(() => hostNextQ(room, gs, rQs), 4500);
 }

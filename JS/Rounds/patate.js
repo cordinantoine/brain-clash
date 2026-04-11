@@ -62,13 +62,14 @@ async function roundPatate_start(room, gs, rQs) {
     const newManche = (cur.patateManche || 0) + 1;
 
     await fp(`rooms/${CODE}`, {
+      "gameState/phase":"questionResult",
       "gameState/revealed":true, "gameState/scores":sc,
       "gameState/patateExplodeAt":null, "gameState/patateExplosion":true,
       "gameState/result":{ msg:`💥 BOOM ! ${loser} explose ! -${losePts} pts`, pts:-losePts, scorer:loser },
       "gameState/patateManche":newManche
     });
 
-    // After 2.5s: next manche or end round
+    // After 3.5s: next manche or end round
     setTimeout(async () => {
       await fp(`rooms/${CODE}`, { "gameState/patateExplosion":null });
       if (newManche >= 4) {
@@ -79,7 +80,7 @@ async function roundPatate_start(room, gs, rQs) {
         const upd = await fg(`rooms/${CODE}/gameState`);
         hostStartQ(room, { ...upd, patateManche:newManche, scores:sc }, rQs);
       }
-    }, 2500);
+    }, 3500);
   }, explodeDelay);
 }
 
@@ -95,26 +96,29 @@ async function roundPatate_process(room, gs, rQs, isOk) {
     const newHolder = others[Math.floor(Math.random() * others.length)];
 
     await fp(`rooms/${CODE}`, {
+      "gameState/phase":"questionResult",
       "gameState/result":{ msg:`✅ ${holder} passe la patate à ${newHolder} !`, pts:0, scorer:null },
       "gameState/patateHolder":newHolder,
       "gameState/buzzed":null, "gameState/answers":{}, "gameState/buzzedOut":[]
     });
 
-    // Brief display then next question
+    // 2.5s then restore question phase manually (do NOT call hostStartQ — keeps explosion timer intact)
     setTimeout(async () => {
       const cur = await fg(`rooms/${CODE}/gameState`);
       if (!cur || cur.revealed || cur.patateExplosion || (cur.patateManche || 0) >= 4) return;
-      await fp(`rooms/${CODE}`, { "gameState/result":null });
       const pool = rQs[cur.roundIdx] || [];
       const nextQ = (cur.qIdx + 1) % pool.length;
       await fp(`rooms/${CODE}`, {
+        "gameState/phase":"question",
+        "gameState/result":null,
         "gameState/qIdx":nextQ, "gameState/answers":{},
         "gameState/buzzed":null, "gameState/revealed":false, "gameState/buzzedOut":[]
       });
-    }, 1000);
+    }, 2500);
   } else {
     // Keep potato, next question
     await fp(`rooms/${CODE}`, {
+      "gameState/phase":"questionResult",
       "gameState/result":{ msg:`❌ Raté ! ${holder} garde la patate !`, pts:0, scorer:null },
       "gameState/buzzed":null, "gameState/answers":{}, "gameState/buzzedOut":[]
     });
@@ -122,13 +126,14 @@ async function roundPatate_process(room, gs, rQs, isOk) {
     setTimeout(async () => {
       const cur = await fg(`rooms/${CODE}/gameState`);
       if (!cur || cur.revealed || cur.patateExplosion || (cur.patateManche || 0) >= 4) return;
-      await fp(`rooms/${CODE}`, { "gameState/result":null });
       const pool = rQs[cur.roundIdx] || [];
       const nextQ = (cur.qIdx + 1) % pool.length;
       await fp(`rooms/${CODE}`, {
+        "gameState/phase":"question",
+        "gameState/result":null,
         "gameState/qIdx":nextQ, "gameState/answers":{},
         "gameState/buzzed":null, "gameState/revealed":false, "gameState/buzzedOut":[]
       });
-    }, 1000);
+    }, 2500);
   }
 }
