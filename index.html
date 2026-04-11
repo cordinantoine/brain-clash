@@ -9,8 +9,6 @@
 </head>
 <body>
 
-  <canvas id="canvas3d"></canvas>
-  <div id="fog3d"></div>
   <div id="bg"></div>
   <div id="app"></div>
 
@@ -19,14 +17,12 @@
   ORDRE DE CHARGEMENT — NE PAS MODIFIER L'ORDRE
   ═══════════════════════════════════════════════
 
-  ÉTAPE 1 — Moteur 3D
-  ÉTAPE 2 — Config globale
-  ÉTAPE 3 — Firebase
-  ÉTAPE 4 — Questions (index en premier, puis les thèmes)
-  ÉTAPE 5 — Scène 3D
-  ÉTAPE 6 — Rounds (chacun indépendant)
-  ÉTAPE 7 — Logique principale
-  ÉTAPE 8 — Interface
+  ÉTAPE 1 — Config globale
+  ÉTAPE 2 — Firebase
+  ÉTAPE 3 — Questions (index en premier, puis les thèmes)
+  ÉTAPE 4 — Rounds (chacun indépendant)
+  ÉTAPE 5 — Logique principale
+  ÉTAPE 6 — Interface
 
   ➕ Pour ajouter un thème  → créer js/questions/montheme.js
                               + ajouter une ligne <script> ici
@@ -35,17 +31,13 @@
                               + gérer le cas dans game.js
   -->
 
-  <!-- ÉTAPE 1 : Moteur 3D -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
-
-  <!-- ÉTAPE 2 : Config globale (THEMES, RT, COL, variables d'état) -->
+  <!-- ÉTAPE 1 : Config globale (THEMES, RT, COL, variables d'état) -->
   <script src="js/config.js"></script>
 
-  <!-- ÉTAPE 3 : Firebase (fg, fs, fp, fd, fl) -->
+  <!-- ÉTAPE 2 : Firebase (fg, fs, fp, fd, fl) -->
   <script src="js/firebase.js"></script>
 
-  <!-- ÉTAPE 4 : Questions — index en premier, puis un fichier par thème -->
+  <!-- ÉTAPE 3 : Questions — index en premier, puis un fichier par thème -->
   <script src="js/questions/index.js"></script>
   <script src="js/questions/culture.js"></script>
   <script src="js/questions/music.js"></script>
@@ -61,10 +53,7 @@
   <script src="js/questions/francaise.js"></script>
   <script src="js/questions/lotr.js"></script>
 
-  <!-- ÉTAPE 5 : Scène 3D (silhouette, ambiances, animations) -->
-  <script src="js/scene3d.js"></script>
-
-  <!-- ÉTAPE 6 : Rounds — un fichier par mode de jeu -->
+  <!-- ÉTAPE 5 : Rounds — un fichier par mode de jeu -->
   <script src="js/rounds/qcm.js"></script>
   <script src="js/rounds/buzzer.js"></script>
   <script src="js/rounds/chrono.js"></script>
@@ -72,10 +61,10 @@
   <script src="js/rounds/patate.js"></script>
   <script src="js/rounds/carton.js"></script>
 
-  <!-- ÉTAPE 7 : Logique principale (orchestre les rounds) -->
+  <!-- ÉTAPE 5 : Logique principale (orchestre les rounds) -->
   <script src="js/game.js"></script>
 
-  <!-- ÉTAPE 8 : Interface (Home, drawQ, drawScore...) -->
+  <!-- ÉTAPE 6 : Interface (Home, drawQ, drawScore...) -->
   <script src="js/ui.js"></script>
 
 </body>

@@ -83,7 +83,6 @@ function R(h) { A.innerHTML = h; }
 
 // ── Change le thème visuel (3D + étoiles CSS) ──
 function setBG(tid) {
-  if (window.SCENE3D) window.SCENE3D.setTheme(tid);
   const t = THEMES[tid] || THEMES.culture;
   const bg = document.getElementById("bg");
   bg.innerHTML = "";
@@ -99,11 +98,9 @@ function setBG(tid) {
 // ════════════════════════════════════════════
 function Home() {
   setBG("culture");
-  if (window.SCENE3D) { window.SCENE3D.exitGameMode(); window.SCENE3D.resetScreen(); window.SCENE3D.idle(); window.SCENE3D.showLogo(true); }
-  const _fog = document.getElementById('fog3d'); if (_fog) _fog.style.display = '';
   R(`<div class="sc"><div class="float" style="text-align:center;margin-bottom:10px"><div style="font-size:4.5rem">🧠</div><p style="color:rgba(255,255,255,.42);font-size:.8rem;letter-spacing:.25em;font-weight:600;margin-top:5px">LE JEU DE QUIZ ULTIME</p></div><div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px"><button class="btn" id="bC" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);color:white;width:100%;padding:16px">🏠 Créer une partie</button><button class="btn" id="bJ" style="background:linear-gradient(135deg,#0891b2,#22d3ee);color:white;width:100%;padding:16px">🚪 Rejoindre une partie</button></div><p style="color:rgba(255,255,255,.18);font-size:.7rem">Multi-appareils · 9 thèmes · 250 questions</p></div>`);
-  on("bC","click",()=>{ if(window.SCENE3D) window.SCENE3D.showLogo(false); Create(1); });
-  on("bJ","click",()=>{ if(window.SCENE3D) window.SCENE3D.showLogo(false); Join(); });
+  on("bC","click",()=>{ Create(1); });
+  on("bJ","click",()=>{ Join(); });
 }
 
 // ════════════════════════════════════════════
@@ -112,7 +109,6 @@ function Home() {
 function Create(step) {
   const t = THEMES[CD.themes[0]] || THEMES.culture;
   setBG(CD.themes[0] || "culture");
-  if (window.SCENE3D) window.SCENE3D.showLogo(false);
 
   if (step === 1) {
     R(`<div class="sc"><div class="glass su" style="width:100%;max-width:380px;padding:24px 20px"><button id="bBk" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:.8rem;margin-bottom:16px">← Retour</button><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:3px">Créer une partie</h2><p style="color:rgba(255,255,255,.38);margin-bottom:4px;font-size:.8rem">Étape 1/3</p><p style="color:rgba(255,255,255,.22);margin-bottom:18px;font-size:.72rem">📺 Cet écran sera le plateau du jeu. Les joueurs rejoignent sur leur téléphone.</p><label style="color:rgba(255,255,255,.5);font-size:.75rem;font-weight:600;margin-bottom:7px;display:block">Nombre max de joueurs</label><div id="mpGrid" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px"></div><button class="btn" id="bNx" style="width:100%;padding:13px;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:white">Suivant →</button></div></div>`);
@@ -204,7 +200,6 @@ async function doJoin() {
 function Lobby(room) {
   const t   = THEMES[room.theme] || THEMES.culture;
   setBG(room.theme);
-  if (window.SCENE3D) { window.SCENE3D.resetScreen(); window.SCENE3D.idle(); window.SCENE3D.showLogo(false); }
 
   const pathParts = window.location.pathname.split('/');
   pathParts[pathParts.length - 1] = 'player.html';
@@ -245,7 +240,6 @@ async function doLaunch() {
 function Wait(room) {
   const t = THEMES[room.theme] || THEMES.culture;
   setBG(room.theme);
-  if (window.SCENE3D) { window.SCENE3D.resetScreen(); window.SCENE3D.idle(); window.SCENE3D.showLogo(false); }
   function draw(cur) {
     const rows = toArr(cur.players).map((p,i)=>`<div style="display:flex;align-items:center;gap:8px;padding:6px 10px;border-radius:9px;background:rgba(255,255,255,.04)"><div style="width:22px;height:22px;border-radius:50%;background:${COL[i%8].bg};flex-shrink:0"></div><span style="font-size:.84rem;font-weight:600">${p.name}</span>${p.isHost?`<span style="margin-left:auto;font-size:.62rem;color:${t.accent};font-weight:700">HÔTE</span>`:""}</div>`).join("");
     R(`<div class="sc"><div class="float" style="text-align:center"><div style="font-size:2.8rem">⏳</div><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;margin-top:4px">En attente…</h2><p style="color:rgba(255,255,255,.42);margin-top:3px;font-size:.84rem">L'hôte n'a pas encore lancé</p></div><div class="glass" style="padding:17px 19px;text-align:center;max-width:320px;width:100%"><p style="color:${t.accent};font-weight:700;margin-bottom:4px">Code : ${room.code}</p><p style="color:rgba(255,255,255,.48);font-size:.82rem">Vous jouez en tant que <strong>${ME}</strong></p><div style="margin-top:12px;display:grid;gap:6px">${rows}</div></div><button class="btn" id="bLv" style="background:rgba(255,255,255,.07);color:white;padding:11px 24px;font-size:.84rem">Quitter</button></div>`);
@@ -267,7 +261,6 @@ function Wait(room) {
 function drawLoading(room) {
   const t = THEMES[room.theme] || THEMES.culture;
   setBG(room.theme || "culture");
-  if (window.SCENE3D) { window.SCENE3D.resetScreen(); window.SCENE3D.idle(); window.SCENE3D.showLogo(false); }
   R(`<div class="sc"><div class="float" style="font-size:4rem">${t.emoji}</div><h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;text-align:center">${t.name}</h2><div style="position:relative;width:58px;height:58px"><svg width="58" height="58" style="transform:rotate(-90deg);animation:spinArc 1.2s linear infinite;position:absolute"><circle cx="29" cy="29" r="23" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="5"/><circle cx="29" cy="29" r="23" fill="none" stroke="${t.accent}" stroke-width="5" stroke-dasharray="144.5" stroke-linecap="round"/></svg></div><p style="color:rgba(255,255,255,.42);font-size:.88rem">Chargement des questions…</p></div>`);
 }
 
@@ -275,9 +268,6 @@ function drawIntro(room, gs) {
   const t     = THEMES[room.theme] || THEMES.culture;
   const rType = room.rounds[gs.roundIdx||0];
   const r     = RT.find(x => x.id === rType) || RT[0];
-  if (window.SCENE3D) { window.SCENE3D.enterGameMode(); window.SCENE3D.talk(); }
-  const _fog = document.getElementById('fog3d'); if (_fog) _fog.style.display = 'none';
-
   // Check if countdown is active
   if (gs.countdownStart) {
     const _cdRender = () => {
@@ -303,11 +293,16 @@ function drawIntro(room, gs) {
   const readyCount = Object.keys(readyMap).length;
   const allReady = readyCount >= players.length;
 
+  const _roomPs = toArr(room.players);
   const playerGrid = players.map((p, i) => {
     const isReady = !!readyMap[p];
+    const rp = _roomPs.find(x => x.name === p);
+    const avIdx = (rp && rp.avatar !== undefined) ? rp.avatar : (i % AVATARS.length);
+    const av = AVATARS[avIdx] || AVATARS[0];
     return `<div class="ready-player ${isReady?'is-ready':''}">
+      <img src="${AVATAR_PATH}${av.file}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:center top;flex-shrink:0;border:2px solid ${av.bg};box-shadow:0 0 8px ${av.bg}66" alt="">
+      <span style="font-weight:600;font-size:.85rem;flex:1;color:${isReady?'#86efac':'rgba(255,255,255,.55)'}">${p}</span>
       <div class="ready-check">${isReady?'✓':''}</div>
-      <span style="font-weight:600;font-size:.85rem;color:${isReady?'#86efac':'rgba(255,255,255,.5)'}">${p}</span>
     </div>`;
   }).join("");
 
@@ -331,16 +326,6 @@ function drawQ(room, gs) {
   const r     = RT.find(x => x.id === rType) || RT[0];
   const q     = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
   if (!q) return;
-
-  if (window.SCENE3D) {
-    if (gs.revealed && gs.result) {
-      window.SCENE3D.updateReveal(true, gs.result);
-      ((gs.result.pts||0) > 0 || gs.result.scorer) ? window.SCENE3D.react() : window.SCENE3D.talk();
-    } else {
-      window.SCENE3D.updateQuestion(q);
-      window.SCENE3D.talk();
-    }
-  }
 
   const amElim    = (gs.roundElim||[]).includes(ME);
   const iHavePatate = rType==="patate" && gs.patateHolder===ME;
@@ -414,10 +399,6 @@ function drawQ(room, gs) {
 
 function drawScore(room, gs, isFinal) {
   const t = THEMES[room.theme] || THEMES.culture;
-  if (window.SCENE3D) {
-    window.SCENE3D.updateScores(gs.scores, gs.players);
-    isFinal ? window.SCENE3D.react() : window.SCENE3D.idle();
-  }
   const _rp    = toArr(room.players);
   const ranked = gs.players.map((p,i)=>{ const rpi=_rp.find(x=>x.name===p); const avIdx=(rpi&&rpi.avatar!==undefined)?rpi.avatar:(i%AVATARS.length); return {name:p,score:gs.scores[i],i,av:AVATARS[avIdx]||AVATARS[0]}; }).sort((a,b)=>b.score-a.score);
   const rows   = ranked.map((p,rank)=>`<div class="glass su" style="padding:12px 15px;display:flex;align-items:center;gap:11px;animation-delay:${rank*.07}s;border-radius:15px;border:2px solid ${p.av.bg}66;background:${p.av.bg}12;box-shadow:0 0 18px ${p.av.bg}33;${rank===0&&isFinal?`border-color:${t.accent};background:${t.accent}10;box-shadow:0 0 28px ${t.accent}55`:``}"><img src="${AVATAR_PATH}${p.av.file}" style="width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:center top;flex-shrink:0;border:2px solid ${p.av.bg};box-shadow:0 0 10px ${p.av.bg}88" alt=""><div style="flex:1;font-weight:700;color:${p.name===ME?"white":"rgba(255,255,255,.8)"}">${p.name}${p.name===ME?" (vous)":""}</div><div style="font-size:1.1rem;flex-shrink:0">${isFinal?(rank===0?"🥇":rank===1?"🥈":rank===2?"🥉":"#"+(rank+1)):("#"+(rank+1))}</div><div style="font-weight:900;font-size:1.35rem;color:${p.av.bg};text-shadow:0 0 10px ${p.av.bg}99">${p.score}</div></div>`).join("");
@@ -442,19 +423,6 @@ function drawQ_host(room, gs) {
   const _wasBuzzed   = drawQ_host._lastBuzzed;
   drawQ_host._lastRevealed = gs.revealed;
   drawQ_host._lastBuzzed   = gs.buzzed;
-
-  if (window.SCENE3D) {
-    window.SCENE3D.resetScreen();
-    // Ajuster la taille du canvas 3D selon le nombre de joueurs
-    window.SCENE3D.setPlayerCount(gs.players?.length || 4);
-    if (gs.revealed && gs.result) {
-      // scorer non-null = au moins 1 joueur a eu juste → applaudissements, sinon → defeated
-      gs.result.scorer ? window.SCENE3D.react() : window.SCENE3D.defeated();
-    } else {
-      // Question posée, en attente de réponse → AJ réfléchit
-      window.SCENE3D.think();
-    }
-  }
 
   // Sons
   if (gs.revealed && !_wasRevealed) {
@@ -525,10 +493,10 @@ function drawQ_host(room, gs) {
     const bord = gs.revealed ? (isCorrect ? '#4ade80' : 'rgba(80,80,100,.4)') : ac.border;
     const opacity = gs.revealed && !isCorrect ? '0.45' : '1';
     const glow = gs.revealed ? '' : `box-shadow:0 0 18px ${ac.glow}66,inset 0 1px 0 rgba(255,255,255,.2)`;
-    return `<div style="display:flex;align-items:center;gap:14px;padding:14px 18px;border-radius:16px;background:${bg};border:2px solid ${bord};opacity:${opacity};transition:all .3s;height:100%;min-height:0;box-sizing:border-box;${glow}">
-      <div style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.15rem;flex-shrink:0;box-shadow:0 0 8px rgba(255,255,255,.2)">${ac.lbl}</div>
-      <span style="font-size:clamp(.9rem,1.8vw,1.3rem);font-weight:700;flex:1;line-height:1.35">${a}</span>
-      ${gs.revealed && isCorrect ? `<span style="font-size:1.4rem;flex-shrink:0">✅</span>` : ""}
+    return `<div style="display:flex;align-items:center;gap:18px;padding:18px 26px;border-radius:20px;background:${bg};border:2px solid ${bord};opacity:${opacity};transition:all .3s;height:100%;min-height:0;box-sizing:border-box;${glow}">
+      <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.35rem;flex-shrink:0;box-shadow:0 0 10px rgba(255,255,255,.25)">${ac.lbl}</div>
+      <span style="font-size:clamp(1.05rem,2.2vw,1.55rem);font-weight:700;flex:1;line-height:1.4">${a}</span>
+      ${gs.revealed && isCorrect ? `<span style="font-size:1.7rem;flex-shrink:0">✅</span>` : ""}
     </div>`;
   }).join("");
 
@@ -547,18 +515,18 @@ function drawQ_host(room, gs) {
     </div>`;
   }).join("");
 
-  R(`<div style="position:fixed;inset:0;overflow:hidden;pointer-events:none">
+  R(`<div style="position:fixed;inset:0;display:flex;overflow:hidden;pointer-events:none">
 
-    <!-- Scores en haut à gauche -->
-    <div style="position:absolute;top:16px;left:16px;width:28%;box-sizing:border-box;z-index:3">
-      <div style="background:rgba(0,0,0,.5);backdrop-filter:blur(14px);border-radius:16px;border:1px solid rgba(255,255,255,.2);padding:12px 14px;display:flex;flex-direction:column;gap:6px">
-        <div style="font-size:.6rem;font-weight:800;color:rgba(255,255,255,.6);letter-spacing:.12em">SCORES</div>
+    <!-- Scores (gauche) -->
+    <div style="width:252px;flex-shrink:0;padding:16px 12px;z-index:3;pointer-events:all">
+      <div style="background:rgba(0,0,0,.55);backdrop-filter:blur(16px);border-radius:16px;border:1px solid rgba(255,255,255,.18);padding:12px 14px;display:flex;flex-direction:column;gap:7px">
+        <div style="font-size:.55rem;font-weight:800;color:rgba(255,255,255,.45);letter-spacing:.15em">SCORES</div>
         ${sc}
       </div>
     </div>
 
-    <!-- Panneau question à droite (2/3 de la largeur, toute la hauteur) -->
-    <div style="position:absolute;top:0;right:0;width:65%;height:100%;box-sizing:border-box">
+    <!-- Panneau question (droite, prend tout l'espace restant) -->
+    <div style="flex:1;position:relative;overflow:hidden;min-width:0">
 
       <!-- LEDs -->
       <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,${t.accent},#fff,${t.accent},#fff,${t.accent});background-size:200% 100%;animation:ledSweep 2.5s linear infinite;box-shadow:0 0 12px 2px ${t.accent},0 0 24px 4px ${t.accent}88;z-index:2"></div>
@@ -566,12 +534,12 @@ function drawQ_host(room, gs) {
       <div style="position:absolute;top:4px;left:0;bottom:4px;width:4px;background:linear-gradient(180deg,${t.accent},#fff,${t.accent});background-size:100% 200%;animation:ledSweep 3s linear infinite;box-shadow:0 0 12px 2px ${t.accent};z-index:2"></div>
 
       <!-- Contenu -->
-      <div style="width:100%;height:100%;background:linear-gradient(160deg,rgba(20,20,60,.6) 0%,rgba(10,10,40,.7) 100%);backdrop-filter:blur(16px);border-left:3px solid ${t.accent}cc;display:flex;flex-direction:column;padding:20px 26px 20px 28px;gap:13px;box-sizing:border-box;overflow:hidden;pointer-events:all">
+      <div style="width:100%;height:100%;background:linear-gradient(160deg,rgba(20,20,60,.6) 0%,rgba(10,10,40,.7) 100%);backdrop-filter:blur(16px);border-left:3px solid ${t.accent}cc;display:flex;flex-direction:column;padding:20px 30px 20px 26px;gap:14px;box-sizing:border-box;overflow:hidden;pointer-events:all">
 
         <!-- Header -->
         <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
           <div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;background:${t.accent}44;border:1px solid ${t.accent}aa;white-space:nowrap;box-shadow:0 0 8px ${t.accent}55"><span>${r.icon}</span><span style="color:white;font-size:.7rem;font-weight:700">${r.name}</span></div>
-          <span style="color:rgba(255,255,255,.75);font-size:.72rem;font-weight:700;white-space:nowrap">${rType==="patate"?`🥔 M.${(gs.patateManche||0)+1}/4`:rType==="carton"?`🎯 Tir`:rType==="chrono"?`⏱ Chrono`:`Q${gs.qIdx+1}/${qTotal}`}</span>
+          <span style="color:rgba(255,255,255,.75);font-size:.75rem;font-weight:700;white-space:nowrap">${rType==="patate"?`🥔 M.${(gs.patateManche||0)+1}/4`:rType==="carton"?`🎯 Tir`:rType==="chrono"?`⏱ Chrono`:`Q${gs.qIdx+1}/${qTotal}`}</span>
           <div style="flex:1;height:6px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden"><div style="height:100%;width:${((gs.qIdx+1)/qTotal*100)}%;background:linear-gradient(90deg,${t.dark},${t.accent});border-radius:3px;box-shadow:0 0 6px ${t.accent}"></div></div>
           ${timerHtml}
         </div>
@@ -579,16 +547,15 @@ function drawQ_host(room, gs) {
         ${elimBar}
 
         <!-- Question -->
-        <div style="flex-shrink:0;padding:20px 26px;border-radius:18px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);box-shadow:0 4px 30px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2)">
-          <p style="font-size:clamp(1.05rem,2.5vw,1.7rem);font-weight:800;line-height:1.5;text-align:center;color:white;margin:0">${q.q}</p>
+        <div style="flex-shrink:0;padding:24px 32px;border-radius:20px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);box-shadow:0 4px 30px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2)">
+          <p style="font-size:clamp(1.2rem,3vw,2.2rem);font-weight:800;line-height:1.5;text-align:center;color:white;margin:0">${q.q}</p>
         </div>
 
         <!-- Réponses 2×2 -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1;min-height:0">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;flex:1;min-height:0">
           ${aHtml}
         </div>
 
-        <!-- Buzz / résultat -->
         ${buzzInd}
         ${res}
 

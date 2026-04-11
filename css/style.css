@@ -84,13 +84,13 @@ input::placeholder { color:rgba(255,255,255,.3) }
 
 /* ── Boutons de réponse ── */
 .ab {
-  width:100%; padding:13px 15px; border-radius:13px;
-  border:2px solid rgba(255,255,255,.13);
-  background:rgba(255,255,255,.04); color:white;
-  font-family:'Poppins',sans-serif; font-size:.88rem; font-weight:600;
+  width:100%; padding:15px 17px; border-radius:14px;
+  border:2px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.06); color:white;
+  font-family:'Poppins',sans-serif; font-size:.97rem; font-weight:600;
   text-align:left; cursor:pointer;
-  display:flex; align-items:center; gap:10px;
-  transition:all .15s; margin-bottom:8px;
+  display:flex; align-items:center; gap:11px;
+  transition:all .15s; margin-bottom:9px; line-height:1.4;
 }
 .ab:hover:not([disabled]) { background:rgba(255,255,255,.1); transform:translateX(3px) }
 .ab[disabled]  { cursor:default }
@@ -99,20 +99,20 @@ input::placeholder { color:rgba(255,255,255,.3) }
 .ab.dim { opacity:.3; background:rgba(255,255,255,.01) !important; border-color:rgba(255,255,255,.05) !important }
 
 .lbl {
-  width:27px; height:27px; border-radius:7px;
-  background:rgba(255,255,255,.1);
+  width:31px; height:31px; border-radius:8px;
+  background:rgba(255,255,255,.12);
   display:flex; align-items:center; justify-content:center;
-  font-weight:700; font-size:.76rem; flex-shrink:0;
+  font-weight:800; font-size:.82rem; flex-shrink:0;
 }
 
 /* ── Ready screen (host) ── */
 .ready-grid {
-  display:grid; grid-template-columns:repeat(auto-fill,minmax(140px,1fr));
-  gap:10px; width:100%; max-width:460px;
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(190px,1fr));
+  gap:10px; width:100%; max-width:700px;
 }
 .ready-player {
-  display:flex; align-items:center; gap:8px;
-  padding:10px 14px; border-radius:12px;
+  display:flex; align-items:center; gap:9px;
+  padding:10px 14px; border-radius:13px;
   background:rgba(255,255,255,.04);
   border:1px solid rgba(255,255,255,.08);
   transition:all .3s;
@@ -161,18 +161,4 @@ input::placeholder { color:rgba(255,255,255,.3) }
   pointer-events:none;
 }
 
-/* ── Couches 3D ── */
-#canvas3d {
-  position:fixed; inset:0; z-index:0;
-  pointer-events:none;
-}
-#fog3d {
-  position:fixed; inset:0; z-index:1;
-  background: radial-gradient(ellipse 120% 60% at 50% 100%,
-    rgba(0,0,0,0) 0%,
-    rgba(0,0,0,.5) 55%,
-    rgba(0,0,0,.88) 100%
-  );
-  pointer-events:none;
-}
 #bg { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none }

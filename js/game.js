@@ -30,7 +30,7 @@ async function hostLoadQ() {
     rQs, players, scores:players.map(() => 0),
     lives:players.map(() => 3), balloons,
     cartonManche:0, patateHolder:null, patateManche:0,
-    orageStart:null, patateExplodeAt:null, patateExplosion:null,
+    patateExplodeAt:null, patateExplosion:null,
     roundElim:[], buzzed:null, buzzedOut:[], answers:{},
     revealed:false, result:null, pickTarget:false,
     timerStart:Date.now() + 4000, timerDur:null, hostPick:null,
