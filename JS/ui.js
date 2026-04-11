@@ -12,7 +12,7 @@
      - drawQ      → écran de question
      - drawScore  → tableau des scores
 
-   Dépend de : config.js, firebase.js, game.js, scene3d.js
+   Dépend de : config.js, firebase.js, game.js
    ════════════════════════════════════════════ */
 
 // ════════════════════════════════════════════
