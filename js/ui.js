@@ -12,7 +12,7 @@
      - drawQ      → écran de question
      - drawScore  → tableau des scores
 
-   Dépend de : config.js, firebase.js, game.js, scene3d.js
+   Dépend de : config.js, firebase.js, game.js
    ════════════════════════════════════════════ */
 
 // ════════════════════════════════════════════
@@ -290,29 +290,27 @@ function drawIntro(room, gs) {
   // Ready screen with player checkboxes
   const readyMap = gs.ready || {};
   const players = gs.players || [];
-  const readyCount = Object.keys(readyMap).length;
-  const allReady = readyCount >= players.length;
-
   const _roomPs = toArr(room.players);
-  const playerGrid = players.map((p, i) => {
+  const playerRows = players.map((p, i) => {
     const isReady = !!readyMap[p];
     const rp = _roomPs.find(x => x.name === p);
     const avIdx = (rp && rp.avatar !== undefined) ? rp.avatar : (i % AVATARS.length);
     const av = AVATARS[avIdx] || AVATARS[0];
-    return `<div class="ready-player ${isReady?'is-ready':''}">
-      <img src="${AVATAR_PATH}${av.file}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;object-position:center top;flex-shrink:0;border:2px solid ${av.bg};box-shadow:0 0 8px ${av.bg}66" alt="">
-      <span style="font-weight:600;font-size:.85rem;flex:1;color:${isReady?'#86efac':'rgba(255,255,255,.55)'}">${p}</span>
-      <div class="ready-check">${isReady?'✓':''}</div>
+    return `<div class="intro-player-row" style="background:${av.bg}33">
+      <span class="intro-player-name">${p}</span>
+      <div class="intro-player-square${isReady?' is-ready':''}" style="border-color:${av.bg};${isReady?'background:'+av.bg:''}"></div>
     </div>`;
   }).join("");
 
-  R(`<div class="sc">
-    <p style="color:rgba(255,255,255,.4);font-size:.85rem;font-weight:800;letter-spacing:.25em">ROUND ${(gs.roundIdx||0)+1} / ${room.rounds.length}</p>
-    <div class="pop" style="font-size:7rem">${r.icon}</div>
-    <h2 style="font-family:'Playfair Display',serif;font-size:clamp(2.6rem,7vw,4.2rem);text-align:center;text-shadow:0 0 48px ${t.accent};margin:0">${r.name}</h2>
-    <p style="color:rgba(255,255,255,.72);text-align:center;max-width:680px;line-height:1.7;font-size:clamp(1.1rem,2.5vw,1.5rem);font-weight:500;padding:0 16px">${r.desc}</p>
-    <div class="ready-grid" style="margin-top:18px">${playerGrid}</div>
-    <p style="color:rgba(255,255,255,.35);font-size:.82rem;margin-top:6px">${allReady?"Tous prêts ! Lancement…":`${readyCount}/${players.length} prêts`}</p>
+  R(`<div class="intro-screen">
+    <div class="intro-banner">★ BRAIN CLASH ★</div>
+    <div class="intro-body">
+      <div class="intro-left">${playerRows}</div>
+      <div class="intro-right glass">
+        <h2 class="intro-round-name">${r.name}</h2>
+        <p class="intro-round-desc">${r.desc}</p>
+      </div>
+    </div>
   </div>`);
 }
 
@@ -399,24 +397,155 @@ function drawQ(room, gs) {
 
 function drawScore(room, gs, isFinal) {
   const t = THEMES[room.theme] || THEMES.culture;
-  const _rp    = toArr(room.players);
-  const ranked = gs.players.map((p,i)=>{ const rpi=_rp.find(x=>x.name===p); const avIdx=(rpi&&rpi.avatar!==undefined)?rpi.avatar:(i%AVATARS.length); return {name:p,score:gs.scores[i],i,av:AVATARS[avIdx]||AVATARS[0]}; }).sort((a,b)=>b.score-a.score);
-  const rows   = ranked.map((p,rank)=>`<div class="glass su" style="padding:12px 15px;display:flex;align-items:center;gap:11px;animation-delay:${rank*.07}s;border-radius:15px;border:2px solid ${p.av.bg}66;background:${p.av.bg}12;box-shadow:0 0 18px ${p.av.bg}33;${rank===0&&isFinal?`border-color:${t.accent};background:${t.accent}10;box-shadow:0 0 28px ${t.accent}55`:``}"><img src="${AVATAR_PATH}${p.av.file}" style="width:46px;height:46px;border-radius:50%;object-fit:cover;object-position:center top;flex-shrink:0;border:2px solid ${p.av.bg};box-shadow:0 0 10px ${p.av.bg}88" alt=""><div style="flex:1;font-weight:700;color:${p.name===ME?"white":"rgba(255,255,255,.8)"}">${p.name}${p.name===ME?" (vous)":""}</div><div style="font-size:1.1rem;flex-shrink:0">${isFinal?(rank===0?"🥇":rank===1?"🥈":rank===2?"🥉":"#"+(rank+1)):("#"+(rank+1))}</div><div style="font-weight:900;font-size:1.35rem;color:${p.av.bg};text-shadow:0 0 10px ${p.av.bg}99">${p.score}</div></div>`).join("");
-  R(`<div class="sc" style="max-width:430px;margin:0 auto;padding:20px;gap:12px"><div class="float" style="text-align:center"><div style="font-size:3rem">${isFinal?"🏆":"📊"}</div><h2 style="font-family:'Playfair Display',serif;font-size:1.8rem;margin-top:4px">${isFinal?"Victoire !":"Scores"}</h2>${isFinal?`<p style="color:${t.accent};font-weight:700;margin-top:3px">🎉 ${ranked[0].name} remporte la partie !</p>`:`<p style="color:rgba(255,255,255,.38);font-size:.82rem;margin-top:2px">Prochain round dans quelques secondes…</p>`}</div><div style="width:100%;display:flex;flex-direction:column;gap:8px">${rows}</div>${isFinal?`<button class="btn" id="bH" style="background:linear-gradient(135deg,${t.dark},${t.accent});color:white;padding:13px 28px">🏠 Retour à l'accueil</button>`:""}</div>`);
-  if (isFinal) on("bH","click",()=>{ if(STOP)STOP(); if(HOST && CODE) fd(`rooms/${CODE}`); Home(); });
+  const _rp = toArr(room.players);
+  const ranked = gs.players.map((p,i) => {
+    const rpi = _rp.find(x => x.name === p);
+    const avIdx = (rpi && rpi.avatar !== undefined) ? rpi.avatar : (i % AVATARS.length);
+    return { name: p, score: gs.scores[i], i, av: AVATARS[avIdx] || AVATARS[0] };
+  }).sort((a,b) => b.score - a.score);
+
+  const RANK_COLORS = ['#D4A844', '#9CA3AF', '#B07D4A'];
+  const RANK_SUF    = ['st','nd','rd'];
+  const ordBadge = rank => {
+    const c   = rank < 3 ? RANK_COLORS[rank] : 'rgba(255,255,255,.45)';
+    const suf = rank < 3 ? RANK_SUF[rank] : 'th';
+    return `<div style="min-width:54px;display:flex;align-items:baseline;justify-content:center;gap:1px;padding-right:16px;border-right:2px solid ${c}44;flex-shrink:0">
+      <span style="font-size:1.35rem;font-weight:900;color:${c}">${rank+1}</span>
+      <span style="font-size:.62rem;font-weight:800;color:${c};line-height:1;align-self:flex-start;margin-top:4px">${suf}</span>
+    </div>`;
+  };
+
+  const rows = ranked.map((p, rank) => {
+    const c   = rank < 3 ? RANK_COLORS[rank] : 'rgba(255,255,255,.18)';
+    const bg  = rank === 0 ? `${RANK_COLORS[0]}18` : rank === 1 ? `${RANK_COLORS[1]}10` : rank === 2 ? `${RANK_COLORS[2]}10` : 'rgba(255,255,255,.04)';
+    const glow = rank < 3 ? `box-shadow:0 0 22px ${RANK_COLORS[rank]}44;` : '';
+    return `<div class="su" style="padding:14px 18px;display:flex;align-items:center;gap:14px;animation-delay:${rank*.1}s;border-radius:14px;border:2px solid ${c};background:${bg};${glow}">
+      ${ordBadge(rank)}
+      <img src="${AVATAR_PATH}${p.av.file}" style="width:42px;height:42px;border-radius:50%;object-fit:cover;object-position:center top;flex-shrink:0;border:2px solid ${rank < 3 ? RANK_COLORS[rank] : p.av.bg};box-shadow:0 0 10px ${rank < 3 ? RANK_COLORS[rank] : p.av.bg}66" alt="">
+      <div style="flex:1;font-weight:700;font-size:1.05rem;color:${p.name===ME?'white':'rgba(255,255,255,.88)'}">
+        ${p.name}${p.name===ME?' <span style="opacity:.55;font-size:.8rem">(vous)</span>':''} - <span style="color:${rank < 3 ? RANK_COLORS[rank] : 'rgba(255,255,255,.7)'}">${p.score} pts</span>
+      </div>
+    </div>`;
+  }).join('');
+
+  const rId   = room.rounds?.[gs.roundIdx] ?? '';
+  const rObj  = RT.find(x => x.id === rId);
+  const rName = rObj ? rObj.name : 'Brain Clash';
+
+  if (isFinal) {
+    const LAUREL = (flip) => `<svg width="56" height="88" viewBox="0 0 56 88" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0${flip?';transform:scaleX(-1)':''}">
+      <path d="M46,80 C36,63 20,46 10,12" stroke="#B8860B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="41" cy="70" rx="13" ry="5.5" transform="rotate(-48 41 70)" fill="#D4A030" opacity=".92"/>
+      <ellipse cx="33" cy="57" rx="12" ry="5"   transform="rotate(-56 33 57)" fill="#E8C040" opacity=".88"/>
+      <ellipse cx="25" cy="45" rx="12" ry="5"   transform="rotate(-63 25 45)" fill="#D4A030" opacity=".92"/>
+      <ellipse cx="18" cy="33" rx="11" ry="4.5" transform="rotate(-70 18 33)" fill="#E8C040" opacity=".88"/>
+      <ellipse cx="13" cy="21" rx="10" ry="4"   transform="rotate(-76 13 21)" fill="#D4A030" opacity=".92"/>
+      <circle cx="10" cy="12" r="3.5" fill="#D4A030"/>
+      <circle cx="6"  cy="8"  r="2"   fill="#B8860B"/>
+      <circle cx="14" cy="8"  r="2"   fill="#B8860B"/>
+    </svg>`;
+
+    R(`<div class="sc" style="padding:28px 20px;gap:0">
+      <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;margin-bottom:22px;width:100%;max-width:600px">
+        ${LAUREL(false)}
+        <h2 style="font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;letter-spacing:.06em;text-transform:uppercase;text-align:center;line-height:1.15;
+          background:linear-gradient(180deg,#FFE566 0%,#D4A030 45%,#9A6800 100%);
+          -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+          background-size:200% auto;animation:goldShimmer 4s linear infinite;flex:1">CLASSEMENT<br>FINAL</h2>
+        ${LAUREL(true)}
+      </div>
+      <div style="width:100%;max-width:600px;display:flex;flex-direction:column;gap:10px">${rows}</div>
+      <div style="width:65%;max-width:380px;height:26px;margin:2px auto 0;flex-shrink:0;
+        background:linear-gradient(90deg,transparent,#C8900077 20%,#E8C04088 50%,#C8900077 80%,transparent);
+        border-radius:50%;box-shadow:0 6px 36px #C8900055,0 0 55px #C8900033;
+        animation:podiumRise .7s .5s ease both;opacity:0;animation-fill-mode:forwards"></div>
+      <div style="text-align:center;margin-top:20px;max-width:600px">
+        <div style="font-size:1.1rem;font-weight:900;letter-spacing:.1em;margin-bottom:8px">✦ PARTIE TERMINÉE</div>
+        <p style="color:rgba(255,255,255,.6);font-size:.9rem;max-width:380px;margin:0 auto;line-height:1.6">
+          Bien joué ! Participez à un nouveau ${rName} pour grimper dans le classement !
+        </p>
+      </div>
+      ${HOST ? `<button class="btn" id="bH" style="margin-top:22px;background:linear-gradient(135deg,${t.dark},${t.accent});color:white;padding:13px 32px">🏠 Retour à l'accueil</button>` : ''}
+    </div>`);
+    _spawnFinalFx();
+    if (HOST) on("bH","click",()=>{ _cleanupFinalFx(); if(STOP)STOP(); if(HOST && CODE) fd(`rooms/${CODE}`); Home(); });
+  } else {
+    const LAUREL2 = (flip) => `<svg width="56" height="88" viewBox="0 0 56 88" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0${flip?';transform:scaleX(-1)':''}">
+      <path d="M46,80 C36,63 20,46 10,12" stroke="#B8860B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <ellipse cx="41" cy="70" rx="13" ry="5.5" transform="rotate(-48 41 70)" fill="#D4A030" opacity=".92"/>
+      <ellipse cx="33" cy="57" rx="12" ry="5"   transform="rotate(-56 33 57)" fill="#E8C040" opacity=".88"/>
+      <ellipse cx="25" cy="45" rx="12" ry="5"   transform="rotate(-63 25 45)" fill="#D4A030" opacity=".92"/>
+      <ellipse cx="18" cy="33" rx="11" ry="4.5" transform="rotate(-70 18 33)" fill="#E8C040" opacity=".88"/>
+      <ellipse cx="13" cy="21" rx="10" ry="4"   transform="rotate(-76 13 21)" fill="#D4A030" opacity=".92"/>
+      <circle cx="10" cy="12" r="3.5" fill="#D4A030"/>
+      <circle cx="6"  cy="8"  r="2"   fill="#B8860B"/>
+      <circle cx="14" cy="8"  r="2"   fill="#B8860B"/>
+    </svg>`;
+    R(`<div class="sc" style="padding:28px 20px;gap:0">
+      <div style="display:flex;align-items:flex-end;justify-content:center;gap:8px;margin-bottom:22px;width:100%;max-width:600px">
+        ${LAUREL2(false)}
+        <h2 style="font-size:clamp(1.7rem,5vw,2.7rem);font-weight:900;letter-spacing:.06em;text-transform:uppercase;text-align:center;line-height:1.15;
+          background:linear-gradient(180deg,#FFE566 0%,#D4A030 45%,#9A6800 100%);
+          -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+          background-size:200% auto;animation:goldShimmer 4s linear infinite;flex:1">CLASSEMENT</h2>
+        ${LAUREL2(true)}
+      </div>
+      <div style="width:100%;max-width:600px;display:flex;flex-direction:column;gap:10px">${rows}</div>
+      <div style="width:65%;max-width:380px;height:26px;margin:2px auto 0;flex-shrink:0;
+        background:linear-gradient(90deg,transparent,#C8900077 20%,#E8C04088 50%,#C8900077 80%,transparent);
+        border-radius:50%;box-shadow:0 6px 36px #C8900055,0 0 55px #C8900033;
+        animation:podiumRise .7s .5s ease both;opacity:0;animation-fill-mode:forwards"></div>
+      <p style="color:rgba(255,255,255,.45);font-size:.85rem;margin-top:20px;text-align:center">Prochain round dans quelques secondes…</p>
+    </div>`);
+  }
+}
+
+function _spawnFinalFx() {
+  _cleanupFinalFx();
+  const ov = document.createElement('div');
+  ov.id = 'final-fx';
+  ov.style.cssText = 'position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0';
+  document.body.appendChild(ov);
+
+  const FW = ['#FFD700','#FF6B9D','#7C3AED','#06B6D4','#22C55E','#FF8C00'];
+  for (let i = 0; i < 14; i++) {
+    const s = 50 + Math.random() * 110;
+    const d = document.createElement('div');
+    d.style.cssText = `position:absolute;width:${s}px;height:${s}px;border-radius:50%;
+      left:${Math.random()*100}%;top:${Math.random()*72}%;
+      background:radial-gradient(circle,${FW[i%FW.length]}bb 0%,${FW[(i+2)%FW.length]}44 55%,transparent 72%);
+      animation:fwBurst ${1.3+Math.random()*.9}s ease-out ${Math.random()*2.8}s infinite`;
+    ov.appendChild(d);
+  }
+
+  const CF = ['#FFD700','#FF6B9D','#7C3AED','#06B6D4','#22C55E','#FF4500','#E8C040'];
+  for (let i = 0; i < 55; i++) {
+    const rect = Math.random() > .45;
+    const d = document.createElement('div');
+    d.style.cssText = `position:absolute;
+      width:${rect ? 3+Math.random()*5 : 5+Math.random()*7}px;
+      height:${rect ? 8+Math.random()*14 : 5+Math.random()*7}px;
+      left:${Math.random()*100}%;top:-5%;
+      background:${CF[Math.floor(Math.random()*CF.length)]};
+      border-radius:${rect ? '2px' : '50%'};
+      animation:confettiFall ${3+Math.random()*4}s linear ${Math.random()*4}s infinite`;
+    ov.appendChild(d);
+  }
+}
+
+function _cleanupFinalFx() {
+  document.getElementById('final-fx')?.remove();
 }
 
 // ════════════════════════════════════════════
-//  VUE PLATEAU TV (hôte uniquement)
+//  VUE PLATEAU TV (hôte uniquement) — Cockpit
 // ════════════════════════════════════════════
 function drawQ_host(room, gs) {
-  const t     = THEMES[room.theme] || THEMES.culture;
   const rType = room.rounds[gs.roundIdx];
   const r     = RT.find(x => x.id === rType) || RT[0];
   const q     = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
   if (!q) return;
 
-  // Annuler le RAF timer précédent
   if (_timerRafId) { cancelAnimationFrame(_timerRafId); _timerRafId = null; }
 
   const _wasRevealed = drawQ_host._lastRevealed;
@@ -424,144 +553,154 @@ function drawQ_host(room, gs) {
   drawQ_host._lastRevealed = gs.revealed;
   drawQ_host._lastBuzzed   = gs.buzzed;
 
-  // Sons
-  if (gs.revealed && !_wasRevealed) {
-    const isGood = !!gs.result?.scorer;
-    isGood ? SFX.correct() : SFX.wrong();
-  } else if (gs.buzzed && gs.buzzed !== _wasBuzzed) {
-    SFX.buzz();
+  if (gs.revealed && !_wasRevealed) { gs.result?.scorer ? SFX.correct() : SFX.wrong(); }
+  else if (gs.buzzed && gs.buzzed !== _wasBuzzed) { SFX.buzz(); }
+
+  const fmtT = s => `${Math.floor(s/60)}:${String(s%60).padStart(2,'0')}`;
+  const qTotal  = (gs.rQs||{})[gs.roundIdx]?.length || 1;
+  const baseScore = qTotal * 50;
+  const _roomPlayers = toArr(room.players);
+
+  // ── Timer text ──
+  const _hasTimer = rType !== "patate" && gs.timerStart && gs.timerDur && !gs.revealed && (!gs.buzzed || rType==="chrono");
+  let timerVal = "";
+  if (_hasTimer) {
+    const elapsed = Math.min(gs.timerDur, (Date.now()-gs.timerStart)/1000);
+    timerVal = fmtT(Math.max(0, Math.round(gs.timerDur - elapsed)));
   }
 
-  // Patate explosion
-  if (rType === "patate" && gs.patateExplosion) {
-    R(`<div class="sc"><div class="pop" style="font-size:8rem">💥</div><h2 style="font-family:'Playfair Display',serif;font-size:2rem;text-align:center;color:#f87171">${gs.result?.msg||'BOOM !'}</h2></div>`);
-    return;
-  }
+  // ── Header meta ──
+  let metaText = "";
+  if (rType==="patate")      metaText = `🥔 MANCHE ${(gs.patateManche||0)+1}/4`;
+  else if (rType==="carton") metaText = `🎯 TIR À LA CARABINE`;
+  else                       metaText = `QUESTION ${gs.qIdx+1}/${qTotal} (${baseScore} PTS)`;
 
-  // Timer
-  let timerHtml = "";
-  if (rType !== "patate" && gs.timerStart && gs.timerDur && !gs.revealed && (!gs.buzzed||rType==="chrono")) {
-    const elapsed = Math.min(gs.timerDur,(Date.now()-gs.timerStart)/1000);
-    const tl = Math.max(0, Math.round(gs.timerDur-elapsed));
-    const col = tl<=5?"#ef4444":tl<=10?"#f59e0b":"#22c55e";
-    const dash = 131.9*(1-tl/gs.timerDur);
-    timerHtml = `<div style="position:relative;width:58px;height:58px;flex-shrink:0"><svg width="58" height="58" style="transform:rotate(-90deg);position:absolute"><circle cx="29" cy="29" r="21" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="6"/><circle cx="29" cy="29" r="21" fill="none" stroke="${col}" stroke-width="6" stroke-dasharray="131.9" stroke-dashoffset="${dash}" stroke-linecap="round" id="timerC"/></svg><div id="timerN" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;color:${tl<=5?"#ef4444":"white"}">${tl}</div></div>`;
-    const tS=gs.timerStart, tD=gs.timerDur;
-    let _lastTick = -1;
-    function tickTimer(){ const e2=Math.min(tD,(Date.now()-tS)/1000),tl2=Math.max(0,Math.round(tD-e2)); const n=$("timerN"),c=$("timerC"); if(n){n.textContent=tl2;n.style.color=tl2<=5?"#ef4444":"white";} if(c){c.setAttribute("stroke-dashoffset",131.9*(1-tl2/tD));c.setAttribute("stroke",tl2<=5?"#ef4444":tl2<=10?"#f59e0b":"#22c55e");} if(tl2>0){ if(tl2 !== _lastTick){ _lastTick=tl2; tl2<=5 ? SFX.tickUrgent() : SFX.tick(); } _timerRafId = requestAnimationFrame(tickTimer); } else { _timerRafId = null; } }
-    _timerRafId = requestAnimationFrame(tickTimer);
-  }
-
-  // Elim / patate bar
-  let elimBar = "";
+  // ── Elim bar ──
+  let elimBarHtml = "";
   if (rType==="carton") {
-    const balloons=gs.balloons||gs.players.map(()=>3), eliminated=gs.roundElim||[];
-    elimBar=`<div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:6px">${gs.players.map((p,i)=>{ const b=balloons[i]||0,dead=eliminated.includes(p); return`<div style="padding:5px 13px;border-radius:12px;font-size:.78rem;font-weight:700;background:${dead?"rgba(239,68,68,.08)":COL[i%8].bg+"22"};color:${dead?"rgba(255,255,255,.25)":"white"};border:1px solid ${dead?"rgba(239,68,68,.3)":COL[i%8].bg+"44"}">${p} ${"🎈".repeat(b)}${dead?" 💀":""}</div>`; }).join("")}</div>`;
-  }
-  if (rType==="patate") {
-    elimBar=`<div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center;margin-bottom:6px"><span style="font-size:.75rem;color:rgba(255,255,255,.38);font-weight:600">🥔 Manche ${(gs.patateManche||0)+1}/4</span>${gs.players.map((p,i)=>{ const h=p===gs.patateHolder; return`<div style="padding:5px 13px;border-radius:12px;font-size:.78rem;font-weight:700;background:${h?"rgba(251,146,60,.3)":COL[i%8].bg+"22"};color:${h?"#fb923c":"rgba(255,255,255,.5)"};border:${h?"2px solid rgba(251,146,60,.7)":"1px solid "+COL[i%8].bg+"44"};animation:${h?"buzzPulse 1s ease-in-out infinite":"none"}">${h?"🥔 ":""}${p}</div>`; }).join("")}</div>`;
+    const balloons = gs.balloons || gs.players.map(()=>3), eliminated = gs.roundElim||[];
+    elimBarHtml = `<div class="ck-elimbar">${gs.players.map((p,i)=>{ const b=balloons[i]||0,dead=eliminated.includes(p); return`<div class="ck-elimtag" style="background:${dead?"rgba(239,68,68,.12)":"rgba(255,255,255,.1)"};color:${dead?"rgba(255,255,255,.3)":"white"};border:2px solid ${dead?"rgba(239,68,68,.4)":"rgba(255,255,255,.22)"}">${p} ${"🎈".repeat(b)}${dead?" 💀":""}</div>`; }).join("")}</div>`;
+  } else if (rType==="patate") {
+    elimBarHtml = `<div class="ck-elimbar">${gs.players.map((p,i)=>{ const h=p===gs.patateHolder; return`<div class="ck-elimtag" style="background:${h?"rgba(251,146,60,.25)":"rgba(255,255,255,.07)"};color:${h?"#fb923c":"rgba(255,255,255,.5)"};border:${h?"2px solid rgba(251,146,60,.7)":"1px solid rgba(255,255,255,.15)"};animation:${h?"buzzPulse 1s ease-in-out infinite":"none"}">${h?"🥔 ":""}${p}</div>`; }).join("")}</div>`;
   }
 
-  // Buzz indicator
-  let buzzInd = "";
-  if (gs.buzzed && !gs.revealed && rType !== "patate") {
+  // ── Buzz indicator ──
+  let buzzHtml = "";
+  if (gs.buzzed && !gs.revealed && rType!=="patate") {
     const bI = gs.players.indexOf(gs.buzzed);
-    buzzInd = `<div style="padding:14px 22px;border-radius:16px;background:${COL[bI%8].bg}22;border:2px solid ${COL[bI%8].bg}99;text-align:center;font-size:1.25rem;font-weight:800;animation:buzzPulse 1s ease-in-out infinite">🔔 <span style="color:${COL[bI%8].bg}">${gs.buzzed}</span> répond…</div>`;
-  }
-  if (rType==="patate" && gs.patateHolder && !gs.revealed) {
-    buzzInd = `<div style="padding:14px 22px;border-radius:16px;background:rgba(251,146,60,.2);border:2px solid rgba(251,146,60,.6);text-align:center;font-size:1.15rem;font-weight:800;animation:buzzPulse 0.8s ease-in-out infinite">🥔 <span style="color:#fb923c">${gs.patateHolder}</span> a la patate !</div>`;
+    buzzHtml = `<div class="ck-buzz" style="background:${COL[bI%8].bg}1a;border:3px solid ${COL[bI%8].bg}99;color:${COL[bI%8].bg}">🔔 ${gs.buzzed} répond…</div>`;
+  } else if (rType==="patate" && gs.patateHolder && !gs.revealed) {
+    buzzHtml = `<div class="ck-buzz" style="background:rgba(251,146,60,.15);border:3px solid rgba(251,146,60,.6);color:#fb923c">🥔 ${gs.patateHolder} a la patate !</div>`;
   }
 
-  // Result
-  let res = "";
+  // ── Result ──
+  let resHtml = "";
   if (gs.result && gs.revealed) {
     const isGood = (gs.result.pts||0)>0||gs.result.scorer;
-    res = `<div style="padding:16px 22px;border-radius:16px;border:2px solid ${isGood?"rgba(34,197,94,.5)":"rgba(239,68,68,.5)"};background:${isGood?"rgba(34,197,94,.12)":"rgba(239,68,68,.12)"};text-align:center"><div style="color:${isGood?"#86efac":"#fca5a5"};font-weight:800;font-size:1.2rem">${gs.result.msg}</div>${q.f&&gs.revealed?`<div style="color:rgba(255,255,255,.5);font-size:.85rem;margin-top:6px">💡 ${q.f}</div>`:""}</div>`;
+    resHtml = `<div class="ck-result" style="background:${isGood?"rgba(34,197,94,.15)":"rgba(239,68,68,.15)"};border:3px solid ${isGood?"rgba(34,197,94,.5)":"rgba(239,68,68,.5)"}"><div class="ck-result-msg" style="color:${isGood?"#86efac":"#fca5a5"}">${gs.result.msg}</div>${q.f?`<div class="ck-result-anecdote">💡 ${q.f}</div>`:""}</div>`;
   }
 
-  // Answer buttons — couleurs A=bleu B=rouge C=vert D=jaune
-  const ANS_COLORS = [
-    { bg:'#1d4ed8', border:'#93c5fd', glow:'#3b82f6', lbl:'A' },
-    { bg:'#dc2626', border:'#fca5a5', glow:'#ef4444', lbl:'B' },
-    { bg:'#16a34a', border:'#86efac', glow:'#22c55e', lbl:'C' },
-    { bg:'#ca8a04', border:'#fde68a', glow:'#eab308', lbl:'D' },
-  ];
-  const aHtml = q.a.map((a,i) => {
-    const ac = ANS_COLORS[i];
+  const statusHtml = (elimBarHtml || buzzHtml || resHtml)
+    ? `<div class="ck-status">${elimBarHtml}${buzzHtml}${resHtml}</div>` : "";
+
+  // ── Answers ──
+  const ANS_CLS = ['ck-ans-A','ck-ans-B','ck-ans-C','ck-ans-D'];
+  const aHtml = q.a.map((a, i) => {
     const isCorrect = i === q.c;
-    const bg   = gs.revealed ? (isCorrect ? '#15803d' : 'rgba(20,20,40,.5)') : ac.bg;
-    const bord = gs.revealed ? (isCorrect ? '#4ade80' : 'rgba(80,80,100,.4)') : ac.border;
-    const opacity = gs.revealed && !isCorrect ? '0.45' : '1';
-    const glow = gs.revealed ? '' : `box-shadow:0 0 18px ${ac.glow}66,inset 0 1px 0 rgba(255,255,255,.2)`;
-    return `<div style="display:flex;align-items:center;gap:18px;padding:18px 26px;border-radius:20px;background:${bg};border:2px solid ${bord};opacity:${opacity};transition:all .3s;height:100%;min-height:0;box-sizing:border-box;${glow}">
-      <div style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.35rem;flex-shrink:0;box-shadow:0 0 10px rgba(255,255,255,.25)">${ac.lbl}</div>
-      <span style="font-size:clamp(1.05rem,2.2vw,1.55rem);font-weight:700;flex:1;line-height:1.4">${a}</span>
-      ${gs.revealed && isCorrect ? `<span style="font-size:1.7rem;flex-shrink:0">✅</span>` : ""}
+    let extraCls = gs.revealed ? (isCorrect ? ' ck-correct' : ' ck-wrong') : '';
+    return `<div class="ck-ans ${ANS_CLS[i]}${extraCls}">
+      <div class="ck-lbl">${LB[i]}</div>
+      <div class="ck-atext">${a}</div>
+      ${gs.revealed && isCorrect ? '<div style="font-size:56px;flex-shrink:0">✅</div>' : ''}
     </div>`;
   }).join("");
 
-  const qTotal = (gs.rQs||{})[gs.roundIdx]?.length || 1;
-
-  // Récupérer l'avatar de chaque joueur depuis room.players
-  const _roomPlayers = toArr(room.players);
-  const sc = gs.players.map((p,i) => {
-    const rp  = _roomPlayers.find(x => x.name === p);
+  // ── Sidebar players (sorted by score desc) ──
+  const PCOLORS = ['#3ea7ff','#ff4fa2','#4aff7a','#ffde3a','#b96dff','#ff8a3a','#4be0ff','#ff6b3a'];
+  const _ranked = gs.players.map((p,i) => {
+    const rp = _roomPlayers.find(x => x.name === p);
     const avIdx = (rp && rp.avatar !== undefined) ? rp.avatar : (i % AVATARS.length);
-    const av  = AVATARS[avIdx] || AVATARS[0];
-    return `<div style="display:flex;align-items:center;gap:10px;padding:6px 12px;border-radius:12px;background:${av.bg}22;border:2px solid ${av.bg}88;box-shadow:0 0 12px ${av.bg}44,0 0 24px ${av.bg}22;transition:all .3s">
-      <img src="${AVATAR_PATH}${av.file}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;object-position:center top;flex-shrink:0;border:2px solid ${av.bg};box-shadow:0 0 8px ${av.bg}66" alt="">
-      <span style="font-size:.82rem;font-weight:600;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p}</span>
-      <span style="font-size:1rem;font-weight:900;color:${av.bg};text-shadow:0 0 8px ${av.bg}88">${gs.scores[i]||0}</span>
+    return { p, origIdx: i, av: AVATARS[avIdx]||AVATARS[0], score: gs.scores[i]||0 };
+  }).sort((a,b) => b.score - a.score);
+
+  const playerRowsHtml = _ranked.map(({ p, origIdx, av, score }) => {
+    const pc = PCOLORS[origIdx % PCOLORS.length];
+    return `<div class="ck-prow" style="--pc:${pc}">
+      <div class="ck-av"><img src="${AVATAR_PATH}${av.file}" alt=""></div>
+      <div class="ck-pinfo">
+        <div class="ck-pname">${p}</div>
+        <div class="ck-pscore">${score}</div>
+      </div>
     </div>`;
   }).join("");
 
-  R(`<div style="position:fixed;inset:0;display:flex;overflow:hidden;pointer-events:none">
+  R(`<div class="ck-wrap">
+    <div class="ck-bg"></div>
 
-    <!-- Scores (gauche) -->
-    <div style="width:252px;flex-shrink:0;padding:16px 12px;z-index:3;pointer-events:all">
-      <div style="background:rgba(0,0,0,.55);backdrop-filter:blur(16px);border-radius:16px;border:1px solid rgba(255,255,255,.18);padding:12px 14px;display:flex;flex-direction:column;gap:7px">
-        <div style="font-size:.55rem;font-weight:800;color:rgba(255,255,255,.45);letter-spacing:.15em">SCORES</div>
-        ${sc}
-      </div>
-    </div>
+    <div class="ck-stage-wrap">
+      <div class="ck-stage" id="ck-stage">
 
-    <!-- Panneau question (droite, prend tout l'espace restant) -->
-    <div style="flex:1;position:relative;overflow:hidden;min-width:0">
-
-      <!-- LEDs -->
-      <div style="position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,${t.accent},#fff,${t.accent},#fff,${t.accent});background-size:200% 100%;animation:ledSweep 2.5s linear infinite;box-shadow:0 0 12px 2px ${t.accent},0 0 24px 4px ${t.accent}88;z-index:2"></div>
-      <div style="position:absolute;bottom:0;left:0;right:0;height:4px;background:linear-gradient(90deg,${t.accent},#fff,${t.accent},#fff,${t.accent});background-size:200% 100%;animation:ledSweep 2.5s linear infinite reverse;box-shadow:0 0 12px 2px ${t.accent},0 0 24px 4px ${t.accent}88;z-index:2"></div>
-      <div style="position:absolute;top:4px;left:0;bottom:4px;width:4px;background:linear-gradient(180deg,${t.accent},#fff,${t.accent});background-size:100% 200%;animation:ledSweep 3s linear infinite;box-shadow:0 0 12px 2px ${t.accent};z-index:2"></div>
-
-      <!-- Contenu -->
-      <div style="width:100%;height:100%;background:linear-gradient(160deg,rgba(20,20,60,.6) 0%,rgba(10,10,40,.7) 100%);backdrop-filter:blur(16px);border-left:3px solid ${t.accent}cc;display:flex;flex-direction:column;padding:20px 30px 20px 26px;gap:14px;box-sizing:border-box;overflow:hidden;pointer-events:all">
-
-        <!-- Header -->
-        <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
-          <div style="display:inline-flex;align-items:center;gap:5px;padding:4px 12px;border-radius:20px;background:${t.accent}44;border:1px solid ${t.accent}aa;white-space:nowrap;box-shadow:0 0 8px ${t.accent}55"><span>${r.icon}</span><span style="color:white;font-size:.7rem;font-weight:700">${r.name}</span></div>
-          <span style="color:rgba(255,255,255,.75);font-size:.75rem;font-weight:700;white-space:nowrap">${rType==="patate"?`🥔 M.${(gs.patateManche||0)+1}/4`:rType==="carton"?`🎯 Tir`:rType==="chrono"?`⏱ Chrono`:`Q${gs.qIdx+1}/${qTotal}`}</span>
-          <div style="flex:1;height:6px;background:rgba(255,255,255,.15);border-radius:3px;overflow:hidden"><div style="height:100%;width:${((gs.qIdx+1)/qTotal*100)}%;background:linear-gradient(90deg,${t.dark},${t.accent});border-radius:3px;box-shadow:0 0 6px ${t.accent}"></div></div>
-          ${timerHtml}
+        <div class="ck-title">
+          <div class="ck-title-stars">★ ★ ★</div>
+          <div class="ck-title-text"><span>BRAIN</span><span>CLASH</span></div>
         </div>
 
-        ${elimBar}
-
-        <!-- Question -->
-        <div style="flex-shrink:0;padding:24px 32px;border-radius:20px;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.4);box-shadow:0 4px 30px rgba(0,0,0,.3),inset 0 1px 0 rgba(255,255,255,.2)">
-          <p style="font-size:clamp(1.2rem,3vw,2.2rem);font-weight:800;line-height:1.5;text-align:center;color:white;margin:0">${q.q}</p>
+        <div class="ck-main">
+          <div class="ck-qcard">
+            <div class="ck-qhead">
+              <span class="ck-qhead-ph"></span>
+              <span class="ck-qmeta">${metaText}</span>
+              <span class="ck-qtimer" id="ck-timer">${timerVal}</span>
+            </div>
+            <div class="ck-qtext" id="ck-qtext">${q.q}</div>
+          </div>
+          ${statusHtml}
+          <div class="ck-answers">${aHtml}</div>
         </div>
 
-        <!-- Réponses 2×2 -->
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;flex:1;min-height:0">
-          ${aHtml}
+        <div class="ck-sidebar">
+          <div class="ck-sidebar-title">CLASSEMENT DES JOUEURS</div>
+          <div class="ck-player-rows">${playerRowsHtml}</div>
         </div>
-
-        ${buzzInd}
-        ${res}
 
       </div>
     </div>
   </div>`);
+
+  // ── Stage scaling ──
+  function ckFit() {
+    const s = document.getElementById('ck-stage');
+    if (!s) return;
+    s.style.transform = `scale(${Math.min(window.innerWidth/1920, window.innerHeight/1080)})`;
+  }
+  ckFit();
+  window.addEventListener('resize', ckFit);
+
+  // ── Question font-size (auto-reduce for long text) ──
+  const qtEl = document.getElementById('ck-qtext');
+  if (qtEl) {
+    const len = q.q.length;
+    if (len > 100) qtEl.style.fontSize = '42px';
+    else if (len > 65) qtEl.style.fontSize = '52px';
+  }
+
+  // ── Timer animation ──
+  if (_hasTimer) {
+    const tS = gs.timerStart, tD = gs.timerDur;
+    let _lastTick = -1;
+    function tickTimer() {
+      const e2  = Math.min(tD, (Date.now()-tS)/1000);
+      const tl2 = Math.max(0, Math.round(tD - e2));
+      const n   = document.getElementById('ck-timer');
+      if (n) {
+        n.textContent = fmtT(tl2);
+        n.className   = 'ck-qtimer' + (tl2 <= 5 ? ' urgent' : '');
+      }
+      if (tl2 !== _lastTick) { _lastTick = tl2; tl2 <= 5 ? SFX.tickUrgent() : SFX.tick(); }
+      if (tl2 > 0) { _timerRafId = requestAnimationFrame(tickTimer); } else { _timerRafId = null; }
+    }
+    _timerRafId = requestAnimationFrame(tickTimer);
+  }
 }
 
 // ── Lancement ──

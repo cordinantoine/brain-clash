@@ -16,7 +16,7 @@ function drawQuestionResult(room, gs) {
   }
 
   const rType = room.rounds[gs.roundIdx];
-  const variants = { qcm:interQCM, buzzer:interBuzzer, chrono:interChrono, steal:interSteal, patate:interPatate, carton:interCarton };
+  const variants = { qcm:interQCM, buzzer:interBuzzer, chrono:interChrono, steal:interSteal, patate:interPatate, patateExplosion:interPatate, carton:interCarton };
   const fn = variants[rType];
   if (fn) fn(room, gs); else drawScore(room, gs, false);
 }
@@ -61,55 +61,59 @@ function _interLayout(room, gs, contentHtml) {
   </div>`);
 }
 
-// ── QCM : réponses colorées + qui a bon ──
+// ── QCM : style Buzzer adapté multi-gagnants ──
 function interQCM(room, gs) {
   const q = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
   if (!q) { drawScore(room, gs, false); return; }
-  const ans = gs.answers || {};
-  const ANS_COLORS = [
-    { bg:'#1d4ed8', border:'#93c5fd', lbl:'A' },
-    { bg:'#dc2626', border:'#fca5a5', lbl:'B' },
-    { bg:'#16a34a', border:'#86efac', lbl:'C' },
-    { bg:'#ca8a04', border:'#fde68a', lbl:'D' },
-  ];
-  const aHtml = q.a.map((a, i) => {
-    const ac = ANS_COLORS[i];
-    const isCorrect = i === q.c;
-    return `<div style="display:flex;align-items:center;gap:14px;padding:14px 20px;border-radius:16px;background:${isCorrect?'#15803d':'rgba(20,20,40,.5)'};border:2px solid ${isCorrect?'#4ade80':'rgba(80,80,100,.4)'};opacity:${isCorrect?'1':'0.4'};transition:all .3s">
-      <div style="width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:1.1rem;flex-shrink:0">${ac.lbl}</div>
-      <span style="font-size:clamp(.9rem,1.8vw,1.3rem);font-weight:700;flex:1;line-height:1.4">${a}</span>
-      ${isCorrect?`<span style="font-size:1.5rem;flex-shrink:0">✅</span>`:""}
-    </div>`;
-  }).join("");
 
-  const correct = gs.players.filter(p => ans[p] !== undefined && ans[p].ansIdx === q.c);
-  const wrong   = gs.players.filter(p => ans[p] !== undefined && ans[p].ansIdx !== q.c);
-  const noAns   = gs.players.filter(p => ans[p] === undefined);
+  const ans = gs.answers || {};
   const _rp = toArr(room.players);
-  const chips = (arr, icon, col) => arr.map(p => {
+  const correct = gs.players.filter(p => ans[p] !== undefined && ans[p].ansIdx === q.c);
+  const pts = gs.result?.pts ?? Math.round(50 * gs.players.length * 0.5);
+
+  let content;
+
+  if (correct.length === 0) {
+    content = `
+      <div style="font-size:5rem;animation:floatY 2s ease-in-out infinite">❌</div>
+      <div style="font-size:2rem;font-weight:800;color:#fca5a5;text-align:center;animation:sUp .35s ease both">Personne n'a trouvé !</div>
+      ${q ? `<div style="padding:10px 18px;border-radius:12px;background:rgba(255,255,255,.07);font-size:.88rem;text-align:center">Bonne réponse : <strong style="color:#86efac">${q.a[q.c]}</strong>${q.f ? ` — 💡 ${q.f}` : ''}</div>` : ''}
+    `;
+  } else if (correct.length === 1) {
+    const p = correct[0];
     const idx = gs.players.indexOf(p);
     const rp = _rp.find(x => x.name === p);
-    const avIdx = (rp && rp.avatar !== undefined) ? rp.avatar : (idx % AVATARS.length);
-    const av = AVATARS[avIdx] || AVATARS[0];
-    return `<div style="display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:20px;background:${col}22;border:1px solid ${col}66">
-      <img src="${AVATAR_PATH}${av.file}" style="width:20px;height:20px;border-radius:50%;object-fit:cover;border:1px solid ${av.bg}" alt="">
-      <span style="font-size:.72rem;font-weight:700">${icon} ${p}</span>
-    </div>`;
-  }).join("");
+    const av = AVATARS[(rp&&rp.avatar!==undefined)?rp.avatar:(idx%AVATARS.length)]||AVATARS[0];
+    content = `
+      <div style="animation:popIn .5s cubic-bezier(.36,.07,.19,.97) both">
+        <img src="${AVATAR_PATH}${av.file}" style="width:160px;height:160px;border-radius:50%;object-fit:cover;object-position:center top;border:5px solid ${av.bg};box-shadow:0 0 40px ${av.bg}99,0 0 80px ${av.bg}44" alt="">
+      </div>
+      <div style="text-align:center;animation:sUp .35s ease both">
+        <div style="font-size:2rem;font-weight:900;color:white">${p}</div>
+        <div style="font-size:3rem;font-weight:900;color:#4ade80;text-shadow:0 0 20px #22c55e">+${pts} pts</div>
+      </div>
+      ${q ? `<div style="padding:10px 18px;border-radius:12px;background:rgba(255,255,255,.07);font-size:.82rem;color:rgba(255,255,255,.65);text-align:center">Bonne réponse : <strong style="color:#86efac">${q.a[q.c]}</strong>${q.f ? ` — 💡 ${q.f}` : ''}</div>` : ''}
+    `;
+  } else {
+    const size = correct.length <= 3 ? 110 : 72;
+    const avatarsHtml = correct.map((p, i) => {
+      const idx = gs.players.indexOf(p);
+      const rp = _rp.find(x => x.name === p);
+      const av = AVATARS[(rp&&rp.avatar!==undefined)?rp.avatar:(idx%AVATARS.length)]||AVATARS[0];
+      return `<div style="text-align:center;animation:popIn .5s cubic-bezier(.36,.07,.19,.97) ${i*.08}s both">
+        <img src="${AVATAR_PATH}${av.file}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;object-position:center top;border:4px solid ${av.bg};box-shadow:0 0 28px ${av.bg}88" alt="">
+        <div style="font-size:${correct.length<=3?'.9rem':'.75rem'};font-weight:700;margin-top:6px;max-width:${size+10}px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p}</div>
+        ${correct.length<=3?`<div style="font-size:1.2rem;font-weight:900;color:#4ade80">+${pts}</div>`:''}
+      </div>`;
+    }).join('');
+    content = `
+      ${correct.length >= 4 ? `<div style="font-size:1.8rem;font-weight:900;color:#4ade80;text-shadow:0 0 20px #22c55e;text-align:center;animation:sUp .3s ease both">+${pts} pts chacun !</div>` : ''}
+      <div style="display:flex;gap:${correct.length<=3?24:12}px;justify-content:center;flex-wrap:wrap;align-items:flex-end">${avatarsHtml}</div>
+      ${q ? `<div style="padding:10px 18px;border-radius:12px;background:rgba(255,255,255,.07);font-size:.82rem;color:rgba(255,255,255,.65);text-align:center">Bonne réponse : <strong style="color:#86efac">${q.a[q.c]}</strong>${q.f ? ` — 💡 ${q.f}` : ''}</div>` : ''}
+    `;
+  }
 
-  const pts = Math.round(50 * gs.players.length * 0.5);
-  const resHtml = correct.length
-    ? `<div style="color:#86efac;font-weight:800;font-size:1.1rem;text-align:center;animation:sUp .3s ease both">✅ ${correct.join(", ")} +${pts} pts !</div>`
-    : `<div style="color:#fca5a5;font-weight:800;font-size:1.1rem;text-align:center;animation:sUp .3s ease both">❌ Personne n'a trouvé !</div>`;
-
-  _interLayout(room, gs, `
-    ${resHtml}
-    <div style="width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:680px">${aHtml}</div>
-    ${q.f?`<div style="padding:8px 14px;border-radius:10px;background:rgba(255,255,255,.07);font-size:.78rem;color:rgba(255,255,255,.6);text-align:center">💡 ${q.f}</div>`:''}
-    <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:center">
-      ${chips(correct,'✅','#22c55e')}${chips(wrong,'❌','#ef4444')}${chips(noAns,'⏱️','#6b7280')}
-    </div>
-  `);
+  _interLayout(room, gs, content);
 }
 
 // ── Buzzer : avatar vainqueur ou timeout ──

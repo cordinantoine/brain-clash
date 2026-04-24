@@ -119,8 +119,8 @@ async function hostStartQ(room, gs, rQs) {
     HTIMER = setTimeout(async () => {
       const cur = await fg(`rooms/${CODE}/gameState`);
       if (!cur || cur.revealed || cur.phase !== "question") return;
-      await fp(`rooms/${CODE}`, { "gameState/revealed":true, "gameState/result":{ msg:"⏱️ Temps écoulé !", pts:0, scorer:null } });
-      setTimeout(() => hostNextQ(room, cur, rQs), 3000);
+      await fp(`rooms/${CODE}`, { "gameState/phase":"questionResult", "gameState/revealed":true, "gameState/result":{ msg:"⏱️ Temps écoulé !", pts:0, scorer:null } });
+      setTimeout(() => hostNextQ(room, cur, rQs), 4500);
     }, 30000);
     return;
   }
@@ -334,14 +334,16 @@ function Watch(initialRoom) {
         }
       }
     }
-    const key = gs.phase+"-"+gs.roundIdx+"-"+gs.qIdx+"-"+(gs.buzzed||"")+"-"+gs.revealed+"-"+gs.pickTarget+"-"+(gs.countdownStart||"")+"-"+JSON.stringify(gs.result)+"-"+JSON.stringify(gs.ready||{})+"-"+(gs.patateHolder||"")+"-"+(gs.patateExplosion||"");
+    const key = gs.phase+"-"+gs.roundIdx+"-"+gs.qIdx+"-"+(gs.buzzed||"")+"-"+gs.revealed+"-"+gs.pickTarget+"-"+(gs.countdownStart||"")+"-"+JSON.stringify(gs.result)+"-"+JSON.stringify(gs.ready||{})+"-"+(gs.patateHolder||"")+"-"+(gs.chronoRanking?'r':'');
     if (key===lastPhase) return;
     if (gs.buzzed&&gs.buzzed!==ME) I_BUZZED=false;
     if (gs.revealed) I_BUZZED=false;
     lastPhase=key;
-    if      (gs.phase==="roundIntro") drawIntro(room,gs);
-    else if (gs.phase==="question")   drawQ_host(room,gs);
-    else if (gs.phase==="scoreboard") drawScore(room,gs,false);
-    else if (gs.phase==="final")      drawScore(room,gs,true);
+    if      (gs.phase==="roundIntro")       drawIntro(room,gs);
+    else if (gs.phase==="question")         drawQ_host(room,gs);
+    else if (gs.phase==="questionResult")   drawQuestionResult(room,gs);
+    else if (gs.phase==="patateExplosion")  drawQuestionResult(room,gs);
+    else if (gs.phase==="scoreboard")       drawScore(room,gs,false);
+    else if (gs.phase==="final")            drawScore(room,gs,true);
   });
 }

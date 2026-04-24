@@ -25,22 +25,22 @@ async function roundBuzzer_process(room, gs, rQs, isOk) {
     HTIMER = setTimeout(async () => {
       const c2 = await fg(`rooms/${CODE}/gameState`);
       if (!c2 || c2.revealed || c2.phase !== "question") return;
-      await fp(`rooms/${CODE}`, { "gameState/revealed":true, "gameState/result":{ msg:"⏱️ Temps écoulé !", pts:0, scorer:null } });
-      setTimeout(() => hostNextQ(room, updGs || gs, rQs), 3000);
+      await fp(`rooms/${CODE}`, { "gameState/phase":"questionResult", "gameState/revealed":true, "gameState/result":{ msg:"⏱️ Temps écoulé !", pts:0, scorer:null } });
+      setTimeout(() => hostNextQ(room, updGs || gs, rQs), 4500);
     }, remaining * 1000);
   };
 
   if (isOk) {
     sc[pIdx] += ptsWin;
-    await fp(`rooms/${CODE}`, { "gameState/revealed":true, "gameState/scores":sc, "gameState/result":{ msg:`✅ ${gs.buzzed} a bon ! +${ptsWin} pts`, pts:ptsWin, scorer:gs.buzzed } });
-    setTimeout(() => hostNextQ(room, gs, rQs), 2500);
+    await fp(`rooms/${CODE}`, { "gameState/phase":"questionResult", "gameState/revealed":true, "gameState/scores":sc, "gameState/result":{ msg:`✅ ${gs.buzzed} a bon ! +${ptsWin} pts`, pts:ptsWin, scorer:gs.buzzed } });
+    setTimeout(() => hostNextQ(room, gs, rQs), 4500);
   } else {
     sc[pIdx] = Math.max(0, sc[pIdx] - ptsLose);
     const bo = [...(gs.buzzedOut || []), gs.buzzed];
     const remaining = gs.players.filter(p => !bo.includes(p) && !(gs.roundElim || []).includes(p));
     if (!remaining.length) {
-      await fp(`rooms/${CODE}`, { "gameState/revealed":true, "gameState/scores":sc, "gameState/buzzedOut":bo, "gameState/result":{ msg:`❌ ${gs.buzzed} a raté ! Bonne réponse : ${q.a[q.c]}`, pts:-ptsLose, scorer:null } });
-      setTimeout(() => hostNextQ(room, gs, rQs), 3000);
+      await fp(`rooms/${CODE}`, { "gameState/phase":"questionResult", "gameState/revealed":true, "gameState/scores":sc, "gameState/buzzedOut":bo, "gameState/result":{ msg:`❌ ${gs.buzzed} a raté ! Bonne réponse : ${q.a[q.c]}`, pts:-ptsLose, scorer:null } });
+      setTimeout(() => hostNextQ(room, gs, rQs), 4500);
     } else {
       // Calculate remaining question time
       const timeRemaining = gs._buzzerTimeRemaining || Math.max(1, Math.round(gs.timerDur - (Date.now() - gs.timerStart) / 1000));

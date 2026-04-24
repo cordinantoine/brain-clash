@@ -92,8 +92,6 @@ async function roundCarton_check(room, gs, rQs) {
   if (HTIMER) { clearTimeout(HTIMER); HTIMER = null; }
 
   const players = toArr(gs.players);
-  const N = players.length;
-  const BASE = 50 * N;
   const scores = [...toArr(gs.scores)];
   const balloons = toArr(gs.balloons).length ? [...toArr(gs.balloons)] : players.map(() => room.cartonBallons || 3);
   const roundElim = [...toArr(gs.roundElim)];
@@ -116,19 +114,16 @@ async function roundCarton_check(room, gs, rQs) {
   const pi = players.indexOf(firstPlayer);
 
   if (isCorrect) {
-    // BONNE RÉPONSE → points + choix de cible
-    const ptsWin = Math.round(BASE * 0.4);
-    scores[pi] += ptsWin;
-
+    // BONNE RÉPONSE → choix de cible (pas de points)
     const targets = players.filter(p => p !== firstPlayer && !roundElim.includes(p));
     if (targets.length === 0) {
       // Personne à cibler → juste afficher et continuer
       const recap = _cartonRecap(players, balloons);
       await fp(`rooms/${CODE}`, {
         "gameState/phase": "questionResult",
-        "gameState/revealed": true, "gameState/scores": scores,
+        "gameState/revealed": true,
         "gameState/balloons": balloons, "gameState/roundElim": roundElim,
-        "gameState/result": { msg: `✅ ${firstPlayer} a bon ! +${ptsWin} pts 🎯\n${recap}`, pts: ptsWin, scorer: firstPlayer }
+        "gameState/result": { msg: `✅ ${firstPlayer} a bon ! 🎯\n${recap}`, pts: 0, scorer: firstPlayer }
       });
       const alive = players.filter(p => !roundElim.includes(p));
       if (alive.length <= 1) {
@@ -140,17 +135,16 @@ async function roundCarton_check(room, gs, rQs) {
       // Cible disponible → écran pick
       await fp(`rooms/${CODE}`, {
         "gameState/buzzed": firstPlayer,
-        "gameState/pickTarget": true, "gameState/scores": scores,
+        "gameState/pickTarget": true,
         "gameState/balloons": balloons, "gameState/roundElim": roundElim,
-        "gameState/result": { msg: `✅ ${firstPlayer} a bon ! +${ptsWin} pts — Sur qui tirer ? 🎯`, pts: ptsWin, scorer: firstPlayer }
+        "gameState/result": { msg: `✅ ${firstPlayer} a bon ! Sur qui tirer ? 🎯`, pts: 0, scorer: firstPlayer }
       });
       // _cartonBusy reste true jusqu'au pick
     }
   } else {
-    // MAUVAISE RÉPONSE → perd 1 ballon
+    // MAUVAISE RÉPONSE → perd 1 ballon (pas de points)
     if (balloons[pi] > 0) {
       balloons[pi]--;
-      scores[pi] = Math.max(0, scores[pi] - Math.round(BASE * 0.3));
     }
     if (balloons[pi] <= 0 && !roundElim.includes(firstPlayer)) {
       roundElim.push(firstPlayer);
@@ -163,7 +157,7 @@ async function roundCarton_check(room, gs, rQs) {
 
     await fp(`rooms/${CODE}`, {
       "gameState/phase": "questionResult",
-      "gameState/revealed": true, "gameState/scores": scores,
+      "gameState/revealed": true,
       "gameState/balloons": balloons, "gameState/roundElim": roundElim,
       "gameState/result": { msg: `${lostMsg}\nBonne réponse : ${q.a[q.c]}\n${recap}`, pts: 0, scorer: null }
     });
@@ -181,15 +175,12 @@ async function roundCarton_check(room, gs, rQs) {
 // Choix de cible après bonne réponse
 async function roundCarton_pick(room, gs, rQs, targetName) {
   const players = toArr(gs.players);
-  const N = players.length;
-  const BASE = 50 * N;
   const tI = players.indexOf(targetName);
   const scores = [...toArr(gs.scores)];
   const balloons = toArr(gs.balloons).length ? [...toArr(gs.balloons)] : players.map(() => room.cartonBallons || 3);
   const roundElim = [...toArr(gs.roundElim)];
 
   balloons[tI] = Math.max(0, balloons[tI] - 1);
-  scores[tI] = Math.max(0, scores[tI] - Math.round(BASE * 0.3));
   if (balloons[tI] <= 0 && !roundElim.includes(targetName)) roundElim.push(targetName);
 
   const shotMsg = balloons[tI] <= 0
@@ -199,9 +190,9 @@ async function roundCarton_pick(room, gs, rQs, targetName) {
 
   await fp(`rooms/${CODE}`, {
     "gameState/phase": "questionResult",
-    "gameState/revealed": true, "gameState/pickTarget": false, "gameState/scores": scores,
+    "gameState/revealed": true, "gameState/pickTarget": false,
     "gameState/balloons": balloons, "gameState/roundElim": roundElim,
-    "gameState/result": { msg: `${shotMsg}\n${recap}`, pts: Math.round(BASE * 0.4), scorer: gs.buzzed }
+    "gameState/result": { msg: `${shotMsg}\n${recap}`, pts: 0, scorer: gs.buzzed }
   });
 
   // Vérifier fin de round
@@ -233,11 +224,9 @@ async function _cartonEndRound(room, gs, rQs, players, balloons, roundElim, scor
   if (HTIMER) { clearTimeout(HTIMER); HTIMER = null; }
   _cartonBusy = true; // bloqué définitivement
 
-  const N = players.length;
-  const BASE = 50 * N;
   const alive = players.filter(p => !roundElim.includes(p));
   const surv = alive[0] || null;
-  const survPts = Math.round(BASE * 1.25);
+  const survPts = 125;
   if (surv) scores[players.indexOf(surv)] += survPts;
 
   const recap = _cartonRecap(players, balloons);
