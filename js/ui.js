@@ -265,53 +265,104 @@ function drawLoading(room) {
 }
 
 function drawIntro(room, gs) {
-  const t     = THEMES[room.theme] || THEMES.culture;
-  const rType = room.rounds[gs.roundIdx||0];
-  const r     = RT.find(x => x.id === rType) || RT[0];
-  // Check if countdown is active
-  if (gs.countdownStart) {
-    const _cdRender = () => {
-      const elapsed = Math.round((Date.now() - gs.countdownStart) / 1000);
-      const num = 3 - elapsed;
-      if (num > 0) {
-        R(`<div class="countdown-overlay"><div class="countdown-number" key="${num}" style="color:${t.accent}">${num}</div></div><div class="countdown-flash"></div>`);
-      } else {
-        R(`<div class="countdown-overlay"><div class="countdown-go" style="color:${t.accent}">GO!</div></div>`);
-      }
-    };
-    _cdRender();
-    // Re-render every second for 2, 1, GO
-    setTimeout(_cdRender, 1000);
-    setTimeout(_cdRender, 2000);
-    setTimeout(_cdRender, 3000);
-    return;
-  }
-
-  // Ready screen with player checkboxes
+  const rType   = room.rounds[gs.roundIdx||0];
+  const r       = RT.find(x => x.id === rType) || RT[0];
   const readyMap = gs.ready || {};
-  const players = gs.players || [];
-  const _roomPs = toArr(room.players);
-  const playerRows = players.map((p, i) => {
+  const players  = gs.players || [];
+  const _roomPs  = toArr(room.players);
+  const PCOLORS  = ['#3ea7ff','#ff4fa2','#4aff7a','#ffde3a','#b96dff','#ff8a3a','#4be0ff','#ff6b3a'];
+
+  // ── Player sidebar (réutilisée pour ready-screen ET countdown) ──
+  const playerRowsHtml = players.map((p, i) => {
     const isReady = !!readyMap[p];
-    const rp = _roomPs.find(x => x.name === p);
+    const rp   = _roomPs.find(x => x.name === p);
     const avIdx = (rp && rp.avatar !== undefined) ? rp.avatar : (i % AVATARS.length);
-    const av = AVATARS[avIdx] || AVATARS[0];
-    return `<div class="intro-player-row" style="background:${av.bg}33">
-      <span class="intro-player-name">${p}</span>
-      <div class="intro-player-square${isReady?' is-ready':''}" style="border-color:${av.bg};${isReady?'background:'+av.bg:''}"></div>
+    const av   = AVATARS[avIdx] || AVATARS[0];
+    const pc   = PCOLORS[i % PCOLORS.length];
+    return `<div class="ck-intro-prow${isReady?' ck-intro-ready':''}" style="--pc:${pc}">
+      <div class="ck-av"><img src="${AVATAR_PATH}${av.file}" alt=""></div>
+      <div class="ck-pinfo">
+        <div class="ck-pname">${p}</div>
+      </div>
+      <div class="ck-intro-pstatus">${isReady ? '✓' : '⏳'}</div>
     </div>`;
   }).join("");
 
-  R(`<div class="intro-screen">
-    <div class="intro-banner">★ BRAIN CLASH ★</div>
-    <div class="intro-body">
-      <div class="intro-left">${playerRows}</div>
-      <div class="intro-right glass">
-        <h2 class="intro-round-name">${r.name}</h2>
-        <p class="intro-round-desc">${r.desc}</p>
+  // ── Countdown actif ──
+  if (gs.countdownStart) {
+    const _renderCd = () => {
+      const elapsed = Math.round((Date.now() - gs.countdownStart) / 1000);
+      const num = 3 - elapsed;
+      const cdContent = num > 0
+        ? `<div class="ck-intro-cd-num" key="${num}">${num}</div>`
+        : `<div class="ck-intro-cd-go">GO !</div>`;
+      R(`<div class="ck-wrap">
+        <div class="ck-bg"></div>
+        <div class="ck-stage-wrap">
+          <div class="ck-stage" id="ck-stage">
+            <div class="ck-title">
+              <div class="ck-title-stars">★ ★ ★</div>
+              <div class="ck-title-text"><span>BRAIN</span><span>CLASH</span></div>
+            </div>
+            <div class="ck-intro-countdown">${cdContent}</div>
+            <div class="ck-sidebar">
+              <div class="ck-sidebar-title">JOUEURS</div>
+              <div class="ck-player-rows">${playerRowsHtml}</div>
+            </div>
+          </div>
+        </div>
+      </div>`);
+      _ckFit();
+    };
+    _renderCd();
+    setTimeout(_renderCd, 1000);
+    setTimeout(_renderCd, 2000);
+    setTimeout(_renderCd, 3000);
+    window.addEventListener('resize', _ckFit);
+    return;
+  }
+
+  // ── Écran de présentation (en attente des joueurs) ──
+  const roundNum = (gs.roundIdx || 0) + 1;
+  const totalRounds = (room.rounds || []).length;
+
+  R(`<div class="ck-wrap">
+    <div class="ck-bg"></div>
+    <div class="ck-stage-wrap">
+      <div class="ck-stage" id="ck-stage">
+
+        <div class="ck-title">
+          <div class="ck-title-stars">★ ★ ★</div>
+          <div class="ck-title-text"><span>BRAIN</span><span>CLASH</span></div>
+        </div>
+
+        <div class="ck-intro-main">
+          <div class="ck-intro-card">
+            <div class="ck-intro-badge">ROUND ${roundNum} / ${totalRounds}</div>
+            <div class="ck-intro-icon">${r.icon}</div>
+            <div class="ck-intro-name">${r.name}</div>
+            <div class="ck-intro-desc">${r.desc}</div>
+            <div class="ck-intro-wait">Les joueurs appuient sur PRÊT depuis leur téléphone…</div>
+          </div>
+        </div>
+
+        <div class="ck-sidebar">
+          <div class="ck-sidebar-title">JOUEURS</div>
+          <div class="ck-player-rows">${playerRowsHtml}</div>
+        </div>
+
       </div>
     </div>
   </div>`);
+
+  _ckFit();
+  window.addEventListener('resize', _ckFit);
+}
+
+function _ckFit() {
+  const s = document.getElementById('ck-stage');
+  if (!s) return;
+  s.style.transform = `scale(${Math.min(window.innerWidth/1920, window.innerHeight/1080)})`;
 }
 
 function drawQ_optimistic(gs) {
@@ -668,13 +719,8 @@ function drawQ_host(room, gs) {
   </div>`);
 
   // ── Stage scaling ──
-  function ckFit() {
-    const s = document.getElementById('ck-stage');
-    if (!s) return;
-    s.style.transform = `scale(${Math.min(window.innerWidth/1920, window.innerHeight/1080)})`;
-  }
-  ckFit();
-  window.addEventListener('resize', ckFit);
+  _ckFit();
+  window.addEventListener('resize', _ckFit);
 
   // ── Question font-size (auto-reduce for long text) ──
   const qtEl = document.getElementById('ck-qtext');
