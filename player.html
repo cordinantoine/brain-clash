@@ -123,7 +123,9 @@
     .avatar-opt{width:54px;height:54px;border-radius:14px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all .15s;flex-shrink:0;position:relative}
     .avatar-opt img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
     .avatar-opt.selected{border-color:#fff;box-shadow:0 0 0 3px var(--accent),0 0 16px var(--accent-glow);transform:scale(1.1)}
-    .avatar-opt:active{transform:scale(0.95)}
+    .avatar-opt:active:not(.taken){transform:scale(0.95)}
+    .avatar-opt.taken{opacity:.3;cursor:not-allowed;filter:grayscale(.8)}
+    .avatar-opt.taken::after{content:'✕';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:#f87171;background:rgba(0,0,0,.5);border-radius:12px}
 
     /* ── Avatar dans la barre de score ── */
     .score-pill{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0;padding:5px 8px 6px;background:#0e1422;border:2px solid #1e2a40;border-radius:12px;min-width:56px;transition:border-color .3s,box-shadow .3s}
@@ -269,7 +271,7 @@ const toArr = v => {
 
 async function fg(path) {
   try {
-    const r = await fetch(`${FB}/${path}.json`);
+    const r = await fetch(`${FB}/${path}.json`, { cache: 'no-store' });
     if (!r.ok) return null;
     const d = await r.json();
     return d !== null ? d : null;
@@ -315,6 +317,7 @@ let ME = "", CODE = "", MY_INDEX = -1;
 let MY_AVATAR = 0;
 let PLAYER_AVATARS = [];
 let STOP_LISTENER = null;
+let _avatarPollIv = null;
 let TIMER_IV = null;
 let LAST_KEY = "";
 
@@ -352,17 +355,46 @@ function buildAvatarGrid() {
   ).join('');
 }
 function selectAvatar(i) {
-  document.querySelectorAll('.avatar-opt').forEach(el => el.classList.remove('selected'));
   const opt = G('av-opt-'+i);
-  if (opt) opt.classList.add('selected');
+  if (!opt || opt.classList.contains('taken')) return;
+  document.querySelectorAll('.avatar-opt').forEach(el => el.classList.remove('selected'));
+  opt.classList.add('selected');
   MY_AVATAR = i;
+}
+
+async function refreshTakenAvatars(code) {
+  if (!code || code.length !== 5) return;
+  const room = await fg(`rooms/${code}`);
+  if (!room) return;
+  const taken = new Set(toArr(room.players).map(p => p.avatar));
+  document.querySelectorAll('.avatar-opt').forEach((opt, i) => {
+    if (taken.has(i)) {
+      opt.classList.add('taken');
+      opt.classList.remove('selected');
+    } else {
+      opt.classList.remove('taken');
+    }
+  });
+  // Si l'avatar sélectionné est maintenant pris, choisir le premier libre
+  if (taken.has(MY_AVATAR)) {
+    const firstFree = AVATARS.findIndex((_, i) => !taken.has(i));
+    if (firstFree >= 0) selectAvatar(firstFree);
+  }
 }
 buildAvatarGrid();
 
 // ════════════════════════════════════════════
 //  ÉCRAN JOIN
 // ════════════════════════════════════════════
-G('input-code').oninput = e => { e.target.value = e.target.value.toUpperCase(); };
+G('input-code').oninput = e => {
+  e.target.value = e.target.value.toUpperCase();
+  const code = e.target.value;
+  if (_avatarPollIv) { clearInterval(_avatarPollIv); _avatarPollIv = null; }
+  if (code.length === 5) {
+    refreshTakenAvatars(code);
+    _avatarPollIv = setInterval(() => refreshTakenAvatars(code), 1500);
+  }
+};
 G('btn-join').onclick = doJoin;
 G('input-code').onkeydown = e => { if(e.key==='Enter') doJoin(); };
 G('input-name').onkeydown = e => { if(e.key==='Enter') G('input-code').focus(); };
@@ -400,9 +432,37 @@ async function doJoin() {
     G('btn-join').disabled = false; G('btn-join').textContent = 'Rejoindre →';
     return;
   }
+  const avatarIdx = MY_AVATAR; // snapshot avant tout await
+
+  if (players.find(p => p.avatar === avatarIdx)) {
+    showErr("Cet avatar est déjà pris ! Choisis-en un autre.");
+    refreshTakenAvatars(code);
+    G('btn-join').disabled = false; G('btn-join').textContent = 'Rejoindre →';
+    return;
+  }
+
+  // Réservation atomique : PATCH un champ unique par avatar, puis vérifier
+  await fp(`rooms/${code}`, { [`avatarClaims/${avatarIdx}`]: name });
+  await new Promise(r => setTimeout(r, 150)); // laisse Firebase propager les PATCHes concurrents
+  const claimedBy = await fg(`rooms/${code}/avatarClaims/${avatarIdx}`);
+  if (claimedBy !== name) {
+    showErr("Cet avatar est déjà pris ! Choisis-en un autre.");
+    refreshTakenAvatars(code);
+    G('btn-join').disabled = false; G('btn-join').textContent = 'Rejoindre →';
+    return;
+  }
+
+  // Re-lire les joueurs juste avant d'écrire (données fraîches)
+  const freshRoom = await fg(`rooms/${code}`);
+  const freshPlayers = toArr(freshRoom ? freshRoom.players : []);
+  if (freshPlayers.find(p => p.name === name)) {
+    showErr("Ce prénom est déjà pris !");
+    G('btn-join').disabled = false; G('btn-join').textContent = 'Rejoindre →';
+    return;
+  }
 
   // Écrire le joueur
-  const newPlayers = [...players, { name, isHost: false, avatar: MY_AVATAR }];
+  const newPlayers = [...freshPlayers, { name, isHost: false, avatar: avatarIdx }];
   const writeOk = await fs(`rooms/${code}/players`, newPlayers);
 
   if (!writeOk) {
@@ -420,7 +480,16 @@ async function doJoin() {
     G('btn-join').disabled = false; G('btn-join').textContent = 'Rejoindre →';
     return;
   }
+  // Filet de sécurité final : doublon d'avatar en base
+  if (checkArr.filter(p => p.avatar === avatarIdx).length > 1) {
+    await fs(`rooms/${code}/players`, checkArr.filter(p => p.name !== name));
+    showErr("Cet avatar a été pris en même temps ! Choisis-en un autre.");
+    refreshTakenAvatars(code);
+    G('btn-join').disabled = false; G('btn-join').textContent = 'Rejoindre →';
+    return;
+  }
 
+  if (_avatarPollIv) { clearInterval(_avatarPollIv); _avatarPollIv = null; }
   ME = name;
   CODE = code;
   MY_INDEX = players.length;
@@ -953,6 +1022,7 @@ async function actPick(targetName) {
 function goHome() {
   if (STOP_LISTENER) { STOP_LISTENER(); STOP_LISTENER = null; }
   if (TIMER_IV) clearInterval(TIMER_IV);
+  if (_avatarPollIv) { clearInterval(_avatarPollIv); _avatarPollIv = null; }
   ME = ''; CODE = ''; MY_INDEX = -1; LAST_KEY = '';
   G('input-name').value = '';
   G('input-code').value = '';
