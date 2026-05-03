@@ -9,20 +9,53 @@
 // accent  = couleur principale des boutons et textes
 // dark    = couleur foncée pour les gradients
 // stars   = afficher des étoiles CSS en arrière-plan
+// Indexé par : slug Firebase (depuis /questions/_themes) ET ids legacy
 const THEMES = {
+  // ── Legacy (questions hardcodées dans js/questions/*.js) ──
+  // Conservés pour compat ; Firebase slugs ci-dessous = nouveau système.
   culture : { id:"culture",  name:"Culture Générale", emoji:"🧠", accent:"#a78bfa", dark:"#7c3aed", stars:true  },
   music   : { id:"music",    name:"Musique",           emoji:"🎵", accent:"#f472b6", dark:"#be185d", stars:false },
   cinema  : { id:"cinema",   name:"Cinéma / Séries",   emoji:"🎬", accent:"#fbbf24", dark:"#d97706", stars:true  },
   sport   : { id:"sport",    name:"Sport",             emoji:"⚽", accent:"#34d399", dark:"#059669", stars:false },
-  histoire: { id:"histoire", name:"Histoire",          emoji:"🏛️", accent:"#d4a574", dark:"#92400e", stars:false },
   science : { id:"science",  name:"Sciences",          emoji:"🔬", accent:"#22d3ee", dark:"#0891b2", stars:true  },
   geo     : { id:"geo",      name:"Géographie",        emoji:"🌍", accent:"#60a5fa", dark:"#2563eb", stars:true  },
   gaming  : { id:"gaming",   name:"Jeux Vidéo",        emoji:"🎮", accent:"#c084fc", dark:"#7e22ce", stars:false },
   hp      : { id:"hp",       name:"Harry Potter",      emoji:"⚡", accent:"#fcd34d", dark:"#92400e", stars:true  },
-  nba     : { id:"nba",      name:"NBA",               emoji:"🏀", accent:"#f97316", dark:"#c2410c", stars:false },
-  football: { id:"football", name:"Football",           emoji:"⚽", accent:"#22c55e", dark:"#15803d", stars:false },
   francaise:{ id:"francaise",name:"Culture Française",  emoji:"🇫🇷", accent:"#3b82f6", dark:"#1d4ed8", stars:true  },
   lotr    : { id:"lotr",     name:"Seigneur des Anneaux",emoji:"💍", accent:"#eab308", dark:"#a16207", stars:true  },
+
+  // ── Slugs Firebase (depuis /questions/_themes) ──
+  alcools_vins              : { id:"alcools_vins",              name:"Alcools & Vins",            emoji:"🍷", accent:"#c026d3", dark:"#86198f", stars:false },
+  animaux                   : { id:"animaux",                   name:"Animaux",                   emoji:"🐾", accent:"#84cc16", dark:"#3f6212", stars:false },
+  bandes_dessinees_manga    : { id:"bandes_dessinees_manga",    name:"Bandes Dessinées & Manga",  emoji:"📚", accent:"#fb7185", dark:"#9f1239", stars:false },
+  capitales_du_monde        : { id:"capitales_du_monde",        name:"Capitales du monde",        emoji:"🏛️", accent:"#38bdf8", dark:"#075985", stars:true  },
+  cinema_films              : { id:"cinema_films",              name:"Cinéma & Films",            emoji:"🎬", accent:"#fbbf24", dark:"#d97706", stars:true  },
+  cuisine_et_gastronomie    : { id:"cuisine_et_gastronomie",    name:"Cuisine & Gastronomie",     emoji:"🍳", accent:"#fb923c", dark:"#9a3412", stars:false },
+  disney                    : { id:"disney",                    name:"Disney",                    emoji:"🏰", accent:"#ec4899", dark:"#9d174d", stars:true  },
+  economie_finance          : { id:"economie_finance",          name:"Économie & Finance",        emoji:"💰", accent:"#10b981", dark:"#065f46", stars:false },
+  emissions_de_tele_francaises:{ id:"emissions_de_tele_francaises",name:"Émissions Télé FR",       emoji:"📺", accent:"#6366f1", dark:"#3730a3", stars:false },
+  formule_1                 : { id:"formule_1",                 name:"Formule 1",                 emoji:"🏎️", accent:"#ef4444", dark:"#7f1d1d", stars:false },
+  game_of_thrones           : { id:"game_of_thrones",           name:"Game of Thrones",           emoji:"🐉", accent:"#9ca3af", dark:"#374151", stars:true  },
+  geographie                : { id:"geographie",                name:"Géographie",                emoji:"🌍", accent:"#60a5fa", dark:"#1d4ed8", stars:true  },
+  harry_potter              : { id:"harry_potter",              name:"Harry Potter",              emoji:"⚡", accent:"#fcd34d", dark:"#92400e", stars:true  },
+  histoire                  : { id:"histoire",                  name:"Histoire",                  emoji:"🏛️", accent:"#d4a574", dark:"#92400e", stars:false },
+  jeux_video                : { id:"jeux_video",                name:"Jeux Vidéo",                emoji:"🎮", accent:"#c084fc", dark:"#7e22ce", stars:false },
+  litterature_auteurs       : { id:"litterature_auteurs",       name:"Littérature & Auteurs",     emoji:"📖", accent:"#a78bfa", dark:"#5b21b6", stars:true  },
+  marvel_dc_universe        : { id:"marvel_dc_universe",        name:"Marvel & DC Universe",      emoji:"🦸", accent:"#dc2626", dark:"#7f1d1d", stars:false },
+  musique_artistes          : { id:"musique_artistes",          name:"Musique & Artistes",        emoji:"🎵", accent:"#f472b6", dark:"#be185d", stars:false },
+  nba                       : { id:"nba",                       name:"NBA",                       emoji:"🏀", accent:"#f97316", dark:"#c2410c", stars:false },
+  oceans_mers               : { id:"oceans_mers",               name:"Océans & Mers",             emoji:"🌊", accent:"#06b6d4", dark:"#155e75", stars:false },
+  plantes_botanique         : { id:"plantes_botanique",         name:"Plantes & Botanique",       emoji:"🌿", accent:"#16a34a", dark:"#14532d", stars:false },
+  records_faits_insolites   : { id:"records_faits_insolites",   name:"Records & Faits Insolites", emoji:"🏆", accent:"#eab308", dark:"#854d0e", stars:false },
+  rugby                     : { id:"rugby",                     name:"Rugby",                     emoji:"🏉", accent:"#15803d", dark:"#14532d", stars:false },
+  sciences_nature           : { id:"sciences_nature",           name:"Sciences & Nature",         emoji:"🔬", accent:"#22d3ee", dark:"#0e7490", stars:true  },
+  seigneur_des_anneaux      : { id:"seigneur_des_anneaux",      name:"Seigneur des Anneaux",      emoji:"💍", accent:"#eab308", dark:"#a16207", stars:true  },
+  series_tv_streaming       : { id:"series_tv_streaming",       name:"Séries TV & Streaming",     emoji:"📺", accent:"#8b5cf6", dark:"#5b21b6", stars:false },
+  sports_de_combat          : { id:"sports_de_combat",          name:"Sports de Combat",          emoji:"🥊", accent:"#b91c1c", dark:"#7f1d1d", stars:false },
+  sports_olympiques         : { id:"sports_olympiques",         name:"Sports Olympiques",         emoji:"🥇", accent:"#f59e0b", dark:"#92400e", stars:false },
+  star_wars                 : { id:"star_wars",                 name:"Star Wars",                 emoji:"⭐", accent:"#fde047", dark:"#a16207", stars:true  },
+  tennis                    : { id:"tennis",                    name:"Tennis",                    emoji:"🎾", accent:"#a3e635", dark:"#3f6212", stars:false },
+  football                  : { id:"football",                  name:"Football",                  emoji:"⚽", accent:"#22c55e", dark:"#15803d", stars:false },
 };
 
 // ── Types de rounds disponibles ──
@@ -80,7 +113,20 @@ let I_BUZZED = false;         // ai-je déjà buzzé cette question ?
 let lastAnswerKey = "";       // clé pour détecter les nouvelles réponses
 
 // ── Configuration d'une partie en cours de création ──
-let CD = { name:"", maxP:4, themes:[], rounds:[], cartonBallons:3 };
+//   mode             : "fixed" (l'hôte choisit les thèmes) | "last_picks" (le dernier choisit)
+//   themes           : slugs sélectionnés (mode fixed uniquement)
+//   availableThemes  : slugs disponibles pour la partie (mode last_picks)
+let CD = { name:"", maxP:4, mode:"fixed", themes:[], availableThemes:[], rounds:[], cartonBallons:3 };
+
+// ── Cache des thèmes Firebase (chargés depuis /questions/_themes) ──
+// Rempli paresseusement par loadFbThemes() avant l'écran de sélection.
+let FB_THEMES = null;
+async function loadFbThemes() {
+  if (FB_THEMES) return FB_THEMES;
+  const data = await fg("questions/_themes");
+  FB_THEMES = Array.isArray(data) ? data : (data ? toArr(data) : []);
+  return FB_THEMES;
+}
 
 // ── Normalise un array Firebase (objet {0:..,1:..} → vrai array) ──
 const toArr = v => {
