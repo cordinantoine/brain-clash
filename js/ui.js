@@ -118,23 +118,72 @@ function Create(step) {
       grid.querySelectorAll(".mpBtn").forEach(b => b.addEventListener("click",()=>{ CD.maxP=+b.dataset.n; renderMpGrid(); }));
     }
     renderMpGrid();
-    on("bBk","click",()=>{ CD={name:"",maxP:4,themes:[],rounds:[],cartonBallons:3}; Home(); });
+    on("bBk","click",()=>{ CD={name:"",maxP:4,mode:"fixed",themes:[],availableThemes:[],rounds:[],cartonBallons:3}; Home(); });
     on("bNx","click",()=>{ Create(2); });
 
   } else if (step === 2) {
-    const g = Object.values(THEMES).map(th => `<div class="tbtn glass" data-tid="${th.id}" style="padding:11px 6px;text-align:center;border-radius:13px;border:2px solid ${CD.themes.includes(th.id)?th.accent:"rgba(255,255,255,.07)"};background:${CD.themes.includes(th.id)?th.accent+"22":"rgba(255,255,255,.02)"};cursor:pointer;position:relative">${CD.themes.includes(th.id)?`<div style="position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:#22c55e;display:flex;align-items:center;justify-content:center;font-size:.55rem">✓</div>`:""}<div style="font-size:1.4rem">${th.emoji}</div><div style="font-size:.58rem;font-weight:700;line-height:1.2;color:rgba(255,255,255,.7);margin-top:3px">${th.name}</div></div>`).join("");
-    const canNext = CD.themes.length > 0;
-    const ac = CD.themes.length ? THEMES[CD.themes[0]].accent : "#a78bfa";
-    const dk = CD.themes.length ? THEMES[CD.themes[0]].dark : "#7c3aed";
-    R(`<div class="sc"><div class="glass su" style="width:100%;max-width:420px;padding:24px 20px;max-height:92vh;overflow-y:auto"><button id="bBk" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:.8rem;margin-bottom:16px">← Retour</button><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:3px">Choisir les thèmes</h2><p style="color:rgba(255,255,255,.38);margin-bottom:4px;font-size:.8rem">Étape 2/3</p><p style="color:rgba(255,255,255,.25);margin-bottom:14px;font-size:.72rem">${CD.themes.length===0?"Aucun thème sélectionné":CD.themes.length===1?"1 thème sélectionné":CD.themes.length+" thèmes sélectionnés"}</p><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px">${g}</div><button class="btn" id="bNx" style="width:100%;padding:13px;color:white;background:${canNext?`linear-gradient(135deg,${dk},${ac})`:"rgba(255,255,255,.1)"}" ${canNext?"":"disabled"}>Suivant →</button></div></div>`);
+    // Charge la liste des thèmes Firebase (mise en cache)
+    if (!FB_THEMES) {
+      R(`<div class="sc"><div class="float" style="text-align:center"><div style="font-size:2.5rem">⏳</div><p style="color:rgba(255,255,255,.42);margin-top:8px">Chargement des thèmes…</p></div></div>`);
+      loadFbThemes().then(()=>Create(2));
+      return;
+    }
+
+    // Visuels (emoji/couleur) depuis THEMES si dispo, sinon défaut neutre
+    const visual = slug => THEMES[slug] || { emoji:"🎲", accent:"#a78bfa", dark:"#7c3aed", name:slug };
+
+    const isFixed = CD.mode === "fixed";
+    const allSlugs = FB_THEMES.map(t => t.slug);
+    const allSelected = isFixed && CD.themes.length === allSlugs.length;
+
+    // Carte mode (radio)
+    const modeCard = mode => {
+      const sel = CD.mode === mode;
+      const data = mode === "fixed"
+        ? { ico:"📋", title:"Thèmes fixes", desc:"L'hôte choisit les thèmes joués." }
+        : { ico:"🎯", title:"Le dernier choisit", desc:"Le perdant choisit thème + difficulté avant chaque jeu." };
+      return `<div class="modeBtn" data-mode="${mode}" style="padding:11px 13px;border-radius:12px;cursor:pointer;border:2px solid ${sel?"#a78bfa":"rgba(255,255,255,.07)"};background:${sel?"rgba(167,139,250,.12)":"rgba(255,255,255,.02)"};display:flex;align-items:center;gap:10px;margin-bottom:7px"><div style="width:18px;height:18px;border-radius:50%;border:2px solid ${sel?"#a78bfa":"rgba(255,255,255,.25)"};background:${sel?"#a78bfa":"transparent"};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.55rem;color:#1a1a2e">${sel?"●":""}</div><div style="font-size:1.05rem">${data.ico}</div><div style="flex:1"><div style="font-weight:600;font-size:.85rem">${data.title}</div><div style="color:rgba(255,255,255,.42);font-size:.7rem;line-height:1.3">${data.desc}</div></div></div>`;
+    };
+
+    // Grille de thèmes (mode fixed uniquement)
+    const grid = isFixed ? FB_THEMES.map(th => {
+      const v = visual(th.slug);
+      const sel = CD.themes.includes(th.slug);
+      return `<div class="tbtn glass" data-tid="${th.slug}" style="padding:11px 6px;text-align:center;border-radius:13px;border:2px solid ${sel?v.accent:"rgba(255,255,255,.07)"};background:${sel?v.accent+"22":"rgba(255,255,255,.02)"};cursor:pointer;position:relative">${sel?`<div style="position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:#22c55e;display:flex;align-items:center;justify-content:center;font-size:.55rem">✓</div>`:""}<div style="font-size:1.4rem">${v.emoji}</div><div style="font-size:.55rem;font-weight:700;line-height:1.2;color:rgba(255,255,255,.7);margin-top:3px">${th.name}</div></div>`;
+    }).join("") : "";
+
+    const canNext = !isFixed || CD.themes.length > 0;
+    const firstSlug = CD.themes[0];
+    const ac = (firstSlug && THEMES[firstSlug]?.accent) || "#a78bfa";
+    const dk = (firstSlug && THEMES[firstSlug]?.dark)   || "#7c3aed";
+
+    const themesSection = isFixed
+      ? `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><label style="color:rgba(255,255,255,.5);font-size:.75rem;font-weight:600">Thèmes</label><button id="bToggleAll" class="btn" style="padding:5px 10px;font-size:.7rem;background:rgba(255,255,255,.06);color:white;border-radius:8px">${allSelected?"✕ Tout désélectionner":"✓ Tout sélectionner"}</button></div><p style="color:rgba(255,255,255,.25);margin-bottom:10px;font-size:.7rem">${CD.themes.length===0?"Aucun thème sélectionné":CD.themes.length===1?"1 thème sélectionné":CD.themes.length+" thèmes sélectionnés"}</p><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px">${grid}</div>`
+      : `<div style="padding:14px;border-radius:11px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.22);margin-bottom:18px;font-size:.78rem;color:rgba(255,255,255,.7);line-height:1.5"><strong style="color:#a78bfa">🎯 Mode "Le dernier choisit"</strong><br>Aucune sélection à l'avance. Avant chaque jeu, le joueur en dernière position choisira le thème + la difficulté parmi les ${allSlugs.length} thèmes disponibles.</div>`;
+
+    R(`<div class="sc"><div class="glass su" style="width:100%;max-width:430px;padding:22px 20px;max-height:92vh;overflow-y:auto"><button id="bBk" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:.8rem;margin-bottom:14px">← Retour</button><h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:3px">Mode de jeu &amp; thèmes</h2><p style="color:rgba(255,255,255,.38);margin-bottom:14px;font-size:.78rem">Étape 2/3</p><label style="color:rgba(255,255,255,.5);font-size:.75rem;font-weight:600;display:block;margin-bottom:8px">Mode de jeu</label>${modeCard("fixed")}${modeCard("last_picks")}<div style="height:14px"></div>${themesSection}<button class="btn" id="bNx" style="width:100%;padding:13px;color:white;background:${canNext?`linear-gradient(135deg,${dk},${ac})`:"rgba(255,255,255,.1)"}" ${canNext?"":"disabled"}>Suivant →</button></div></div>`);
+
     on("bBk","click",()=>Create(1));
-    on("bNx","click",()=>{ if(CD.themes.length) Create(3); });
-    document.querySelectorAll(".tbtn").forEach(b => b.addEventListener("click",()=>{
-      const tid = b.dataset.tid;
-      CD.themes = CD.themes.includes(tid) ? CD.themes.filter(x=>x!==tid) : [...CD.themes,tid];
-      if (CD.themes.length) setBG(CD.themes[0]);
+    on("bNx","click",()=>{ if(canNext) Create(3); });
+
+    document.querySelectorAll(".modeBtn").forEach(b => b.addEventListener("click",()=>{
+      CD.mode = b.dataset.mode;
       Create(2);
     }));
+
+    if (isFixed) {
+      on("bToggleAll","click",()=>{
+        CD.themes = allSelected ? [] : [...allSlugs];
+        if (CD.themes.length) setBG(CD.themes[0]);
+        Create(2);
+      });
+      document.querySelectorAll(".tbtn").forEach(b => b.addEventListener("click",()=>{
+        const tid = b.dataset.tid;
+        CD.themes = CD.themes.includes(tid) ? CD.themes.filter(x=>x!==tid) : [...CD.themes,tid];
+        if (CD.themes.length) setBG(CD.themes[0]);
+        Create(2);
+      }));
+    }
 
   } else {
     const ri = RT.map(r => `<div class="rbtn glass" data-rid="${r.id}" style="padding:10px 12px;cursor:pointer;border:2px solid ${CD.rounds.includes(r.id)?t.accent:"rgba(255,255,255,.07)"};background:${CD.rounds.includes(r.id)?t.accent+"14":"rgba(255,255,255,.02)"};display:flex;align-items:center;gap:10px;margin-bottom:8px;border-radius:13px"><span style="font-size:1.05rem">${r.icon}</span><div style="flex:1"><div style="font-weight:600;font-size:.82rem">${r.name}</div><div style="color:rgba(255,255,255,.33);font-size:.67rem">${r.desc}</div></div><div style="width:14px;height:14px;border-radius:50%;border:2px solid ${CD.rounds.includes(r.id)?t.accent:"rgba(255,255,255,.2)"};background:${CD.rounds.includes(r.id)?t.accent:"transparent"};flex-shrink:0"></div></div>`).join("");
@@ -150,7 +199,17 @@ function Create(step) {
 
 async function doCreate() {
   cleanOldRooms();
-  const themes = CD.themes.length ? CD.themes : ["culture"];
+
+  // En mode last_picks : pas de pré-sélection, tous les thèmes Firebase deviennent dispos.
+  await loadFbThemes();
+  const allSlugs = (FB_THEMES || []).map(t => t.slug);
+  const isFixed = CD.mode === "fixed";
+
+  const themes = isFixed
+    ? (CD.themes.length ? CD.themes : ["culture"])
+    : allSlugs;
+  const availableThemes = isFixed ? [...themes] : [...allSlugs];
+
   // Sort rounds to match RT display order
   const rtOrder = RT.map(r => r.id);
   CD.rounds.sort((a, b) => rtOrder.indexOf(a) - rtOrder.indexOf(b));
@@ -158,6 +217,8 @@ async function doCreate() {
   const room = {
     code, phase:"lobby",
     theme:themes[0], themes,
+    mode: CD.mode || "fixed",
+    availableThemes,
     rounds:CD.rounds, cartonBallons:CD.cartonBallons||3,
     maxP:CD.maxP,
     players:[],
@@ -210,7 +271,7 @@ function Lobby(room) {
     const rows = toArr(cur.players).map((p,i)=>`<div style="display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:10px;background:rgba(255,255,255,.04)"><div style="width:26px;height:26px;border-radius:50%;background:${COL[i%8].bg};display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700">${i+1}</div><span style="font-weight:600;font-size:.88rem">${p.name}</span></div>`).join("");
     const can = toArr(cur.players).length >= 1;
     R(`<div class="sc"><div class="float" style="text-align:center"><div style="font-size:2.5rem">📺</div><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;margin-top:4px">Écran principal</h2><p style="color:rgba(255,255,255,.38);font-size:.76rem;margin-top:3px">Cet écran est le plateau du jeu</p></div><div class="glass" style="padding:17px 19px;text-align:center;max-width:370px;width:100%"><p style="color:rgba(255,255,255,.42);font-size:.76rem;margin-bottom:6px">Code de la salle</p><div style="font-family:'Orbitron',sans-serif;font-size:2.4rem;font-weight:900;color:${t.accent};animation:roomGlow 2s ease-in-out infinite">${room.code}</div><p style="color:rgba(255,255,255,.28);font-size:.68rem;margin-top:5px;margin-bottom:13px">${(room.themes||[room.theme]).map(tid=>(THEMES[tid]||THEMES.culture).emoji).join(" ")} · ${room.rounds.map(r=>RT.find(x=>x.id===r)?.icon||"").join(" ")}</p><div style="background:rgba(0,0,0,.25);border-radius:11px;padding:11px 13px;text-align:left;border:1px solid rgba(255,255,255,.09);margin-bottom:9px;font-size:.78rem;line-height:1.75;white-space:pre-wrap;user-select:all">${inv}</div><button class="btn" id="bCp" style="width:100%;padding:11px;background:linear-gradient(135deg,${t.dark},${t.accent});color:white;border-radius:13px;font-size:.85rem">📋 Copier le lien d'invitation</button></div><div class="glass" style="padding:14px 16px;max-width:370px;width:100%"><p style="color:rgba(255,255,255,.48);font-size:.75rem;font-weight:600;margin-bottom:8px">JOUEURS (${toArr(cur.players).length}/${room.maxP})</p><div>${rows}${toArr(cur.players).length<room.maxP?`<div style="padding:7px 11px;border-radius:10px;border:1px dashed rgba(255,255,255,.11);color:rgba(255,255,255,.2);font-size:.76rem;text-align:center">En attente de joueurs…</div>`:""}</div></div><div style="display:flex;gap:10px;width:100%;max-width:370px"><button class="btn" id="bCn" style="background:rgba(255,255,255,.07);color:white;padding:12px;flex:1;font-size:.84rem">✕ Annuler</button><button class="btn" id="bLn" style="padding:12px;flex:2;font-size:.88rem;color:white;background:${can?`linear-gradient(135deg,${t.dark},${t.accent})`:"rgba(255,255,255,.1)"}" ${can?"":"disabled"}>${can?"🚀 Lancer !":"Attendez des joueurs"}</button></div></div>`);
-    on("bCn","click",async()=>{ if(STOP)STOP(); await fd(`rooms/${room.code}`); CD={name:"",maxP:4,themes:[],rounds:[],cartonBallons:3}; Home(); });
+    on("bCn","click",async()=>{ if(STOP)STOP(); await fd(`rooms/${room.code}`); CD={name:"",maxP:4,mode:"fixed",themes:[],availableThemes:[],rounds:[],cartonBallons:3}; Home(); });
     on("bLn","click",doLaunch);
     on("bCp","click",()=>{ navigator.clipboard.writeText(inv).then(()=>{set("bCp","✅ Copié !");setTimeout(()=>set("bCp","📋 Copier le lien d'invitation"),2500);}).catch(()=>{}); });
   }
