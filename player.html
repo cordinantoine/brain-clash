@@ -223,15 +223,49 @@
 const FB = "https://quiz-buzz-3-default-rtdb.europe-west1.firebasedatabase.app";
 
 const THEMES = {
-  culture : { accent:"#a78bfa", dark:"#7c3aed" },
-  music   : { accent:"#f472b6", dark:"#be185d" },
-  cinema  : { accent:"#fbbf24", dark:"#d97706" },
-  sport   : { accent:"#34d399", dark:"#059669" },
-  histoire: { accent:"#d4a574", dark:"#92400e" },
-  science : { accent:"#22d3ee", dark:"#0891b2" },
-  geo     : { accent:"#60a5fa", dark:"#2563eb" },
-  gaming  : { accent:"#c084fc", dark:"#7e22ce" },
-  hp      : { accent:"#fcd34d", dark:"#92400e" },
+  // Legacy
+  culture : { accent:"#a78bfa", dark:"#7c3aed", emoji:"🧠" },
+  music   : { accent:"#f472b6", dark:"#be185d", emoji:"🎵" },
+  cinema  : { accent:"#fbbf24", dark:"#d97706", emoji:"🎬" },
+  sport   : { accent:"#34d399", dark:"#059669", emoji:"⚽" },
+  science : { accent:"#22d3ee", dark:"#0891b2", emoji:"🔬" },
+  geo     : { accent:"#60a5fa", dark:"#2563eb", emoji:"🌍" },
+  gaming  : { accent:"#c084fc", dark:"#7e22ce", emoji:"🎮" },
+  hp      : { accent:"#fcd34d", dark:"#92400e", emoji:"⚡" },
+  francaise:{ accent:"#3b82f6", dark:"#1d4ed8", emoji:"🇫🇷" },
+  lotr    : { accent:"#eab308", dark:"#a16207", emoji:"💍" },
+  // Slugs Firebase
+  alcools_vins              : { accent:"#c026d3", dark:"#86198f", emoji:"🍷" },
+  animaux                   : { accent:"#84cc16", dark:"#3f6212", emoji:"🐾" },
+  bandes_dessinees_manga    : { accent:"#fb7185", dark:"#9f1239", emoji:"📚" },
+  capitales_du_monde        : { accent:"#38bdf8", dark:"#075985", emoji:"🏛️" },
+  cinema_films              : { accent:"#fbbf24", dark:"#d97706", emoji:"🎬" },
+  cuisine_et_gastronomie    : { accent:"#fb923c", dark:"#9a3412", emoji:"🍳" },
+  disney                    : { accent:"#ec4899", dark:"#9d174d", emoji:"🏰" },
+  economie_finance          : { accent:"#10b981", dark:"#065f46", emoji:"💰" },
+  emissions_de_tele_francaises:{accent:"#6366f1", dark:"#3730a3", emoji:"📺" },
+  formule_1                 : { accent:"#ef4444", dark:"#7f1d1d", emoji:"🏎️" },
+  game_of_thrones           : { accent:"#9ca3af", dark:"#374151", emoji:"🐉" },
+  geographie                : { accent:"#60a5fa", dark:"#1d4ed8", emoji:"🌍" },
+  harry_potter              : { accent:"#fcd34d", dark:"#92400e", emoji:"⚡" },
+  histoire                  : { accent:"#d4a574", dark:"#92400e", emoji:"🏛️" },
+  jeux_video                : { accent:"#c084fc", dark:"#7e22ce", emoji:"🎮" },
+  litterature_auteurs       : { accent:"#a78bfa", dark:"#5b21b6", emoji:"📖" },
+  marvel_dc_universe        : { accent:"#dc2626", dark:"#7f1d1d", emoji:"🦸" },
+  musique_artistes          : { accent:"#f472b6", dark:"#be185d", emoji:"🎵" },
+  nba                       : { accent:"#f97316", dark:"#c2410c", emoji:"🏀" },
+  oceans_mers               : { accent:"#06b6d4", dark:"#155e75", emoji:"🌊" },
+  plantes_botanique         : { accent:"#16a34a", dark:"#14532d", emoji:"🌿" },
+  records_faits_insolites   : { accent:"#eab308", dark:"#854d0e", emoji:"🏆" },
+  rugby                     : { accent:"#15803d", dark:"#14532d", emoji:"🏉" },
+  sciences_nature           : { accent:"#22d3ee", dark:"#0e7490", emoji:"🔬" },
+  seigneur_des_anneaux      : { accent:"#eab308", dark:"#a16207", emoji:"💍" },
+  series_tv_streaming       : { accent:"#8b5cf6", dark:"#5b21b6", emoji:"📺" },
+  sports_de_combat          : { accent:"#b91c1c", dark:"#7f1d1d", emoji:"🥊" },
+  sports_olympiques         : { accent:"#f59e0b", dark:"#92400e", emoji:"🥇" },
+  star_wars                 : { accent:"#fde047", dark:"#a16207", emoji:"⭐" },
+  tennis                    : { accent:"#a3e635", dark:"#3f6212", emoji:"🎾" },
+  football                  : { accent:"#22c55e", dark:"#15803d", emoji:"⚽" },
 };
 
 const RT = [
@@ -562,7 +596,7 @@ function watchGame() {
       return (rp && rp.avatar !== undefined) ? rp.avatar : 0;
     });
 
-    const key = [gs.phase, gs.roundIdx, gs.qIdx, gs.buzzed, gs.revealed, gs.pickTarget, gs.patateHolder||'', gs.chronoRanking?'r':'', gs.countdownStart||'', gs.patateExplosion||'', JSON.stringify(gs.ready||{}), JSON.stringify(gs.result||{})].join('-');
+    const key = [gs.phase, gs.roundIdx, gs.qIdx, gs.buzzed, gs.revealed, gs.pickTarget, gs.patateHolder||'', gs.chronoRanking?'r':'', gs.countdownStart||'', gs.patateExplosion||'', JSON.stringify(gs.ready||{}), JSON.stringify(gs.result||{}), room.picker?.name||'', room.pickerSelectedTheme||'', room.pickerSelectedDifficulty||'', room.pickerDone?'1':'0'].join('-');
     if (key === LAST_KEY) return;
     LAST_KEY = key;
 
@@ -652,6 +686,65 @@ function renderState(room, gs) {
       setTimeout(_cdRender, 3000);
       return;
     }
+
+    // ── Picker phase (mode last_picks) ──
+    if (room.mode === 'last_picks' && !room.pickerDone) {
+      showState('state-waiting');
+      const isPicker = room.picker && room.picker.name === ME;
+      const pickerThemes = toArr(room.pickerThemes || []);
+      const selSlug = room.pickerSelectedTheme;
+      const selDiff = room.pickerSelectedDifficulty;
+      const DIFFS = ['Facile', 'Intermédiaire', 'Expert'];
+      const DCOL = { 'Facile':'#22c55e', 'Intermédiaire':'#f59e0b', 'Expert':'#ef4444' };
+
+      if (!isPicker) {
+        const pickerName = room.picker?.name || '?';
+        const summary = (selSlug && selDiff)
+          ? `<div style="margin-top:12px;font-size:.85rem;color:#86efac">✓ ${(pickerThemes.find(t=>t.slug===selSlug)||{}).name||selSlug} · ${selDiff}</div>`
+          : selSlug
+            ? `<div style="margin-top:12px;font-size:.8rem;color:#94a3b8">Thème : <strong>${(pickerThemes.find(t=>t.slug===selSlug)||{}).name||selSlug}</strong> — choisit la difficulté…</div>`
+            : '';
+        G('waiting-text').innerHTML = `
+          <div style="text-align:center;padding:6px 4px">
+            <div style="font-size:2rem;margin-bottom:8px">🎯</div>
+            <div style="font-size:1rem;font-weight:700;color:#facc15;margin-bottom:4px">${pickerName} choisit le thème</div>
+            <div style="font-size:.78rem;color:#64748b">Patiente sur l'écran principal pour voir les choix.</div>
+            ${summary}
+          </div>`;
+        return;
+      }
+
+      // Picker (moi) : cartes thèmes → difficulté → confirm
+      const themeCardsHtml = pickerThemes.map(th => {
+        const v = THEMES[th.slug] || { accent:'#a78bfa', emoji:'🎲' };
+        const sel = selSlug === th.slug;
+        return `<button onclick="actPickerSelectTheme('${th.slug}')" style="all:unset;cursor:pointer;padding:14px 8px;border-radius:14px;background:${sel?v.accent+'33':'rgba(255,255,255,.04)'};border:2px solid ${sel?v.accent:'rgba(255,255,255,.1)'};text-align:center;${sel?`box-shadow:0 0 16px ${v.accent}66`:''}">
+          <div style="font-size:1.8rem;margin-bottom:4px">${v.emoji}</div>
+          <div style="font-size:.72rem;font-weight:700;color:${sel?v.accent:'#cbd5e1'};line-height:1.2">${th.name}</div>
+        </button>`;
+      }).join('');
+
+      const diffBtnsHtml = selSlug ? `<div style="display:flex;gap:8px;margin-top:14px">${DIFFS.map(d => {
+        const sel = selDiff === d;
+        const c = DCOL[d];
+        return `<button onclick="actPickerSelectDifficulty('${d}')" style="all:unset;cursor:pointer;flex:1;padding:11px 6px;border-radius:11px;background:${sel?c+'33':'rgba(255,255,255,.04)'};border:2px solid ${sel?c:'rgba(255,255,255,.1)'};text-align:center;font-size:.85rem;font-weight:700;color:${sel?c:'#cbd5e1'}">${d}</button>`;
+      }).join('')}</div>` : '';
+
+      const confirmBtnHtml = (selSlug && selDiff)
+        ? `<button onclick="actPickerConfirm()" style="margin-top:14px;width:100%;padding:14px;border:none;border-radius:13px;background:#22c55e;color:white;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer">✓ Confirmer</button>`
+        : '';
+
+      G('waiting-text').innerHTML = `
+        <div style="text-align:center;width:100%;padding:6px 4px">
+          <div style="font-size:.8rem;color:#facc15;font-weight:700;margin-bottom:6px">🎯 À TOI DE CHOISIR !</div>
+          <div style="font-size:.72rem;color:#94a3b8;margin-bottom:12px">Sélectionne un thème puis une difficulté</div>
+          <div style="display:grid;grid-template-columns:repeat(${pickerThemes.length||4},1fr);gap:8px">${themeCardsHtml}</div>
+          ${diffBtnsHtml}
+          ${confirmBtnHtml}
+        </div>`;
+      return;
+    }
+
     const r = RT.find(x => x.id === (room.rounds[gs.roundIdx] || ''));
     const isReady = !!(gs.ready && gs.ready[ME]);
     showState('state-waiting');
@@ -659,7 +752,8 @@ function renderState(room, gs) {
       <div style="text-align:center">
         <div style="font-size:2.5rem;margin-bottom:8px">${r ? r.icon : '🎮'}</div>
         <div style="font-size:1.1rem;font-weight:700;margin-bottom:4px">${r ? r.name : 'Round'}</div>
-        <div style="font-size:.72rem;color:#4a5a7a;margin-bottom:16px">${r ? r.desc : ''}</div>
+        <div style="font-size:.72rem;color:#4a5a7a;margin-bottom:8px">${r ? r.desc : ''}</div>
+        ${room.currentThemeName ? `<div style="font-size:.78rem;color:#cbd5e1;margin-bottom:14px">Thème : <strong>${room.currentThemeName}</strong> · ${room.currentDifficulty||''}</div>` : '<div style="margin-bottom:8px"></div>'}
         <button onclick="actReady()" style="padding:14px 32px;border:none;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:.05em;transition:all .15s;${isReady ? 'background:#14532d;color:#86efac;cursor:default' : 'background:var(--accent);color:white'}" ${isReady ? 'disabled' : ''}>
           ${isReady ? '✓ En attente…' : 'READY ✓'}
         </button>
@@ -1017,6 +1111,35 @@ async function actPick(targetName) {
   const gs = await fg(`rooms/${CODE}/gameState`);
   if (!gs || !gs.pickTarget || gs.buzzed !== ME) return;
   await fp(`rooms/${CODE}`, { "gameState/hostPick": targetName });
+}
+
+// ── Picker actions (mode last_picks) ──
+async function actPickerSelectTheme(slug) {
+  const room = await fg(`rooms/${CODE}`);
+  if (!room || room.pickerDone) return;
+  if (!room.picker || room.picker.name !== ME) return;
+  await fp(`rooms/${CODE}`, { pickerSelectedTheme: slug });
+}
+async function actPickerSelectDifficulty(diff) {
+  const room = await fg(`rooms/${CODE}`);
+  if (!room || room.pickerDone) return;
+  if (!room.picker || room.picker.name !== ME) return;
+  if (!room.pickerSelectedTheme) return;
+  await fp(`rooms/${CODE}`, { pickerSelectedDifficulty: diff });
+}
+async function actPickerConfirm() {
+  const room = await fg(`rooms/${CODE}`);
+  if (!room || room.pickerDone) return;
+  if (!room.picker || room.picker.name !== ME) return;
+  const slug = room.pickerSelectedTheme;
+  const diff = room.pickerSelectedDifficulty;
+  if (!slug || !diff) return;
+  const themeName = (toArr(room.pickerThemes).find(t => t.slug === slug) || {}).name || slug;
+  const newAvail = toArr(room.availableThemes || []).filter(s => s !== slug);
+  await fp(`rooms/${CODE}`, {
+    currentTheme: slug, currentThemeName: themeName, currentDifficulty: diff,
+    availableThemes: newAvail, theme: slug, pickerDone: true,
+  });
 }
 
 function goHome() {

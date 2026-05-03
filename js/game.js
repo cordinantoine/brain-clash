@@ -9,8 +9,117 @@
 
 let _readyTimeout = null;
 
+// ════════════════════════════════════════════
+//  PICKER (mode "last_picks") — sélection du joueur qui choisit
+//  thème + difficulté avant chaque round.
+// ════════════════════════════════════════════
+
+// Pioche aléatoire — utilisé pour ex-aequo et 4 thèmes
+function _shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Détermine le picker. rIdx=0 → tirage au sort. Sinon → score le plus bas (tirage si ex-aequo).
+function _choosePicker(players, scores, rIdx) {
+  if (!players || !players.length) return null;
+  if (rIdx === 0 || !scores || !scores.length) {
+    return players[Math.floor(Math.random() * players.length)];
+  }
+  let minScore = Infinity;
+  players.forEach((_, i) => { if ((scores[i]||0) < minScore) minScore = scores[i]||0; });
+  const candidates = players.filter((_, i) => (scores[i]||0) === minScore);
+  return candidates[Math.floor(Math.random() * candidates.length)];
+}
+
+// Initialise le picker côté Firebase si mode=last_picks. No-op sinon.
+// rIdx = index du round à venir (0 pour le 1er round).
+async function hostBeginRound(rIdx) {
+  const room = await fg(`rooms/${CODE}`);
+  if (!room) return;
+  if (room.mode !== "last_picks") {
+    // Mode fixed : on s'assure qu'aucun reliquat picker ne traîne
+    await fp(`rooms/${CODE}`, {
+      pickerDone: true, picker: null, pickerThemes: null,
+      pickerSelectedTheme: null, pickerSelectedDifficulty: null
+    });
+    return;
+  }
+
+  // Charge les thèmes Firebase (slug → name) pour résoudre les noms
+  const themesIdx = await fg("questions/_themes");
+  const themesArr = Array.isArray(themesIdx) ? themesIdx : (themesIdx ? toArr(themesIdx) : []);
+  const slugToName = {};
+  themesArr.forEach(t => { if (t && t.slug) slugToName[t.slug] = t.name; });
+
+  // Joueurs + scores depuis le gameState courant (sinon room.players)
+  const players = (room.gameState && room.gameState.players) || toArr(room.players).map(p=>p.name);
+  const scores  = (room.gameState && room.gameState.scores)  || players.map(()=>0);
+  const pickerName = _choosePicker(players, scores, rIdx);
+
+  // 4 thèmes au hasard parmi availableThemes (ou moins si moins dispos)
+  const avail = toArr(room.availableThemes || []);
+  if (avail.length === 0) {
+    // Sécurité : si plus rien, on autorise tout direct
+    await fp(`rooms/${CODE}`, { pickerDone: true });
+    return;
+  }
+  const sample = _shuffle(avail).slice(0, Math.min(4, avail.length));
+  const pickerThemes = sample.map(slug => ({ slug, name: slugToName[slug] || slug }));
+
+  await fp(`rooms/${CODE}`, {
+    picker: { name: pickerName },
+    pickerThemes,
+    pickerSelectedTheme: null,
+    pickerSelectedDifficulty: null,
+    pickerDone: false,
+    currentTheme: null,
+    currentThemeName: null,
+    currentDifficulty: null,
+  });
+}
+
+// ── Actions du picker (joueur) ──
+async function actPickerSelectTheme(slug) {
+  const room = await fg(`rooms/${CODE}`);
+  if (!room || room.pickerDone) return;
+  if (!room.picker || room.picker.name !== ME) return;
+  await fp(`rooms/${CODE}`, { pickerSelectedTheme: slug });
+}
+async function actPickerSelectDifficulty(diff) {
+  const room = await fg(`rooms/${CODE}`);
+  if (!room || room.pickerDone) return;
+  if (!room.picker || room.picker.name !== ME) return;
+  if (!room.pickerSelectedTheme) return;
+  await fp(`rooms/${CODE}`, { pickerSelectedDifficulty: diff });
+}
+async function actPickerConfirm() {
+  const room = await fg(`rooms/${CODE}`);
+  if (!room || room.pickerDone) return;
+  if (!room.picker || room.picker.name !== ME) return;
+  const slug = room.pickerSelectedTheme;
+  const diff = room.pickerSelectedDifficulty;
+  if (!slug || !diff) return;
+  const themeName = (toArr(room.pickerThemes).find(t => t.slug === slug) || {}).name || slug;
+  const newAvail = toArr(room.availableThemes || []).filter(s => s !== slug);
+  await fp(`rooms/${CODE}`, {
+    currentTheme: slug,
+    currentThemeName: themeName,
+    currentDifficulty: diff,
+    availableThemes: newAvail,
+    theme: slug,                // pour les écrans visuels (setBG)
+    pickerDone: true,
+  });
+}
+
 async function hostLoadQ() {
   USED_QS = new Set();
+  // Picker setup avant le 1er round (mode last_picks). No-op en mode fixed.
+  await hostBeginRound(0);
   const room = await fg(`rooms/${CODE}`);
   if (!room) return;
   const themes = room.themes && room.themes.length ? room.themes : [room.theme || "culture"];
@@ -51,8 +160,11 @@ function hostWaitReady(room, gs, rQs) {
 
   const checkReady = async () => {
     if (started) return;
-    const cur = await fg(`rooms/${CODE}/gameState`);
+    const r = await fg(`rooms/${CODE}`);
+    const cur = r && r.gameState;
     if (!cur || cur.phase !== "roundIntro") return;
+    // En mode last_picks, on attend que le picker ait confirmé son choix
+    if (r.mode === "last_picks" && !r.pickerDone) return;
     const readyCount = Object.keys(cur.ready || {}).length;
     if (readyCount >= cur.players.length) {
       started = true;
@@ -64,12 +176,14 @@ function hostWaitReady(room, gs, rQs) {
   // Poll every 500ms for ready state
   const iv = setInterval(() => { if (started) { clearInterval(iv); return; } checkReady(); }, 500);
 
-  // Safety timeout: 30 seconds — start anyway
+  // Safety timeout: 30 seconds — start anyway (uniquement si picker confirmé)
   _readyTimeout = setTimeout(async () => {
     if (started) return;
+    const r = await fg(`rooms/${CODE}`);
+    if (r && r.mode === "last_picks" && !r.pickerDone) return;
     started = true;
     clearInterval(iv);
-    const cur = await fg(`rooms/${CODE}/gameState`);
+    const cur = r && r.gameState;
     if (!cur || cur.phase !== "roundIntro") return;
     await hostCountdownAndStart(room, cur, rQs);
   }, 30000);
@@ -138,6 +252,8 @@ async function hostNextQ(room, gs, rQs) {
     if (rIdx >= room.rounds.length) { await fp(`rooms/${CODE}`,{"gameState/phase":"final","gameState/scores":gs.scores}); return; }
     await fp(`rooms/${CODE}`,{"gameState/phase":"scoreboard","gameState/roundIdx":rIdx,"gameState/qIdx":0,"gameState/roundElim":[],"gameState/chronoRanking":null,"gameState/patateManche":0,"gameState/patateExplosion":null});
     setTimeout(async()=>{
+      // Picker setup pour le round à venir (no-op en mode fixed)
+      await hostBeginRound(rIdx);
       await fp(`rooms/${CODE}`,{"gameState/phase":"roundIntro","gameState/ready":{}});
       const cur=await fg(`rooms/${CODE}/gameState`);
       // Wait for ready
@@ -334,7 +450,7 @@ function Watch(initialRoom) {
         }
       }
     }
-    const key = gs.phase+"-"+gs.roundIdx+"-"+gs.qIdx+"-"+(gs.buzzed||"")+"-"+gs.revealed+"-"+gs.pickTarget+"-"+(gs.countdownStart||"")+"-"+JSON.stringify(gs.result)+"-"+JSON.stringify(gs.ready||{})+"-"+(gs.patateHolder||"")+"-"+(gs.chronoRanking?'r':'');
+    const key = gs.phase+"-"+gs.roundIdx+"-"+gs.qIdx+"-"+(gs.buzzed||"")+"-"+gs.revealed+"-"+gs.pickTarget+"-"+(gs.countdownStart||"")+"-"+JSON.stringify(gs.result)+"-"+JSON.stringify(gs.ready||{})+"-"+(gs.patateHolder||"")+"-"+(gs.chronoRanking?'r':'')+"-"+(room.picker?.name||"")+"-"+(room.pickerSelectedTheme||"")+"-"+(room.pickerSelectedDifficulty||"")+"-"+(room.pickerDone?"1":"0");
     if (key===lastPhase) return;
     if (gs.buzzed&&gs.buzzed!==ME) I_BUZZED=false;
     if (gs.revealed) I_BUZZED=false;

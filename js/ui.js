@@ -387,6 +387,62 @@ function drawIntro(room, gs) {
   const roundNum = (gs.roundIdx || 0) + 1;
   const totalRounds = (room.rounds || []).length;
 
+  // ── Mode last_picks : phase de sélection thème + difficulté avant ready ──
+  const inPickerPhase = room.mode === "last_picks" && !room.pickerDone;
+  let mainHtml;
+
+  if (inPickerPhase) {
+    const pickerName = room.picker?.name || "?";
+    const pickerThemes = toArr(room.pickerThemes || []);
+    const selSlug = room.pickerSelectedTheme;
+    const selDiff = room.pickerSelectedDifficulty;
+    const DIFFS = ["Facile", "Intermédiaire", "Expert"];
+
+    const themeCardsHtml = pickerThemes.map(th => {
+      const v = THEMES[th.slug] || { emoji:"🎲", accent:"#a78bfa" };
+      const sel = selSlug === th.slug;
+      return `<div style="padding:18px 12px;border-radius:18px;background:${sel?v.accent+"33":"rgba(255,255,255,.04)"};border:3px solid ${sel?v.accent:"rgba(255,255,255,.08)"};text-align:center;${sel?`box-shadow:0 0 28px ${v.accent}66`:""}">
+        <div style="font-size:3rem;margin-bottom:8px">${v.emoji}</div>
+        <div style="font-size:.95rem;font-weight:700;color:${sel?v.accent:"rgba(255,255,255,.8)"}">${th.name}</div>
+      </div>`;
+    }).join("");
+
+    const diffBtnsHtml = selSlug ? `<div style="display:flex;gap:14px;justify-content:center;margin-top:24px">${DIFFS.map(d => {
+      const sel = selDiff === d;
+      const colors = { "Facile": "#22c55e", "Intermédiaire": "#f59e0b", "Expert": "#ef4444" };
+      const c = colors[d];
+      return `<div style="padding:14px 26px;border-radius:14px;background:${sel?c+"33":"rgba(255,255,255,.04)"};border:3px solid ${sel?c:"rgba(255,255,255,.08)"};font-size:1.05rem;font-weight:700;color:${sel?c:"rgba(255,255,255,.7)"};${sel?`box-shadow:0 0 22px ${c}55`:""}">${d}</div>`;
+    }).join("")}</div>` : "";
+
+    const recapHtml = (selSlug && selDiff) ? (() => {
+      const th = pickerThemes.find(x => x.slug === selSlug) || { name: selSlug };
+      const v  = THEMES[selSlug] || { accent:"#a78bfa", emoji:"🎲" };
+      return `<div style="margin-top:22px;padding:14px 22px;border-radius:14px;background:rgba(255,255,255,.06);text-align:center;font-size:1rem;color:#fff;font-weight:600">${v.emoji} <strong>${th.name}</strong> · <span style="color:${v.accent}">${selDiff}</span></div>`;
+    })() : "";
+
+    mainHtml = `<div class="ck-intro-main">
+      <div class="ck-intro-card" style="padding:28px 32px">
+        <div class="ck-intro-badge">ROUND ${roundNum} / ${totalRounds} · ${r.icon} ${r.name}</div>
+        <div style="font-size:1.6rem;font-weight:800;color:#facc15;text-align:center;margin:14px 0 6px">🎯 ${pickerName} choisit le thème</div>
+        <div style="font-size:.85rem;color:rgba(255,255,255,.5);text-align:center;margin-bottom:18px">Sélection en cours sur son téléphone…</div>
+        <div style="display:grid;grid-template-columns:repeat(${pickerThemes.length||4},1fr);gap:14px;margin-top:8px">${themeCardsHtml}</div>
+        ${diffBtnsHtml}
+        ${recapHtml}
+      </div>
+    </div>`;
+  } else {
+    mainHtml = `<div class="ck-intro-main">
+      <div class="ck-intro-card">
+        <div class="ck-intro-badge">ROUND ${roundNum} / ${totalRounds}</div>
+        <div class="ck-intro-icon">${r.icon}</div>
+        <div class="ck-intro-name">${r.name}</div>
+        <div class="ck-intro-desc">${r.desc}</div>
+        ${room.currentThemeName ? `<div style="margin-top:12px;font-size:.95rem;color:rgba(255,255,255,.7)">Thème : <strong>${room.currentThemeName}</strong> · ${room.currentDifficulty||""}</div>` : ""}
+        <div class="ck-intro-wait">Les joueurs appuient sur PRÊT depuis leur téléphone…</div>
+      </div>
+    </div>`;
+  }
+
   R(`<div class="ck-wrap">
     <div class="ck-bg"></div>
     <div class="ck-stage-wrap">
@@ -397,15 +453,7 @@ function drawIntro(room, gs) {
           <div class="ck-title-text"><span>BRAIN</span><span>CLASH</span></div>
         </div>
 
-        <div class="ck-intro-main">
-          <div class="ck-intro-card">
-            <div class="ck-intro-badge">ROUND ${roundNum} / ${totalRounds}</div>
-            <div class="ck-intro-icon">${r.icon}</div>
-            <div class="ck-intro-name">${r.name}</div>
-            <div class="ck-intro-desc">${r.desc}</div>
-            <div class="ck-intro-wait">Les joueurs appuient sur PRÊT depuis leur téléphone…</div>
-          </div>
-        </div>
+        ${mainHtml}
 
         <div class="ck-sidebar">
           <div class="ck-sidebar-title">JOUEURS</div>
