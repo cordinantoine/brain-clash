@@ -760,3 +760,167 @@ input::placeholder { color:rgba(255,255,255,.3) }
 .ha-joy--mini { left: 40px; top: 820px; transform: scale(.7); transform-origin: top left; }
 .ha-arcbtns--mini { right: 80px; top: 880px; flex-direction: row; gap: 16px; }
 .ha-arcbtns--mini .ha-arcbtn { width: 64px; height: 64px; }
+
+/* ── Étape 2/3 — variant du form (plus large, pinné en haut) ── */
+.ha-form--step2 {
+  width: 1520px;
+  top: 24px;
+  transform: translateX(-50%);
+  padding: 18px 60px 22px;
+}
+.ha-form--step2 .ha-form-title { font-size: 50px; margin-bottom: 14px; }
+.ha-form--step2 .ha-form-back { margin-bottom: 8px; font-size: 22px; }
+.ha-form--step2 .ha-form-step { margin-bottom: 18px; padding: 6px 22px; font-size: 18px; }
+.ha-form--step2 .ha-form-section-label { font-size: 20px; }
+.ha-form--step2 .ha-form-cta {
+  padding: 18px 40px;
+  font-size: 38px;
+  max-width: 580px;
+  border-radius: 50px;
+  margin-top: 18px;
+}
+
+/* ── Cartes "Mode de jeu" (radio) ── */
+.ha-mode-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 22px;
+  margin-bottom: 22px;
+}
+.ha-mode {
+  display: flex; align-items: center; gap: 22px;
+  padding: 22px 28px;
+  border-radius: 24px;
+  background: radial-gradient(ellipse at 50% 25%, #1c0840 0%, #0b0218 100%);
+  border: 3px solid rgba(255,255,255,.12);
+  box-shadow: inset 0 0 22px rgba(110,50,180,.22);
+  cursor: pointer; transition: all .15s ease;
+}
+.ha-mode:hover { border-color: rgba(75,224,255,.55); }
+.ha-mode.sel {
+  border-color: #b96dff;
+  background: radial-gradient(ellipse at 50% 25%, #4b1480 0%, #1a0532 100%);
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.16),
+    0 0 28px #b96dff,
+    0 0 56px color-mix(in srgb, #b96dff 55%, transparent),
+    inset 0 0 30px color-mix(in srgb, #b96dff 28%, transparent);
+}
+.ha-mode-radio {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 3px solid rgba(255,255,255,.3);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.ha-mode.sel .ha-mode-radio { border-color: #b96dff; box-shadow: 0 0 14px #b96dff; }
+.ha-mode.sel .ha-mode-radio::after {
+  content: ''; width: 14px; height: 14px; border-radius: 50%;
+  background: #b96dff; box-shadow: 0 0 12px #b96dff;
+}
+.ha-mode-icon {
+  width: 76px; height: 76px; border-radius: 16px;
+  background: rgba(255,255,255,.05);
+  border: 2px solid rgba(255,255,255,.12);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 40px; flex-shrink: 0;
+}
+.ha-mode.sel .ha-mode-icon { border-color: rgba(185,109,255,.6); background: rgba(185,109,255,.12); }
+.ha-mode-text { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.ha-mode-title {
+  font-family: 'Russo One', sans-serif; font-size: 28px; letter-spacing: .04em;
+  color: #fff; text-shadow: 0 2px 0 rgba(0,0,0,.4);
+}
+.ha-mode-desc {
+  font-family: 'Fredoka', sans-serif; font-weight: 500; font-size: 18px;
+  color: rgba(255,255,255,.65); line-height: 1.3;
+}
+
+/* ── En-tête section thèmes ── */
+.ha-theme-row-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.ha-theme-row-head .ha-form-section-label {
+  margin: 0; text-align: left; display: flex; align-items: center; gap: 16px;
+}
+.ha-theme-count {
+  font-family: 'Russo One', sans-serif; font-size: 16px; letter-spacing: .28em;
+  color: rgba(255,255,255,.5);
+  text-shadow: none;
+}
+.ha-theme-toggle {
+  padding: 8px 20px; border-radius: 999px;
+  background: rgba(75,224,255,.1);
+  border: 2px solid rgba(75,224,255,.5);
+  box-shadow: 0 0 14px rgba(75,224,255,.35);
+  font-family: 'Russo One', sans-serif; font-size: 15px; letter-spacing: .18em;
+  color: #4be0ff; text-shadow: 0 0 8px #4be0ff;
+  cursor: pointer; transition: all .15s ease;
+}
+.ha-theme-toggle:hover { background: rgba(75,224,255,.18); transform: translateY(-2px); }
+
+/* ── Grille des thèmes ── */
+.ha-theme-grid {
+  display: grid; grid-template-columns: repeat(9, 1fr); gap: 12px;
+  margin-bottom: 4px;
+}
+.ha-theme-card {
+  position: relative;
+  aspect-ratio: 1.6 / 1;
+  border-radius: 14px;
+  background: radial-gradient(ellipse at 50% 25%, #1c0840 0%, #0b0218 100%);
+  border: 3px solid rgba(255,255,255,.12);
+  box-shadow: inset 0 0 16px rgba(110,50,180,.22);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 4px; cursor: pointer; transition: all .15s ease;
+  padding: 6px 4px;
+}
+.ha-theme-card:hover { transform: translateY(-3px); border-color: rgba(75,224,255,.5); }
+.ha-theme-card.sel {
+  border-color: var(--tc, #4be0ff);
+  background: radial-gradient(ellipse at 50% 25%, color-mix(in srgb, var(--tc) 28%, #1a0532) 0%, #0e0220 100%);
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.16),
+    0 0 18px var(--tc),
+    0 0 38px color-mix(in srgb, var(--tc) 50%, transparent),
+    inset 0 0 22px color-mix(in srgb, var(--tc) 25%, transparent);
+}
+.ha-theme-card-emoji { font-size: 28px; line-height: 1; }
+.ha-theme-card-name {
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 13px;
+  color: #fff; text-align: center; line-height: 1.05;
+  text-shadow: 0 2px 2px rgba(0,0,0,.5);
+}
+.ha-theme-card .ha-theme-check {
+  position: absolute; top: 5px; right: 5px;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #22c55e; border: 2px solid #fff;
+  box-shadow: 0 0 10px #22c55e;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 900; color: #fff;
+}
+
+/* ── Pad alternatif quand mode = "last_picks" ── */
+.ha-mode-info {
+  padding: 26px 32px; border-radius: 22px; margin-bottom: 4px;
+  background: rgba(185,109,255,.08);
+  border: 2px solid rgba(185,109,255,.45);
+  box-shadow: 0 0 22px rgba(185,109,255,.25), inset 0 0 22px rgba(185,109,255,.1);
+  font-family: 'Fredoka', sans-serif; font-weight: 500; font-size: 22px;
+  color: rgba(255,255,255,.78); line-height: 1.5;
+}
+.ha-mode-info strong {
+  color: #d4a8ff; font-family: 'Russo One', sans-serif;
+  letter-spacing: .08em; font-size: 22px;
+  display: inline-block; margin-bottom: 6px;
+}
+
+/* ── État disabled du CTA ── */
+.ha-form-cta:disabled,
+.ha-form-cta.is-disabled {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.18);
+  box-shadow: 0 0 0 2px rgba(255,255,255,.06), inset 0 0 18px rgba(255,255,255,.04);
+  color: rgba(255,255,255,.32); text-shadow: none;
+  cursor: not-allowed;
+}
+.ha-form-cta:disabled:hover,
+.ha-form-cta.is-disabled:hover { transform: none; }

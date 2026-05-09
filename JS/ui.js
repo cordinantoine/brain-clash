@@ -241,9 +241,6 @@ function Create(step) {
     return;
   }
 
-  const t = THEMES[CD.themes[0]] || THEMES.culture;
-  setBG(CD.themes[0] || "culture");
-
   if (step === 2) {
     // Charge la liste des thèmes Firebase (mise en cache)
     if (!FB_THEMES) {
@@ -252,44 +249,96 @@ function Create(step) {
       return;
     }
 
+    // Fond néon plein écran + étoiles scintillantes (même DNA que step 1)
+    const bg = document.getElementById("bg");
+    bg.innerHTML = "";
+    bg.classList.add("ha-bg");
+    for (let i = 0; i < 32; i++) {
+      const s = document.createElement("div");
+      s.className = "ha-star";
+      s.textContent = Math.random() > .5 ? "✦" : "·";
+      s.style.left = (Math.random()*100) + "%";
+      s.style.top  = (Math.random()*100) + "%";
+      s.style.fontSize = (10 + Math.random()*22) + "px";
+      s.style.animationDelay = (Math.random()*3) + "s";
+      bg.appendChild(s);
+    }
+
     // Visuels (emoji/couleur) depuis THEMES si dispo, sinon défaut neutre
     const visual = slug => THEMES[slug] || { emoji:"🎲", accent:"#a78bfa", dark:"#7c3aed", name:slug };
 
     const isFixed = CD.mode === "fixed";
     const allSlugs = FB_THEMES.map(t => t.slug);
     const allSelected = isFixed && CD.themes.length === allSlugs.length;
+    const canNext = !isFixed || CD.themes.length > 0;
 
-    // Carte mode (radio)
-    const modeCard = mode => {
+    const dot = (on)=>`<span class="dot${on?' on':''}"></span>`;
+    const modeCard = (mode, ico, title, desc) => {
       const sel = CD.mode === mode;
-      const data = mode === "fixed"
-        ? { ico:"📋", title:"Thèmes fixes", desc:"L'hôte choisit les thèmes joués." }
-        : { ico:"🎯", title:"Le dernier choisit", desc:"Le perdant choisit thème + difficulté avant chaque jeu." };
-      return `<div class="modeBtn" data-mode="${mode}" style="padding:11px 13px;border-radius:12px;cursor:pointer;border:2px solid ${sel?"#a78bfa":"rgba(255,255,255,.07)"};background:${sel?"rgba(167,139,250,.12)":"rgba(255,255,255,.02)"};display:flex;align-items:center;gap:10px;margin-bottom:7px"><div style="width:18px;height:18px;border-radius:50%;border:2px solid ${sel?"#a78bfa":"rgba(255,255,255,.25)"};background:${sel?"#a78bfa":"transparent"};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.55rem;color:#1a1a2e">${sel?"●":""}</div><div style="font-size:1.05rem">${data.ico}</div><div style="flex:1"><div style="font-weight:600;font-size:.85rem">${data.title}</div><div style="color:rgba(255,255,255,.42);font-size:.7rem;line-height:1.3">${data.desc}</div></div></div>`;
+      return `<div class="ha-mode${sel?' sel':''}" data-mode="${mode}">
+        <div class="ha-mode-radio"></div>
+        <div class="ha-mode-icon">${ico}</div>
+        <div class="ha-mode-text">
+          <div class="ha-mode-title">${title}</div>
+          <div class="ha-mode-desc">${desc}</div>
+        </div>
+      </div>`;
     };
 
-    // Grille de thèmes (mode fixed uniquement)
-    const grid = isFixed ? FB_THEMES.map(th => {
-      const v = visual(th.slug);
-      const sel = CD.themes.includes(th.slug);
-      return `<div class="tbtn glass" data-tid="${th.slug}" style="padding:11px 6px;text-align:center;border-radius:13px;border:2px solid ${sel?v.accent:"rgba(255,255,255,.07)"};background:${sel?v.accent+"22":"rgba(255,255,255,.02)"};cursor:pointer;position:relative">${sel?`<div style="position:absolute;top:4px;right:4px;width:14px;height:14px;border-radius:50%;background:#22c55e;display:flex;align-items:center;justify-content:center;font-size:.55rem">✓</div>`:""}<div style="font-size:1.4rem">${v.emoji}</div><div style="font-size:.55rem;font-weight:700;line-height:1.2;color:rgba(255,255,255,.7);margin-top:3px">${th.name}</div></div>`;
-    }).join("") : "";
+    let themesBlock;
+    if (isFixed) {
+      const cards = FB_THEMES.map(th => {
+        const v = visual(th.slug);
+        const sel = CD.themes.includes(th.slug);
+        return `<div class="ha-theme-card${sel?' sel':''}" data-tid="${th.slug}" style="--tc:${v.accent}">
+          ${sel ? '<div class="ha-theme-check">✓</div>' : ''}
+          <div class="ha-theme-card-emoji">${v.emoji}</div>
+          <div class="ha-theme-card-name">${th.name}</div>
+        </div>`;
+      }).join("");
+      const countLbl = CD.themes.length===0
+        ? "AUCUN"
+        : CD.themes.length+" SÉLECTIONNÉ"+(CD.themes.length>1?"S":"");
+      themesBlock = `
+        <div class="ha-theme-row-head">
+          <div class="ha-form-section-label">
+            THÈMES <span class="ha-theme-count">${countLbl}</span>
+          </div>
+          <button class="ha-theme-toggle" id="bToggleAll">${allSelected?"✕ TOUT DÉSÉLECTIONNER":"✓ TOUT SÉLECTIONNER"}</button>
+        </div>
+        <div class="ha-theme-grid">${cards}</div>`;
+    } else {
+      themesBlock = `<div class="ha-mode-info">
+        <strong>🎯 MODE "LE DERNIER CHOISIT"</strong><br>
+        Aucune sélection à l'avance. Avant chaque jeu, le joueur en dernière position choisira le thème + la difficulté parmi les ${allSlugs.length} thèmes disponibles.
+      </div>`;
+    }
 
-    const canNext = !isFixed || CD.themes.length > 0;
-    const firstSlug = CD.themes[0];
-    const ac = (firstSlug && THEMES[firstSlug]?.accent) || "#a78bfa";
-    const dk = (firstSlug && THEMES[firstSlug]?.dark)   || "#7c3aed";
+    R(`<div class="ha-stage-wrap"><div class="ha-stage">
+        <div class="ha-form ha-form--step2">
+          <button class="ha-form-back" id="bBk">← RETOUR</button>
+          <div class="ha-form-step">
+            ${dot(true)}${dot(true)}${dot(false)}
+            <span style="margin-left:4px">ÉTAPE 2 / 3</span>
+          </div>
+          <div class="ha-form-title">MODE DE JEU &amp; THÈMES</div>
 
-    const themesSection = isFixed
-      ? `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><label style="color:rgba(255,255,255,.5);font-size:.75rem;font-weight:600">Thèmes</label><button id="bToggleAll" class="btn" style="padding:5px 10px;font-size:.7rem;background:rgba(255,255,255,.06);color:white;border-radius:8px">${allSelected?"✕ Tout désélectionner":"✓ Tout sélectionner"}</button></div><p style="color:rgba(255,255,255,.25);margin-bottom:10px;font-size:.7rem">${CD.themes.length===0?"Aucun thème sélectionné":CD.themes.length===1?"1 thème sélectionné":CD.themes.length+" thèmes sélectionnés"}</p><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px">${grid}</div>`
-      : `<div style="padding:14px;border-radius:11px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.22);margin-bottom:18px;font-size:.78rem;color:rgba(255,255,255,.7);line-height:1.5"><strong style="color:#a78bfa">🎯 Mode "Le dernier choisit"</strong><br>Aucune sélection à l'avance. Avant chaque jeu, le joueur en dernière position choisira le thème + la difficulté parmi les ${allSlugs.length} thèmes disponibles.</div>`;
+          <div class="ha-form-section-label" style="margin-bottom:14px">MODE DE JEU</div>
+          <div class="ha-mode-grid">
+            ${modeCard("fixed", "📋", "Thèmes fixes", "L'hôte choisit les thèmes joués.")}
+            ${modeCard("last_picks", "🎯", "Le dernier choisit", "Le perdant choisit thème + difficulté avant chaque jeu.")}
+          </div>
 
-    R(`<div class="sc"><div class="glass su" style="width:100%;max-width:430px;padding:22px 20px;max-height:92vh;overflow-y:auto"><button id="bBk" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:.8rem;margin-bottom:14px">← Retour</button><h2 style="font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:3px">Mode de jeu &amp; thèmes</h2><p style="color:rgba(255,255,255,.38);margin-bottom:14px;font-size:.78rem">Étape 2/3</p><label style="color:rgba(255,255,255,.5);font-size:.75rem;font-weight:600;display:block;margin-bottom:8px">Mode de jeu</label>${modeCard("fixed")}${modeCard("last_picks")}<div style="height:14px"></div>${themesSection}<button class="btn" id="bNx" style="width:100%;padding:13px;color:white;background:${canNext?`linear-gradient(135deg,${dk},${ac})`:"rgba(255,255,255,.1)"}" ${canNext?"":"disabled"}>Suivant →</button></div></div>`);
+          ${themesBlock}
+
+          <button class="ha-form-cta${canNext?'':' is-disabled'}" id="bNx"${canNext?'':' disabled'}>SUIVANT <span style="font-size:28px">→</span></button>
+        </div>
+      </div></div>`);
 
     on("bBk","click",()=>Create(1));
     on("bNx","click",()=>{ if(canNext) Create(3); });
 
-    document.querySelectorAll(".modeBtn").forEach(b => b.addEventListener("click",()=>{
+    document.querySelectorAll(".ha-mode").forEach(b => b.addEventListener("click",()=>{
       CD.mode = b.dataset.mode;
       Create(2);
     }));
@@ -297,18 +346,24 @@ function Create(step) {
     if (isFixed) {
       on("bToggleAll","click",()=>{
         CD.themes = allSelected ? [] : [...allSlugs];
-        if (CD.themes.length) setBG(CD.themes[0]);
         Create(2);
       });
-      document.querySelectorAll(".tbtn").forEach(b => b.addEventListener("click",()=>{
+      document.querySelectorAll(".ha-theme-card").forEach(b => b.addEventListener("click",()=>{
         const tid = b.dataset.tid;
         CD.themes = CD.themes.includes(tid) ? CD.themes.filter(x=>x!==tid) : [...CD.themes,tid];
-        if (CD.themes.length) setBG(CD.themes[0]);
         Create(2);
       }));
     }
 
-  } else {
+    _haFit();
+    window.addEventListener("resize", _haFit);
+    return;
+  }
+
+  const t = THEMES[CD.themes[0]] || THEMES.culture;
+  setBG(CD.themes[0] || "culture");
+
+  {
     const allRoundIds = RT.map(r => r.id);
     const allRoundsSelected = CD.rounds.length === allRoundIds.length;
     const ri = RT.map(r => `<div class="rbtn glass" data-rid="${r.id}" style="padding:10px 12px;cursor:pointer;border:2px solid ${CD.rounds.includes(r.id)?t.accent:"rgba(255,255,255,.07)"};background:${CD.rounds.includes(r.id)?t.accent+"14":"rgba(255,255,255,.02)"};display:flex;align-items:center;gap:10px;margin-bottom:8px;border-radius:13px"><span style="font-size:1.05rem">${r.icon}</span><div style="flex:1"><div style="font-weight:600;font-size:.82rem">${r.name}</div><div style="color:rgba(255,255,255,.33);font-size:.67rem">${r.desc}</div></div><div style="width:14px;height:14px;border-radius:50%;border:2px solid ${CD.rounds.includes(r.id)?t.accent:"rgba(255,255,255,.2)"};background:${CD.rounds.includes(r.id)?t.accent:"transparent"};flex-shrink:0"></div></div>`).join("");
