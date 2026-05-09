@@ -176,21 +176,75 @@ function Home() {
 //  CRÉATION DE PARTIE (3 étapes)
 // ════════════════════════════════════════════
 function Create(step) {
-  const t = THEMES[CD.themes[0]] || THEMES.culture;
-  setBG(CD.themes[0] || "culture");
-
   if (step === 1) {
-    R(`<div class="sc"><div class="glass su" style="width:100%;max-width:380px;padding:24px 20px"><button id="bBk" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:.8rem;margin-bottom:16px">← Retour</button><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:3px">Créer une partie</h2><p style="color:rgba(255,255,255,.38);margin-bottom:4px;font-size:.8rem">Étape 1/3</p><p style="color:rgba(255,255,255,.22);margin-bottom:18px;font-size:.72rem">📺 Cet écran sera le plateau du jeu. Les joueurs rejoignent sur leur téléphone.</p><label style="color:rgba(255,255,255,.5);font-size:.75rem;font-weight:600;margin-bottom:7px;display:block">Nombre max de joueurs</label><div id="mpGrid" style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:20px"></div><button class="btn" id="bNx" style="width:100%;padding:13px;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:white">Suivant →</button></div></div>`);
-    function renderMpGrid() {
-      const grid = $("mpGrid"); if (!grid) return;
-      grid.innerHTML = [2,3,4,5,6,7,8].map(n => `<button class="btn mpBtn" data-n="${n}" style="width:38px;height:38px;border-radius:9px;padding:0;font-size:.9rem;color:white;background:${CD.maxP===n?"rgba(167,139,250,.25)":"transparent"};border:2px solid ${CD.maxP===n?"#a78bfa":"rgba(255,255,255,.14)"}">${n}</button>`).join("");
-      grid.querySelectorAll(".mpBtn").forEach(b => b.addEventListener("click",()=>{ CD.maxP=+b.dataset.n; renderMpGrid(); }));
+    // Fond néon plein écran + étoiles scintillantes
+    const bg = document.getElementById("bg");
+    bg.innerHTML = "";
+    bg.classList.add("ha-bg");
+    for (let i = 0; i < 32; i++) {
+      const s = document.createElement("div");
+      s.className = "ha-star";
+      s.textContent = Math.random() > .5 ? "✦" : "·";
+      s.style.left = (Math.random()*100) + "%";
+      s.style.top  = (Math.random()*100) + "%";
+      s.style.fontSize = (10 + Math.random()*22) + "px";
+      s.style.animationDelay = (Math.random()*3) + "s";
+      bg.appendChild(s);
     }
-    renderMpGrid();
+
+    const dot = (on)=>`<span class="dot${on?' on':''}"></span>`;
+    const nums = [2,3,4,5,6,7,8].map(v => `<div class="ha-num${CD.maxP===v?' sel':''}" data-n="${v}">${v}</div>`).join("");
+
+    R(`<div class="ha-stage-wrap"><div class="ha-stage">
+        <div class="ha-title-wrap ha-title-wrap--mini">
+          <div class="ha-stars-row">★ ★ ★</div>
+          <div class="ha-brand"><span>BRAIN</span><span>CLASH</span></div>
+        </div>
+
+        <div class="ha-form">
+          <button class="ha-form-back" id="bBk">← RETOUR</button>
+          <div class="ha-form-step">
+            ${dot(true)}${dot(false)}${dot(false)}
+            <span style="margin-left:4px">ÉTAPE 1 / 3</span>
+          </div>
+          <div class="ha-form-title">CRÉER UNE PARTIE</div>
+          <div class="ha-form-note">
+            <span class="em">📺 Cet écran sera le plateau du jeu.</span><br>
+            Les joueurs rejoindront depuis leur téléphone.
+          </div>
+          <div class="ha-form-section-label">NOMBRE MAX DE JOUEURS</div>
+          <div class="ha-num-row">${nums}</div>
+          <button class="ha-form-cta" id="bNx">SUIVANT <span style="font-size:28px">→</span></button>
+        </div>
+
+        <div class="ha-joy ha-joy--mini">
+          <div class="ha-joy-base"></div>
+          <div class="ha-joy-stick"></div>
+          <div class="ha-joy-ball"></div>
+        </div>
+        <div class="ha-arcbtns ha-arcbtns--mini">
+          <div class="ha-arcbtn" style="--col:#ff2a9d"></div>
+          <div class="ha-arcbtn" style="--col:#4be0ff"></div>
+          <div class="ha-arcbtn" style="--col:#22c55e"></div>
+        </div>
+      </div></div>`);
+
+    document.querySelectorAll(".ha-num").forEach(b => b.addEventListener("click", ()=>{
+      CD.maxP = +b.dataset.n;
+      document.querySelectorAll(".ha-num").forEach(x => x.classList.toggle("sel", +x.dataset.n === CD.maxP));
+    }));
     on("bBk","click",()=>{ CD={name:"",maxP:4,mode:"fixed",themes:[],availableThemes:[],rounds:[],cartonBallons:3}; Home(); });
     on("bNx","click",()=>{ Create(2); });
 
-  } else if (step === 2) {
+    _haFit();
+    window.addEventListener("resize", _haFit);
+    return;
+  }
+
+  const t = THEMES[CD.themes[0]] || THEMES.culture;
+  setBG(CD.themes[0] || "culture");
+
+  if (step === 2) {
     // Charge la liste des thèmes Firebase (mise en cache)
     if (!FB_THEMES) {
       R(`<div class="sc"><div class="float" style="text-align:center"><div style="font-size:2.5rem">⏳</div><p style="color:rgba(255,255,255,.42);margin-top:8px">Chargement des thèmes…</p></div></div>`);

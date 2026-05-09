@@ -632,3 +632,131 @@ input::placeholder { color:rgba(255,255,255,.3) }
 }
 .ha-arcbtn:nth-child(2) { animation-delay: .3s; }
 .ha-arcbtn:nth-child(3) { animation-delay: .6s; }
+
+/* ════════════════════════════════════════════
+   CRÉER UNE PARTIE — Étape 1/3 (cockpit néon)
+   ════════════════════════════════════════════ */
+.ha-title-wrap--mini { top: 50px; }
+.ha-title-wrap--mini .ha-stars-row { font-size: 26px; margin-bottom: 6px; }
+.ha-title-wrap--mini .ha-brand { font-size: 84px; gap: 22px; }
+
+.ha-form {
+  position: absolute; left: 50%; top: 54%;
+  transform: translate(-50%, -50%);
+  width: 1180px;
+  border-radius: 36px;
+  background: radial-gradient(ellipse at 50% 0%, #3a0b56 0%, #1a0532 55%, #10021f 100%);
+  border: 5px solid #ffb13a;
+  box-shadow:
+    0 0 0 3px #ffd27a,
+    0 0 36px rgba(255,160,60,.85),
+    0 0 80px rgba(255,120,40,.4),
+    inset 0 0 64px rgba(110,50,180,.4);
+  padding: 44px 80px 56px;
+  display: flex; flex-direction: column;
+  z-index: 5;
+}
+.ha-form-back {
+  align-self: flex-start;
+  background: none; border: none; color: rgba(255,255,255,.55);
+  font-family: 'Russo One', sans-serif; font-size: 22px; letter-spacing: .18em;
+  cursor: pointer; padding: 4px 2px; margin-bottom: 16px;
+  text-shadow: 0 0 8px rgba(255,255,255,.2);
+}
+.ha-form-back:hover { color: #fff; }
+.ha-form-step {
+  align-self: center; display: inline-flex; align-items: center; gap: 14px;
+  padding: 8px 28px; border-radius: 999px;
+  background: rgba(75,224,255,.08);
+  border: 2px solid rgba(75,224,255,.55);
+  box-shadow: 0 0 16px rgba(75,224,255,.35);
+  font-family: 'Russo One', sans-serif; font-size: 22px; letter-spacing: .32em;
+  color: #4be0ff; text-shadow: 0 0 10px #4be0ff;
+  margin-bottom: 24px;
+}
+.ha-form-step .dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: rgba(75,224,255,.25);
+  border: 1px solid rgba(75,224,255,.5);
+}
+.ha-form-step .dot.on {
+  background: #4be0ff; box-shadow: 0 0 10px #4be0ff;
+  border-color: #4be0ff;
+}
+.ha-form-title {
+  font-family: 'Russo One', sans-serif;
+  font-size: 88px; letter-spacing: .04em; line-height: .95;
+  text-align: center; color: #fff;
+  text-shadow: 0 0 14px #4ad8ff, 0 0 28px #4ad8ff, 0 4px 0 #061e2e;
+  margin-bottom: 14px;
+}
+.ha-form-note {
+  text-align: center;
+  font-family: 'Fredoka', sans-serif; font-weight: 500;
+  font-size: 26px; line-height: 1.4;
+  color: rgba(255,255,255,.78);
+  max-width: 880px; margin: 0 auto 40px;
+}
+.ha-form-note .em { color: #ffb13a; text-shadow: 0 0 10px rgba(255,177,58,.6); }
+.ha-form-section-label {
+  font-family: 'Russo One', sans-serif;
+  font-size: 22px; letter-spacing: .32em;
+  color: #ff8af0; text-shadow: 0 0 10px #ff2a9d, 0 0 20px #ff2a9d;
+  text-align: center; margin-bottom: 24px;
+}
+.ha-num-row {
+  display: flex; gap: 20px; justify-content: center; margin-bottom: 46px;
+  flex-wrap: nowrap;
+}
+.ha-num {
+  width: 100px; height: 100px; border-radius: 22px;
+  background: radial-gradient(ellipse at 50% 25%, #1c0840 0%, #0b0218 100%);
+  border: 3px solid rgba(255,255,255,.18);
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.04),
+    inset 0 0 22px rgba(110,50,180,.25);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Russo One', sans-serif; font-size: 52px; color: #fff;
+  text-shadow: 0 3px 0 rgba(0,0,0,.4);
+  cursor: pointer; transition: all .15s ease;
+}
+.ha-num:hover {
+  border-color: rgba(75,224,255,.6);
+  transform: translateY(-3px);
+  box-shadow: 0 0 18px rgba(75,224,255,.5), inset 0 0 20px rgba(75,224,255,.18);
+}
+.ha-num.sel {
+  border-color: #b96dff;
+  background: radial-gradient(ellipse at 50% 25%, #4b1480 0%, #1a0532 100%);
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.18),
+    0 0 24px #b96dff,
+    0 0 50px color-mix(in srgb, #b96dff 60%, transparent),
+    inset 0 0 28px color-mix(in srgb, #b96dff 30%, transparent);
+  color: #fff;
+  text-shadow: 0 0 14px #b96dff, 0 3px 0 rgba(0,0,0,.5);
+}
+.ha-form-cta {
+  align-self: center;
+  width: 100%; max-width: 720px;
+  padding: 24px 48px;
+  border-radius: 60px;
+  background: linear-gradient(180deg, #ffd27a 0%, #ffb13a 50%, #d97800 100%);
+  border: 4px solid #fff;
+  box-shadow:
+    0 0 0 3px #ffd27a,
+    0 0 32px rgba(255,177,58,.8),
+    0 0 70px rgba(255,120,40,.45),
+    inset 0 0 26px rgba(255,220,140,.5),
+    0 6px 0 rgba(120,60,0,.4);
+  font-family: 'Russo One', sans-serif; font-size: 44px; letter-spacing: .08em;
+  color: #1a0a01; text-shadow: 0 1px 0 rgba(255,255,255,.3);
+  cursor: pointer; transition: transform .15s;
+  display: flex; align-items: center; justify-content: center; gap: 22px;
+}
+.ha-form-cta:hover { transform: translateY(-3px); }
+
+/* Décor mini (joystick + arcade) — repoussés vers les coins pour ne pas chevaucher le cadre */
+.ha-joy--mini { left: 40px; top: 820px; transform: scale(.7); transform-origin: top left; }
+.ha-arcbtns--mini { right: 80px; top: 880px; flex-direction: row; gap: 16px; }
+.ha-arcbtns--mini .ha-arcbtn { width: 64px; height: 64px; }
