@@ -85,6 +85,7 @@ function R(h) { A.innerHTML = h; }
 function setBG(tid) {
   const t = THEMES[tid] || THEMES.culture;
   const bg = document.getElementById("bg");
+  bg.classList.remove("ha-bg");
   bg.innerHTML = "";
   if (t.stars) for (let i = 0; i < 35; i++) {
     const s = document.createElement("div"), sz = Math.random()*2+.4;
@@ -93,14 +94,82 @@ function setBG(tid) {
   }
 }
 
+// ── Échelle 1920×1080 → viewport (utilisée par l'écran d'accueil) ──
+function _haFit() {
+  const stage = document.querySelector(".ha-stage");
+  if (!stage) return;
+  const s = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+  stage.style.transform = `scale(${s})`;
+}
+
 // ════════════════════════════════════════════
 //  ÉCRAN D'ACCUEIL
 // ════════════════════════════════════════════
 function Home() {
-  setBG("culture");
-  R(`<div class="sc"><div class="float" style="text-align:center;margin-bottom:10px"><div style="font-size:4.5rem">🧠</div><p style="color:rgba(255,255,255,.42);font-size:.8rem;letter-spacing:.25em;font-weight:600;margin-top:5px">LE JEU DE QUIZ ULTIME</p></div><div style="display:flex;flex-direction:column;gap:10px;width:100%;max-width:300px"><button class="btn" id="bC" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);color:white;width:100%;padding:16px">🏠 Créer une partie</button><button class="btn" id="bJ" style="background:linear-gradient(135deg,#0891b2,#22d3ee);color:white;width:100%;padding:16px">🚪 Rejoindre une partie</button></div><p style="color:rgba(255,255,255,.18);font-size:.7rem">Multi-appareils · 9 thèmes · 250 questions</p></div>`);
+  // Fond néon plein écran + étoiles scintillantes
+  const bg = document.getElementById("bg");
+  bg.innerHTML = "";
+  bg.classList.add("ha-bg");
+  for (let i = 0; i < 28; i++) {
+    const s = document.createElement("div");
+    s.className = "ha-star";
+    s.textContent = Math.random() > .5 ? "✦" : "·";
+    s.style.left = (Math.random()*100) + "%";
+    s.style.top  = (Math.random()*100) + "%";
+    s.style.fontSize = (10 + Math.random()*22) + "px";
+    s.style.animationDelay = (Math.random()*3) + "s";
+    bg.appendChild(s);
+  }
+
+  R(`<div class="ha-stage-wrap"><div class="ha-stage">
+    <div class="ha-title-wrap">
+      <div class="ha-stars-row">★ ★ ★</div>
+      <div class="ha-brand"><span>BRAIN</span><span>CLASH</span></div>
+      <div class="ha-tagline">LE QUIZ MULTIJOUEUR</div>
+    </div>
+
+    <div class="ha-cta-stack">
+      <div class="ha-cta ha-cta--orange" id="bC">
+        <div class="ha-cta-icon">📺</div>
+        <div class="ha-cta-text">
+          <div class="ha-cta-kicker">HÔTE</div>
+          <div class="ha-cta-label">CRÉER UNE PARTIE</div>
+        </div>
+      </div>
+      <div class="ha-cta ha-cta--cyan" id="bJ">
+        <div class="ha-cta-icon">📱</div>
+        <div class="ha-cta-text">
+          <div class="ha-cta-kicker">JOUEURS</div>
+          <div class="ha-cta-label">REJOINDRE UNE PARTIE</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ha-stats">
+      <span><span class="num">45</span> THÈMES</span>
+      <span class="ha-dot">•</span>
+      <span><span class="num">6</span> JEUX</span>
+      <span class="ha-dot">•</span>
+      <span><span class="num">2-8</span> JOUEURS</span>
+    </div>
+
+    <div class="ha-joy">
+      <div class="ha-joy-base"></div>
+      <div class="ha-joy-stick"></div>
+      <div class="ha-joy-ball"></div>
+    </div>
+    <div class="ha-arcbtns">
+      <div class="ha-arcbtn" style="--col:#ff2a9d"></div>
+      <div class="ha-arcbtn" style="--col:#4be0ff"></div>
+      <div class="ha-arcbtn" style="--col:#22c55e"></div>
+    </div>
+  </div></div>`);
+
   on("bC","click",()=>{ Create(1); });
   on("bJ","click",()=>{ Join(); });
+
+  _haFit();
+  window.addEventListener("resize", _haFit);
 }
 
 // ════════════════════════════════════════════
@@ -272,7 +341,11 @@ function Lobby(room) {
   const inv = `🧠 BRAIN CLASH\n\nRejoins ma partie !\nThèmes : ${(room.themes||[room.theme]).map(tid=>(THEMES[tid]||THEMES.culture).emoji+" "+(THEMES[tid]||THEMES.culture).name).join(", ")}\nCode : ${room.code}\n\n👉 Ouvre ce lien sur ton téléphone :\n${playerUrl}\nPuis entre le code : ${room.code}`;
 
   function draw(cur) {
-    const rows = toArr(cur.players).map((p,i)=>`<div style="display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:10px;background:rgba(255,255,255,.04)"><div style="width:26px;height:26px;border-radius:50%;background:${COL[i%8].bg};display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700">${i+1}</div><span style="font-weight:600;font-size:.88rem">${p.name}</span></div>`).join("");
+    const rows = toArr(cur.players).map((p,i)=>{
+      const avIdx = (p.avatar !== undefined) ? p.avatar : (i % AVATARS.length);
+      const av = AVATARS[avIdx] || AVATARS[0];
+      return `<div style="display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:10px;background:rgba(255,255,255,.04)"><div style="width:32px;height:32px;border-radius:50%;background:${av.bg};border:2px solid ${av.bg};box-shadow:0 0 10px ${av.bg}66;overflow:hidden;flex-shrink:0"><img src="${AVATAR_PATH}${av.file}" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><span style="font-weight:600;font-size:.88rem">${p.name}</span></div>`;
+    }).join("");
     const can = toArr(cur.players).length >= 1;
     R(`<div class="sc"><div class="float" style="text-align:center"><div style="font-size:2.5rem">📺</div><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;margin-top:4px">Écran principal</h2><p style="color:rgba(255,255,255,.38);font-size:.76rem;margin-top:3px">Cet écran est le plateau du jeu</p></div><div class="glass" style="padding:17px 19px;text-align:center;max-width:370px;width:100%"><p style="color:rgba(255,255,255,.42);font-size:.76rem;margin-bottom:6px">Code de la salle</p><div style="font-family:'Orbitron',sans-serif;font-size:2.4rem;font-weight:900;color:${t.accent};animation:roomGlow 2s ease-in-out infinite">${room.code}</div><p style="color:rgba(255,255,255,.28);font-size:.68rem;margin-top:5px;margin-bottom:13px">${(room.themes||[room.theme]).map(tid=>(THEMES[tid]||THEMES.culture).emoji).join(" ")} · ${room.rounds.map(r=>RT.find(x=>x.id===r)?.icon||"").join(" ")}</p><div style="background:rgba(0,0,0,.25);border-radius:11px;padding:11px 13px;text-align:left;border:1px solid rgba(255,255,255,.09);margin-bottom:9px;font-size:.78rem;line-height:1.75;white-space:pre-wrap;user-select:all">${inv}</div><button class="btn" id="bCp" style="width:100%;padding:11px;background:linear-gradient(135deg,${t.dark},${t.accent});color:white;border-radius:13px;font-size:.85rem">📋 Copier le lien d'invitation</button></div><div class="glass" style="padding:14px 16px;max-width:370px;width:100%"><p style="color:rgba(255,255,255,.48);font-size:.75rem;font-weight:600;margin-bottom:8px">JOUEURS (${toArr(cur.players).length}/${room.maxP})</p><div>${rows}${toArr(cur.players).length<room.maxP?`<div style="padding:7px 11px;border-radius:10px;border:1px dashed rgba(255,255,255,.11);color:rgba(255,255,255,.2);font-size:.76rem;text-align:center">En attente de joueurs…</div>`:""}</div></div><div style="display:flex;gap:10px;width:100%;max-width:370px"><button class="btn" id="bCn" style="background:rgba(255,255,255,.07);color:white;padding:12px;flex:1;font-size:.84rem">✕ Annuler</button><button class="btn" id="bLn" style="padding:12px;flex:2;font-size:.88rem;color:white;background:${can?`linear-gradient(135deg,${t.dark},${t.accent})`:"rgba(255,255,255,.1)"}" ${can?"":"disabled"}>${can?"🚀 Lancer !":"Attendez des joueurs"}</button></div></div>`);
     on("bCn","click",async()=>{ if(STOP)STOP(); await fd(`rooms/${room.code}`); CD={name:"",maxP:4,mode:"fixed",themes:[],availableThemes:[],rounds:[],cartonBallons:3}; Home(); });

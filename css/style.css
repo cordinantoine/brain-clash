@@ -459,3 +459,176 @@ input::placeholder { color:rgba(255,255,255,.3) }
   font-size: 44px; color: var(--pc); line-height: 1;
   text-shadow: 0 0 14px var(--pc), 0 2px 2px rgba(0,0,0,.6);
 }
+
+/* ════════════════════════════════════════════
+   ÉCRAN D'ACCUEIL — Cockpit néon
+   ════════════════════════════════════════════ */
+@keyframes haTwinkle    { 0%,100%{opacity:.35;transform:scale(1)} 50%{opacity:.95;transform:scale(1.25)} }
+@keyframes haNeonFlick  { 0%,100%{opacity:1} 47%{opacity:1} 48%{opacity:.55} 49%{opacity:1} 72%{opacity:1} 73%{opacity:.65} 74%{opacity:1} }
+@keyframes haLedRun     { 0%,100%{opacity:.55;transform:scale(.92)} 50%{opacity:1;transform:scale(1.15)} }
+
+#bg.ha-bg {
+  background: #000 url('../js/assets/bg-neon.png') center center / cover no-repeat;
+}
+
+.ha-stage-wrap {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1; overflow: hidden;
+}
+.ha-stage {
+  position: relative;
+  width: 1920px; height: 1080px;
+  transform-origin: center center;
+  font-family: 'Fredoka', sans-serif;
+  color: #fff;
+}
+
+.ha-star {
+  position: absolute; color: #fff; font-size: 14px; opacity: .55;
+  text-shadow: 0 0 8px #fff, 0 0 18px #a6f;
+  animation: haTwinkle 3s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Title */
+.ha-title-wrap {
+  position: absolute; left: 50%; top: 70px;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center;
+  z-index: 10;
+}
+.ha-stars-row {
+  color: #ffe36a; font-size: 36px; letter-spacing: .45em;
+  margin-bottom: 8px;
+  text-shadow: 0 0 14px #ffb347, 0 0 22px #ff8a1a;
+  animation: haNeonFlick 4.2s linear infinite;
+}
+.ha-brand {
+  font-family: 'Russo One', sans-serif;
+  font-size: 168px; line-height: .95; letter-spacing: .06em;
+  color: #fff; display: flex; gap: 36px;
+  text-shadow:
+    0 0 14px #4ad8ff,
+    0 0 28px #4ad8ff,
+    0 0 56px #4ad8ff,
+    0 0 110px rgba(74,216,255,.6),
+    0 6px 0 #061e2e;
+  animation: haNeonFlick 7s linear infinite;
+}
+.ha-tagline {
+  margin-top: 18px;
+  font-family: 'Russo One', sans-serif;
+  font-size: 30px; letter-spacing: .42em;
+  color: #ff8af0;
+  text-shadow: 0 0 10px #ff2a9d, 0 0 22px #ff2a9d;
+}
+
+/* CTA stack */
+.ha-cta-stack {
+  position: absolute; left: 50%; top: 470px;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; gap: 40px;
+  z-index: 5;
+}
+.ha-cta {
+  position: relative;
+  display: flex; align-items: center; gap: 32px;
+  padding: 28px 56px; min-width: 820px;
+  border-radius: 26px;
+  background: radial-gradient(ellipse at 50% 0%, var(--col-mid) 0%, var(--col-deep) 65%, #0a0118 100%);
+  border: 5px solid var(--col);
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.18),
+    0 0 30px var(--col),
+    0 0 70px color-mix(in srgb, var(--col) 60%, transparent),
+    inset 0 0 36px color-mix(in srgb, var(--col) 30%, transparent);
+  cursor: pointer; user-select: none;
+  transition: transform .15s ease;
+  font-family: 'Fredoka', sans-serif; color: #fff;
+}
+.ha-cta:hover  { transform: translateY(-4px) scale(1.015); }
+.ha-cta:active { transform: translateY(-1px) scale(.998); }
+.ha-cta-icon {
+  width: 110px; height: 110px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff 0%, var(--col) 55%, color-mix(in srgb, var(--col) 50%, #000) 100%);
+  border: 5px solid #fff;
+  box-shadow: 0 0 22px var(--col), 0 0 40px color-mix(in srgb, var(--col) 70%, transparent);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 64px; flex-shrink: 0;
+  text-shadow: 0 3px 0 rgba(0,0,0,.4);
+}
+.ha-cta-text { display: flex; flex-direction: column; line-height: 1; gap: 6px; text-align: left; }
+.ha-cta-kicker {
+  font-family: 'Russo One', sans-serif;
+  font-size: 24px; letter-spacing: .22em;
+  color: var(--col); text-shadow: 0 0 10px var(--col);
+}
+.ha-cta-label {
+  font-family: 'Russo One', sans-serif;
+  font-size: 62px; letter-spacing: .04em;
+  color: #fff; white-space: nowrap;
+  text-shadow: 0 0 14px var(--col), 0 4px 0 rgba(0,0,0,.5);
+}
+.ha-cta--orange { --col:#ffb13a; --col-mid:#3a1d05; --col-deep:#1a0a01; }
+.ha-cta--cyan   { --col:#4be0ff; --col-mid:#06283a; --col-deep:#01101a; }
+
+/* Stats footer */
+.ha-stats {
+  position: absolute; left: 0; right: 0; bottom: 50px;
+  display: flex; gap: 42px; align-items: center; justify-content: center;
+  font-family: 'Russo One', sans-serif;
+  color: rgba(255,255,255,.6);
+  font-size: 22px; letter-spacing: .18em;
+  z-index: 5;
+}
+.ha-stats > span { display: flex; align-items: baseline; gap: 4px; }
+.ha-stats .num {
+  color: #4be0ff; font-size: 34px; margin-right: 8px;
+  text-shadow: 0 0 10px #4be0ff;
+}
+.ha-stats .ha-dot { color: rgba(255,255,255,.25); }
+
+/* Decorative joystick (left) */
+.ha-joy {
+  position: absolute; left: 110px; top: 560px;
+  width: 220px; height: 220px;
+  display: flex; align-items: center; justify-content: center;
+  pointer-events: none;
+}
+.ha-joy-base {
+  position: absolute; width: 100%; height: 100%; border-radius: 50%;
+  background: radial-gradient(circle at 50% 35%, #2a0850 0%, #10021f 70%, #000 100%);
+  border: 4px solid #ff2a9d;
+  box-shadow: 0 0 28px #ff2a9d, inset 0 0 24px rgba(0,0,0,.6);
+}
+.ha-joy-stick {
+  position: absolute; width: 30px; height: 130px;
+  background: linear-gradient(180deg, #fff 0%, #ff2a9d 35%, #5a0838 100%);
+  border-radius: 14px;
+  box-shadow: 0 0 12px #ff2a9d, 0 0 24px #ff2a9d;
+  bottom: 60px;
+}
+.ha-joy-ball {
+  position: absolute; width: 60px; height: 60px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff 0%, #ff4fa2 60%, #800040 100%);
+  border: 3px solid #fff;
+  box-shadow: 0 0 18px #ff2a9d, 0 0 36px #ff2a9d;
+  top: 18px; left: 50%; transform: translateX(-50%);
+}
+
+/* Decorative arcade buttons (right) */
+.ha-arcbtns {
+  position: absolute; right: 130px; top: 600px;
+  display: flex; flex-direction: column; gap: 18px;
+  pointer-events: none;
+}
+.ha-arcbtn {
+  width: 78px; height: 78px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff 0%, var(--col) 55%, color-mix(in srgb, var(--col) 40%, #000) 100%);
+  border: 4px solid #fff;
+  box-shadow: 0 0 18px var(--col), 0 0 32px var(--col);
+  animation: haLedRun 1.8s ease-in-out infinite;
+}
+.ha-arcbtn:nth-child(2) { animation-delay: .3s; }
+.ha-arcbtn:nth-child(3) { animation-delay: .6s; }
