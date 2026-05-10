@@ -8,6 +8,7 @@
 
 async function roundSteal_start(room, gs, rQs) {
   await fp(`rooms/${CODE}`, {
+    "gameState/qIdx":gs.qIdx, "gameState/roundElim":gs.roundElim||[],
     "gameState/phase":"question", "gameState/buzzed":null, "gameState/buzzedOut":[],
     "gameState/answers":{}, "gameState/revealed":false, "gameState/result":null,
     "gameState/pickTarget":false, "gameState/hostPick":null,

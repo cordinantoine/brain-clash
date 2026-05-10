@@ -334,6 +334,7 @@ async function hostStartQ(room, gs, rQs) {
   // Buzzer — 30s question, 3s answer, pause on buzz
   if (rType === "buzzer") {
     await fp(`rooms/${CODE}`, {
+      "gameState/qIdx":gs.qIdx, "gameState/roundElim":gs.roundElim||[],
       "gameState/phase":"question", "gameState/buzzed":null, "gameState/buzzedOut":[],
       "gameState/answers":{}, "gameState/revealed":false, "gameState/result":null,
       "gameState/pickTarget":false, "gameState/hostPick":null,
@@ -371,9 +372,10 @@ async function hostNextQ(room, gs, rQs) {
     },5000);
     return;
   }
-  await fp(`rooms/${CODE}`,{"gameState/qIdx":qIdx,"gameState/roundElim":rE,"gameState/chronoRanking":null});
-  const cur = await fg(`rooms/${CODE}/gameState`);
-  hostStartQ(room, { ...cur, qIdx, roundElim:rE }, rQs);
+  // qIdx + roundElim sont poussés atomiquement par chaque round_start
+  // (sinon Watch re-render drawQuestionResult avec le nouveau qIdx mais
+  // l'ancien result, ce qui flashe la bonne réponse de la question suivante).
+  hostStartQ(room, { ...gs, qIdx, roundElim:rE }, rQs);
 }
 
 // ── Traitement réponse — délègue au bon module ──

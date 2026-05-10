@@ -36,6 +36,8 @@ async function roundCarton_start(room, gs, rQs) {
 
   _cartonBusy = false;
   await fp(`rooms/${CODE}`, {
+    "gameState/qIdx": gs.qIdx,
+    "gameState/roundElim": roundElim,
     "gameState/phase": "question",
     "gameState/buzzed": null,
     "gameState/buzzedOut": [],
