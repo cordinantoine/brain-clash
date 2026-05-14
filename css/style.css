@@ -479,6 +479,7 @@ input::placeholder { color:rgba(255,255,255,.3) }
 .ha-stage {
   position: relative;
   width: 1920px; height: 1080px;
+  flex-shrink: 0;
   transform-origin: center center;
   font-family: 'Fredoka', sans-serif;
   color: #fff;
