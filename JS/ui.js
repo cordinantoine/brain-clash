@@ -360,22 +360,102 @@ function Create(step) {
     return;
   }
 
-  const t = THEMES[CD.themes[0]] || THEMES.culture;
-  setBG(CD.themes[0] || "culture");
-
+  // Étape 3/3 — Rounds de jeu (cockpit néon)
   {
+    const bg = document.getElementById("bg");
+    bg.innerHTML = "";
+    bg.classList.add("ha-bg");
+    for (let i = 0; i < 32; i++) {
+      const s = document.createElement("div");
+      s.className = "ha-star";
+      s.textContent = Math.random() > .5 ? "✦" : "·";
+      s.style.left = (Math.random()*100) + "%";
+      s.style.top  = (Math.random()*100) + "%";
+      s.style.fontSize = (10 + Math.random()*22) + "px";
+      s.style.animationDelay = (Math.random()*3) + "s";
+      bg.appendChild(s);
+    }
+
+    const ROUND_COLORS = {
+      qcm:    "#4be0ff",
+      buzzer: "#ffde3a",
+      chrono: "#ff8a3a",
+      steal:  "#ff2a9d",
+      patate: "#ffb13a",
+      carton: "#22c55e",
+    };
+
     const allRoundIds = RT.map(r => r.id);
     const allRoundsSelected = CD.rounds.length === allRoundIds.length;
-    const ri = RT.map(r => `<div class="rbtn glass" data-rid="${r.id}" style="padding:10px 12px;cursor:pointer;border:2px solid ${CD.rounds.includes(r.id)?t.accent:"rgba(255,255,255,.07)"};background:${CD.rounds.includes(r.id)?t.accent+"14":"rgba(255,255,255,.02)"};display:flex;align-items:center;gap:10px;margin-bottom:8px;border-radius:13px"><span style="font-size:1.05rem">${r.icon}</span><div style="flex:1"><div style="font-weight:600;font-size:.82rem">${r.name}</div><div style="color:rgba(255,255,255,.33);font-size:.67rem">${r.desc}</div></div><div style="width:14px;height:14px;border-radius:50%;border:2px solid ${CD.rounds.includes(r.id)?t.accent:"rgba(255,255,255,.2)"};background:${CD.rounds.includes(r.id)?t.accent:"transparent"};flex-shrink:0"></div></div>`).join("");
-    const roundsHeader = `<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><label style="color:rgba(255,255,255,.5);font-size:.75rem;font-weight:600">Rounds</label><button id="bToggleAllR" class="btn" style="padding:5px 10px;font-size:.7rem;background:rgba(255,255,255,.06);color:white;border-radius:8px">${allRoundsSelected?"✕ Tout désélectionner":"✓ Tout sélectionner"}</button></div><p style="color:rgba(255,255,255,.25);margin-bottom:10px;font-size:.7rem">${CD.rounds.length===0?"Aucun round sélectionné":CD.rounds.length===1?"1 round sélectionné":CD.rounds.length+" rounds sélectionnés"}</p>`;
-    // Balloon selector (1-5) shown only when carton is selected
-    const bp = CD.rounds.includes("carton") ? `<div style="padding:11px 13px;border-radius:11px;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.22);margin-bottom:14px"><label style="color:rgba(255,255,255,.6);font-size:.75rem;font-weight:600;display:block;margin-bottom:7px">🎈 Ballons par joueur (Tir à la Carabine)</label><div style="display:flex;gap:7px">${[1,2,3,4,5].map(n=>`<button class="btn bb" data-n="${n}" style="width:38px;height:38px;border-radius:9px;padding:0;font-size:.9rem;color:white;background:${CD.cartonBallons===n?"rgba(96,165,250,.28)":"transparent"};border:2px solid ${CD.cartonBallons===n?"#60a5fa":"rgba(255,255,255,.14)"}">${n}</button>`).join("")}</div></div>` : "";
-    R(`<div class="sc"><div class="glass su" style="width:100%;max-width:420px;padding:24px 20px;max-height:92vh;overflow-y:auto"><button id="bBk" style="background:none;border:none;color:rgba(255,255,255,.4);cursor:pointer;font-size:.8rem;margin-bottom:16px">← Retour</button><h2 style="font-family:'Playfair Display',serif;font-size:1.5rem;margin-bottom:3px">Rounds de jeu</h2><p style="color:rgba(255,255,255,.38);margin-bottom:14px;font-size:.8rem">Étape 3/3</p>${roundsHeader}${ri}${bp}<button class="btn" id="bCr" style="width:100%;padding:13px;color:white;background:${CD.rounds.length?`linear-gradient(135deg,${t.dark},${t.accent})`:"rgba(255,255,255,.1)"}" ${CD.rounds.length?"":"disabled"}>🚀 Créer la salle</button></div></div>`);
+    const canCreate = CD.rounds.length > 0;
+
+    const dot = (on)=>`<span class="dot${on?' on':''}"></span>`;
+    const roundCards = RT.map(r => {
+      const sel = CD.rounds.includes(r.id);
+      const c = ROUND_COLORS[r.id] || "#b96dff";
+      return `<div class="ha-mode ha-mode--rd${sel?' sel':''}" data-rid="${r.id}" style="--mc:${c}">
+        <div class="ha-mode-icon">${r.icon}</div>
+        <div class="ha-mode-text">
+          <div class="ha-mode-title">${r.name}</div>
+          <div class="ha-mode-desc">${r.desc}</div>
+        </div>
+        <div class="ha-mode-radio"></div>
+      </div>`;
+    }).join("");
+
+    const countLbl = CD.rounds.length===0
+      ? "AUCUN"
+      : CD.rounds.length+" SÉLECTIONNÉ"+(CD.rounds.length>1?"S":"");
+
+    const ballonsPanel = CD.rounds.includes("carton") ? `
+      <div class="ha-ballons">
+        <div class="ha-ballons-lbl">🎈 BALLONS PAR JOUEUR</div>
+        <div class="ha-ballons-row">
+          ${[1,2,3,4,5].map(n => `<button class="ha-ballon${CD.cartonBallons===n?' sel':''}" data-n="${n}">${n}</button>`).join("")}
+        </div>
+      </div>` : "";
+
+    R(`<div class="ha-stage-wrap"><div class="ha-stage">
+        <div class="ha-form ha-form--step3">
+          <button class="ha-form-back" id="bBk">← RETOUR</button>
+          <div class="ha-form-step">
+            ${dot(true)}${dot(true)}${dot(true)}
+            <span style="margin-left:4px">ÉTAPE 3 / 3</span>
+          </div>
+          <div class="ha-form-title">ROUNDS DE JEU</div>
+
+          <div class="ha-theme-row-head">
+            <div class="ha-form-section-label">
+              ROUNDS <span class="ha-theme-count">${countLbl}</span>
+            </div>
+            <button class="ha-theme-toggle" id="bToggleAllR">${allRoundsSelected?"✕ TOUT DÉSÉLECTIONNER":"✓ TOUT SÉLECTIONNER"}</button>
+          </div>
+
+          <div class="ha-round-grid">${roundCards}</div>
+
+          ${ballonsPanel}
+
+          <button class="ha-form-cta${canCreate?'':' is-disabled'}" id="bCr"${canCreate?'':' disabled'}>
+            <span style="font-size:26px">🎮</span> LANCER LA PARTIE
+          </button>
+        </div>
+      </div></div>`);
+
     on("bBk","click",()=>Create(2));
-    on("bCr","click",doCreate);
+    on("bCr","click",()=>{ if(canCreate) doCreate(); });
     on("bToggleAllR","click",()=>{ CD.rounds = allRoundsSelected ? [] : [...allRoundIds]; Create(3); });
-    document.querySelectorAll(".rbtn").forEach(b => b.addEventListener("click",()=>{ const id=b.dataset.rid; CD.rounds=CD.rounds.includes(id)?CD.rounds.filter(r=>r!==id):[...CD.rounds,id]; Create(3); }));
-    document.querySelectorAll(".bb").forEach(b => b.addEventListener("click",()=>{ CD.cartonBallons=+b.dataset.n; Create(3); }));
+    document.querySelectorAll(".ha-mode--rd").forEach(b => b.addEventListener("click",()=>{
+      const id = b.dataset.rid;
+      CD.rounds = CD.rounds.includes(id) ? CD.rounds.filter(r=>r!==id) : [...CD.rounds,id];
+      Create(3);
+    }));
+    document.querySelectorAll(".ha-ballon").forEach(b => b.addEventListener("click",()=>{
+      CD.cartonBallons = +b.dataset.n;
+      Create(3);
+    }));
+
+    _haFit();
+    window.addEventListener("resize", _haFit);
   }
 }
 
@@ -441,26 +521,126 @@ async function doJoin() {
 //  LOBBY (hôte) ET ATTENTE (joueur)
 // ════════════════════════════════════════════
 function Lobby(room) {
-  const t   = THEMES[room.theme] || THEMES.culture;
-  setBG(room.theme);
+  const bg = document.getElementById("bg");
+  bg.innerHTML = "";
+  bg.classList.add("ha-bg");
+  for (let i = 0; i < 36; i++) {
+    const s = document.createElement("div");
+    s.className = "ha-star";
+    s.textContent = Math.random() > .5 ? "✦" : "·";
+    s.style.left = (Math.random()*100) + "%";
+    s.style.top  = (Math.random()*100) + "%";
+    s.style.fontSize = (10 + Math.random()*22) + "px";
+    s.style.animationDelay = (Math.random()*3) + "s";
+    bg.appendChild(s);
+  }
 
   const pathParts = window.location.pathname.split('/');
   pathParts[pathParts.length - 1] = 'player.html';
   const playerUrl = window.location.origin + pathParts.join('/');
   const inv = `🧠 BRAIN CLASH\n\nRejoins ma partie !\nThèmes : ${(room.themes||[room.theme]).map(tid=>(THEMES[tid]||THEMES.culture).emoji+" "+(THEMES[tid]||THEMES.culture).name).join(", ")}\nCode : ${room.code}\n\n👉 Ouvre ce lien sur ton téléphone :\n${playerUrl}\nPuis entre le code : ${room.code}`;
 
+  const LETTER_COLORS = ['#4be0ff','#b96dff','#ff4fa2','#22c55e','#ffb13a'];
+
   function draw(cur) {
-    const rows = toArr(cur.players).map((p,i)=>{
-      const avIdx = (p.avatar !== undefined) ? p.avatar : (i % AVATARS.length);
-      const av = AVATARS[avIdx] || AVATARS[0];
-      return `<div style="display:flex;align-items:center;gap:9px;padding:7px 11px;border-radius:10px;background:rgba(255,255,255,.04)"><div style="width:32px;height:32px;border-radius:50%;background:${av.bg};border:2px solid ${av.bg};box-shadow:0 0 10px ${av.bg}66;overflow:hidden;flex-shrink:0"><img src="${AVATAR_PATH}${av.file}" alt="" style="width:100%;height:100%;object-fit:cover;display:block"></div><span style="font-weight:600;font-size:.88rem">${p.name}</span></div>`;
+    const players = toArr(cur.players);
+    const can = players.length >= 1;
+    const MAX = room.maxP || 8;
+
+    const codeLetters = room.code.split("").map((l, i) =>
+      `<div class="ha-code-letter" style="--lc:${LETTER_COLORS[i % LETTER_COLORS.length]}">${l}</div>`
+    ).join("");
+
+    const themeChips = (room.themes||[room.theme]).map(tid => {
+      const th = THEMES[tid] || THEMES.culture;
+      return `<div class="ha-chip" style="--cc:${th.accent}"><span class="em">${th.emoji}</span><span>${th.name}</span></div>`;
     }).join("");
-    const can = toArr(cur.players).length >= 1;
-    R(`<div class="sc"><div class="float" style="text-align:center"><div style="font-size:2.5rem">📺</div><h2 style="font-family:'Playfair Display',serif;font-size:1.6rem;margin-top:4px">Écran principal</h2><p style="color:rgba(255,255,255,.38);font-size:.76rem;margin-top:3px">Cet écran est le plateau du jeu</p></div><div class="glass" style="padding:17px 19px;text-align:center;max-width:370px;width:100%"><p style="color:rgba(255,255,255,.42);font-size:.76rem;margin-bottom:6px">Code de la salle</p><div style="font-family:'Orbitron',sans-serif;font-size:2.4rem;font-weight:900;color:${t.accent};animation:roomGlow 2s ease-in-out infinite">${room.code}</div><p style="color:rgba(255,255,255,.28);font-size:.68rem;margin-top:5px;margin-bottom:13px">${(room.themes||[room.theme]).map(tid=>(THEMES[tid]||THEMES.culture).emoji).join(" ")} · ${room.rounds.map(r=>RT.find(x=>x.id===r)?.icon||"").join(" ")}</p><div style="background:rgba(0,0,0,.25);border-radius:11px;padding:11px 13px;text-align:left;border:1px solid rgba(255,255,255,.09);margin-bottom:9px;font-size:.78rem;line-height:1.75;white-space:pre-wrap;user-select:all">${inv}</div><button class="btn" id="bCp" style="width:100%;padding:11px;background:linear-gradient(135deg,${t.dark},${t.accent});color:white;border-radius:13px;font-size:.85rem">📋 Copier le lien d'invitation</button></div><div class="glass" style="padding:14px 16px;max-width:370px;width:100%"><p style="color:rgba(255,255,255,.48);font-size:.75rem;font-weight:600;margin-bottom:8px">JOUEURS (${toArr(cur.players).length}/${room.maxP})</p><div>${rows}${toArr(cur.players).length<room.maxP?`<div style="padding:7px 11px;border-radius:10px;border:1px dashed rgba(255,255,255,.11);color:rgba(255,255,255,.2);font-size:.76rem;text-align:center">En attente de joueurs…</div>`:""}</div></div><div style="display:flex;gap:10px;width:100%;max-width:370px"><button class="btn" id="bCn" style="background:rgba(255,255,255,.07);color:white;padding:12px;flex:1;font-size:.84rem">✕ Annuler</button><button class="btn" id="bLn" style="padding:12px;flex:2;font-size:.88rem;color:white;background:${can?`linear-gradient(135deg,${t.dark},${t.accent})`:"rgba(255,255,255,.1)"}" ${can?"":"disabled"}>${can?"🚀 Lancer !":"Attendez des joueurs"}</button></div></div>`);
+
+    const ROUND_COLORS = { qcm:"#4be0ff", buzzer:"#ffde3a", chrono:"#ff8a3a", steal:"#ff2a9d", patate:"#ffb13a", carton:"#22c55e" };
+    const roundChips = (room.rounds||[]).map(rid => {
+      const r = RT.find(x=>x.id===rid);
+      if (!r) return "";
+      return `<div class="ha-chip" style="--cc:${ROUND_COLORS[rid]||'#4be0ff'}"><span class="em">${r.icon}</span><span>${r.name}</span></div>`;
+    }).join("");
+
+    const slots = Array.from({length: MAX}).map((_, i) => {
+      const p = players[i];
+      if (p) {
+        const avIdx = (p.avatar !== undefined) ? p.avatar : (i % AVATARS.length);
+        const av = AVATARS[avIdx] || AVATARS[0];
+        return `<div class="ha-slot filled" style="--pc:${av.bg}">
+          <div class="ha-slot-av"><img src="${AVATAR_PATH}${av.file}" alt=""></div>
+          <div class="ha-slot-info">
+            <div class="ha-slot-name">${p.name}</div>
+            <div class="ha-slot-status">● CONNECTÉ</div>
+          </div>
+        </div>`;
+      }
+      return `<div class="ha-slot">
+        <div class="ha-slot-av">○</div>
+        <div class="ha-slot-info">
+          <div class="ha-slot-name">En attente…</div>
+          <div class="ha-slot-status">SLOT LIBRE</div>
+        </div>
+      </div>`;
+    }).join("");
+
+    R(`<div class="ha-stage-wrap"><div class="ha-stage">
+
+      <div class="ha-lobby-banner">
+        <div class="ha-lobby-banner-icon">📺</div>
+        <div class="ha-lobby-banner-text">
+          <div class="ha-lobby-banner-kicker">SALLE D'ATTENTE</div>
+          <div class="ha-lobby-banner-title">CET ÉCRAN EST LE PLATEAU DU JEU</div>
+        </div>
+      </div>
+
+      <div class="ha-code-block">
+        <div class="ha-code-kicker">CODE DE LA SALLE</div>
+        <div class="ha-code-letters">${codeLetters}</div>
+        <div class="ha-code-help">Tape ce code sur <strong>brain-clash / player</strong> pour rejoindre la partie</div>
+      </div>
+
+      <div class="ha-loadout">
+        <div class="ha-loadout-row">
+          <div class="ha-loadout-label">THÈMES</div>
+          <div class="ha-loadout-items">${themeChips}</div>
+        </div>
+        <div class="ha-loadout-row">
+          <div class="ha-loadout-label">ROUNDS</div>
+          <div class="ha-loadout-items">${roundChips}</div>
+        </div>
+      </div>
+
+      <div class="ha-lobby-players">
+        <div class="ha-lobby-players-head">
+          <div class="ha-lobby-players-title">JOUEURS CONNECTÉS</div>
+          <div class="ha-lobby-players-count">${players.length} / ${MAX}</div>
+        </div>
+        <div class="ha-lobby-slots">${slots}</div>
+      </div>
+
+      <div class="ha-lobby-wait">
+        <button class="ha-cancel-btn" id="bCn">✕ ANNULER</button>
+        <button class="ha-copy-btn" id="bCp"><span style="font-size:26px">📋</span> COPIER LE LIEN D'INVITATION</button>
+        <button class="ha-launch-btn${can?'':' is-disabled'}" id="bLn"${can?'':' disabled'}><span style="font-size:26px">🚀</span> LANCER</button>
+      </div>
+
+    </div></div>`);
+
     on("bCn","click",async()=>{ if(STOP)STOP(); await fd(`rooms/${room.code}`); CD={name:"",maxP:4,mode:"fixed",themes:[],availableThemes:[],rounds:[],cartonBallons:3}; Home(); });
-    on("bLn","click",doLaunch);
-    on("bCp","click",()=>{ navigator.clipboard.writeText(inv).then(()=>{set("bCp","✅ Copié !");setTimeout(()=>set("bCp","📋 Copier le lien d'invitation"),2500);}).catch(()=>{}); });
+    on("bLn","click",()=>{ if(can) doLaunch(); });
+    on("bCp","click",()=>{
+      navigator.clipboard.writeText(inv).then(()=>{
+        const b = document.getElementById("bCp");
+        b.innerHTML = '<span style="font-size:26px">✅</span> COPIÉ !';
+        setTimeout(()=>{ b.innerHTML = '<span style="font-size:26px">📋</span> COPIER LE LIEN D\'INVITATION'; }, 2500);
+      }).catch(()=>{});
+    });
+
+    _haFit();
   }
+  window.addEventListener("resize", _haFit);
   draw(room);
   if (STOP) STOP();
   STOP = (() => {

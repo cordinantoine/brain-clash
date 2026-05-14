@@ -913,6 +913,72 @@ input::placeholder { color:rgba(255,255,255,.3) }
   display: inline-block; margin-bottom: 6px;
 }
 
+/* ── Étape 3/3 — Rounds de jeu ── */
+.ha-form--step3 {
+  width: 1240px;
+  top: 28px;
+  transform: translateX(-50%);
+  padding: 22px 56px 28px;
+}
+.ha-form--step3 .ha-form-title { font-size: 56px; margin-bottom: 22px; }
+.ha-form--step3 .ha-form-back { margin-bottom: 8px; font-size: 22px; }
+.ha-form--step3 .ha-form-step { margin-bottom: 18px; padding: 6px 22px; font-size: 18px; }
+.ha-form--step3 .ha-form-section-label { font-size: 20px; }
+.ha-form--step3 .ha-form-cta {
+  padding: 16px 32px;
+  font-size: 30px;
+  max-width: 620px;
+  border-radius: 50px;
+  margin-top: 4px;
+}
+
+.ha-round-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  margin-bottom: 24px;
+}
+.ha-mode--rd.sel {
+  border-color: var(--mc, #b96dff);
+  background: radial-gradient(ellipse at 50% 25%, color-mix(in srgb, var(--mc) 22%, #1a0532) 0%, #0e0220 100%);
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.16),
+    0 0 22px var(--mc),
+    0 0 44px color-mix(in srgb, var(--mc) 55%, transparent),
+    inset 0 0 24px color-mix(in srgb, var(--mc) 28%, transparent);
+}
+.ha-mode--rd.sel .ha-mode-radio { border-color: var(--mc); box-shadow: 0 0 12px var(--mc); }
+.ha-mode--rd.sel .ha-mode-radio::after { background: var(--mc); box-shadow: 0 0 10px var(--mc); }
+.ha-mode--rd.sel .ha-mode-icon {
+  border-color: color-mix(in srgb, var(--mc) 60%, transparent);
+  background: color-mix(in srgb, var(--mc) 18%, transparent);
+}
+
+/* ── Panneau ballons (Tir à la Carabine) ── */
+.ha-ballons {
+  padding: 18px 26px; border-radius: 22px; margin-bottom: 16px;
+  background: rgba(34,197,94,.08);
+  border: 2px solid rgba(34,197,94,.45);
+  box-shadow: 0 0 20px rgba(34,197,94,.22), inset 0 0 20px rgba(34,197,94,.08);
+  display: flex; align-items: center; gap: 22px;
+}
+.ha-ballons-lbl {
+  font-family: 'Russo One', sans-serif; font-size: 18px; letter-spacing: .08em;
+  color: #b6f5c8; text-shadow: 0 0 8px rgba(34,197,94,.5);
+}
+.ha-ballons-row { display: flex; gap: 10px; }
+.ha-ballon {
+  width: 52px; height: 52px; border-radius: 14px;
+  font-family: 'Russo One', sans-serif; font-size: 22px;
+  color: #fff; background: rgba(255,255,255,.04);
+  border: 2px solid rgba(255,255,255,.14);
+  cursor: pointer; transition: all .15s ease;
+}
+.ha-ballon:hover { transform: translateY(-2px); border-color: rgba(34,197,94,.55); }
+.ha-ballon.sel {
+  background: rgba(34,197,94,.22);
+  border-color: #22c55e;
+  box-shadow: 0 0 14px #22c55e, inset 0 0 12px rgba(34,197,94,.25);
+}
+
 /* ── État disabled du CTA ── */
 .ha-form-cta:disabled,
 .ha-form-cta.is-disabled {
@@ -924,3 +990,250 @@ input::placeholder { color:rgba(255,255,255,.3) }
 }
 .ha-form-cta:disabled:hover,
 .ha-form-cta.is-disabled:hover { transform: none; }
+
+/* ════════════════════════════════════════════
+   LOBBY (Salle d'attente — Hôte / TV)
+   ════════════════════════════════════════════ */
+.ha-lobby-banner {
+  position: absolute; left: 50%; top: 32px; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 22px;
+  padding: 12px 36px 12px 22px;
+  border-radius: 999px;
+  background: radial-gradient(ellipse at 50% 30%, #1c0840 0%, #0b0218 100%);
+  border: 3px solid #ffb13a;
+  box-shadow:
+    0 0 0 2px #ffd27a,
+    0 0 22px rgba(255,160,60,.7),
+    0 0 44px rgba(255,120,40,.3),
+    inset 0 0 22px rgba(110,50,180,.3);
+  z-index: 6;
+}
+.ha-lobby-banner-icon {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff 0%, #ffb13a 55%, #5a2a00 100%);
+  border: 3px solid #fff;
+  box-shadow: 0 0 14px #ffb13a, 0 0 28px rgba(255,177,58,.7);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+}
+.ha-lobby-banner-text { display: flex; flex-direction: column; line-height: 1; gap: 6px; }
+.ha-lobby-banner-kicker {
+  font-family: 'Russo One', sans-serif; font-size: 14px; letter-spacing: .32em;
+  color: #ffb13a; text-shadow: 0 0 10px #ffb13a;
+}
+.ha-lobby-banner-title {
+  font-family: 'Russo One', sans-serif; font-size: 26px; letter-spacing: .04em;
+  color: #fff; text-shadow: 0 0 10px #4ad8ff, 0 2px 0 rgba(0,0,0,.4);
+}
+
+.ha-code-block {
+  position: absolute; left: 70px; top: 160px; width: 1100px;
+  border-radius: 32px;
+  background: radial-gradient(ellipse at 50% 0%, #3a0b56 0%, #1a0532 55%, #10021f 100%);
+  border: 4px solid #ffb13a;
+  box-shadow:
+    0 0 0 2px #ffd27a,
+    0 0 28px rgba(255,160,60,.8),
+    0 0 60px rgba(255,120,40,.35),
+    inset 0 0 50px rgba(110,50,180,.35);
+  padding: 28px 50px 32px;
+  display: flex; flex-direction: column; gap: 18px;
+  z-index: 5;
+}
+.ha-code-kicker {
+  font-family: 'Russo One', sans-serif; font-size: 22px; letter-spacing: .42em;
+  color: #ff8af0; text-shadow: 0 0 10px #ff2a9d, 0 0 20px #ff2a9d;
+  text-align: center;
+}
+.ha-code-letters { display: flex; gap: 22px; justify-content: center; }
+.ha-code-letter {
+  width: 142px; height: 168px; border-radius: 22px;
+  background: radial-gradient(ellipse at 50% 20%, #1c0840 0%, #0b0218 100%);
+  border: 4px solid var(--lc, #4be0ff);
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.1),
+    0 0 22px var(--lc, #4be0ff),
+    0 0 44px color-mix(in srgb, var(--lc, #4be0ff) 50%, transparent),
+    inset 0 0 24px color-mix(in srgb, var(--lc, #4be0ff) 22%, transparent);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Russo One', sans-serif; font-size: 110px; color: #fff;
+  text-shadow: 0 0 14px var(--lc, #4be0ff), 0 0 28px var(--lc, #4be0ff), 0 4px 0 rgba(0,0,0,.4);
+}
+.ha-code-help {
+  text-align: center;
+  font-family: 'Fredoka', sans-serif; font-weight: 500;
+  font-size: 18px; line-height: 1.3; color: rgba(255,255,255,.55);
+}
+.ha-code-help strong { color: #4be0ff; text-shadow: 0 0 8px #4be0ff; font-weight: 700; }
+
+.ha-loadout {
+  position: absolute; left: 70px; top: 660px; width: 1100px;
+  display: flex; flex-direction: column; gap: 14px;
+  z-index: 5;
+}
+.ha-loadout-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 22px;
+  border-radius: 22px;
+  background: rgba(10,5,25,.55);
+  border: 2px solid rgba(75,224,255,.35);
+  box-shadow: 0 0 16px rgba(75,224,255,.25), inset 0 0 16px rgba(0,0,0,.4);
+}
+.ha-loadout-label {
+  font-family: 'Russo One', sans-serif; font-size: 16px; letter-spacing: .28em;
+  color: rgba(255,255,255,.55);
+  flex-shrink: 0; min-width: 110px;
+}
+.ha-loadout-items { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.ha-chip {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(10,5,25,.55);
+  border: 2px solid var(--cc, #4be0ff);
+  box-shadow: 0 0 10px var(--cc, #4be0ff);
+  font-family: 'Fredoka', sans-serif; font-weight: 600;
+  font-size: 15px; color: #fff;
+}
+.ha-chip .em { font-size: 18px; line-height: 1; }
+
+.ha-lobby-players {
+  position: absolute; right: 70px; top: 160px; width: 680px; height: 800px;
+  border-radius: 32px;
+  background: rgba(18,6,46,.55);
+  border: 3px solid rgba(100,200,255,.35);
+  box-shadow:
+    0 0 0 2px rgba(100,200,255,.15),
+    0 0 30px rgba(70,170,255,.55),
+    0 0 60px rgba(120,80,230,.35),
+    inset 0 0 40px rgba(70,150,255,.12);
+  padding: 24px 26px;
+  display: flex; flex-direction: column; gap: 18px;
+  z-index: 5;
+}
+.ha-lobby-players-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 6px 14px;
+  border-bottom: 2px solid rgba(100,200,255,.25);
+}
+.ha-lobby-players-title {
+  font-family: 'Russo One', sans-serif; font-size: 26px; letter-spacing: .06em;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(255,255,255,.4), 0 0 20px rgba(120,180,255,.6);
+}
+.ha-lobby-players-count {
+  font-family: 'Russo One', sans-serif; font-size: 22px; letter-spacing: .1em;
+  color: #4be0ff; text-shadow: 0 0 10px #4be0ff;
+}
+.ha-lobby-slots {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  align-content: start;
+}
+.ha-slot {
+  display: flex; align-items: center; gap: 14px;
+  padding: 12px 16px;
+  border-radius: 18px;
+  background: rgba(10,10,30,.45);
+  border: 2px dashed rgba(180,200,255,.18);
+  box-shadow: inset 0 0 18px rgba(0,0,0,.4);
+}
+.ha-slot.filled {
+  border: 2px solid var(--pc, #3ea7ff);
+  background: rgba(10,10,30,.55);
+  box-shadow: 0 0 14px var(--pc, #3ea7ff), inset 0 0 18px rgba(0,0,0,.35);
+}
+.ha-slot-av {
+  width: 58px; height: 58px; border-radius: 50%;
+  background: rgba(255,255,255,.04);
+  border: 2px dashed rgba(180,200,255,.18);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: 26px; color: rgba(255,255,255,.25);
+  overflow: hidden;
+}
+.ha-slot-av img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.ha-slot.filled .ha-slot-av {
+  border: 2px solid #fff;
+  background: var(--pc, #3ea7ff);
+  color: #fff; font-family: 'Russo One', sans-serif;
+  font-size: 26px;
+  box-shadow: 0 0 12px var(--pc, #3ea7ff);
+}
+.ha-slot-info { display: flex; flex-direction: column; line-height: 1.1; gap: 4px; flex: 1; min-width: 0; }
+.ha-slot-name {
+  font-family: 'Fredoka', sans-serif; font-weight: 700; font-size: 18px;
+  color: rgba(255,255,255,.3);
+}
+.ha-slot.filled .ha-slot-name { color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.5); }
+.ha-slot-status {
+  font-family: 'Russo One', sans-serif; font-size: 11px; letter-spacing: .22em;
+  color: rgba(180,200,255,.4);
+  animation: ledPulse 2s ease-in-out infinite;
+}
+.ha-slot.filled .ha-slot-status { color: #4ade80; animation: none; }
+@keyframes ledPulse { 0%,100% { opacity: .4 } 50% { opacity: .9 } }
+
+.ha-lobby-wait {
+  position: absolute; left: 70px; right: 70px; bottom: 32px;
+  display: flex; align-items: center; justify-content: center; gap: 24px;
+  z-index: 5;
+}
+.ha-copy-btn {
+  flex: 1; max-width: 700px;
+  padding: 18px 36px;
+  border-radius: 50px;
+  background: linear-gradient(180deg, #ffd27a 0%, #ffb13a 50%, #d97800 100%);
+  border: 3px solid #fff;
+  box-shadow:
+    0 0 0 2px #ffd27a,
+    0 0 26px rgba(255,177,58,.75),
+    0 0 60px rgba(255,120,40,.4),
+    inset 0 0 22px rgba(255,220,140,.5),
+    0 5px 0 rgba(120,60,0,.4);
+  font-family: 'Russo One', sans-serif; font-size: 28px; letter-spacing: .06em;
+  color: #1a0a01; text-shadow: 0 1px 0 rgba(255,255,255,.3);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  transition: all .15s ease;
+}
+.ha-copy-btn:hover { transform: translateY(-2px); }
+.ha-cancel-btn {
+  padding: 18px 36px;
+  border-radius: 50px;
+  background: rgba(10,5,25,.6);
+  border: 3px solid rgba(255,68,68,.55);
+  box-shadow: 0 0 18px rgba(255,68,68,.35), inset 0 0 18px rgba(0,0,0,.4);
+  font-family: 'Russo One', sans-serif; font-size: 22px; letter-spacing: .18em;
+  color: #ff8a8a; text-shadow: 0 0 10px #ff4444;
+  cursor: pointer; transition: all .15s ease;
+}
+.ha-cancel-btn:hover { transform: translateY(-2px); }
+.ha-launch-btn {
+  padding: 18px 36px;
+  border-radius: 50px;
+  max-width: 340px;
+  background: linear-gradient(180deg, #6cffb0 0%, #22c55e 50%, #0e7a3b 100%);
+  border: 3px solid #fff;
+  box-shadow:
+    0 0 0 2px #6cffb0,
+    0 0 26px rgba(34,197,94,.75),
+    0 0 60px rgba(20,140,70,.4),
+    inset 0 0 22px rgba(108,255,176,.45),
+    0 5px 0 rgba(10,80,40,.4);
+  font-family: 'Russo One', sans-serif; font-size: 28px; letter-spacing: .06em;
+  color: #06200f; text-shadow: 0 1px 0 rgba(255,255,255,.3);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 14px;
+  transition: all .15s ease;
+}
+.ha-launch-btn:hover { transform: translateY(-2px); }
+.ha-launch-btn:disabled,
+.ha-launch-btn.is-disabled {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.18);
+  box-shadow: 0 0 0 2px rgba(255,255,255,.06), inset 0 0 18px rgba(255,255,255,.04);
+  color: rgba(255,255,255,.32); text-shadow: none;
+  cursor: not-allowed;
+}
+.ha-launch-btn:disabled:hover,
+.ha-launch-btn.is-disabled:hover { transform: none; }
