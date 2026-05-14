@@ -551,10 +551,13 @@ function Lobby(room) {
       `<div class="ha-code-letter" style="--lc:${LETTER_COLORS[i % LETTER_COLORS.length]}">${l}</div>`
     ).join("");
 
-    const themeChips = (room.themes||[room.theme]).map(tid => {
-      const th = THEMES[tid] || THEMES.culture;
-      return `<div class="ha-chip" style="--cc:${th.accent}"><span class="em">${th.emoji}</span><span>${th.name}</span></div>`;
-    }).join("");
+    const themeList = room.themes || [room.theme];
+    const themeChips = (room.mode === "last_picks")
+      ? `<div class="ha-chip" style="--cc:#b96dff"><span class="em">🎯</span><span>Le dernier choisit · ${themeList.length} thèmes</span></div>`
+      : themeList.map(tid => {
+          const th = THEMES[tid] || THEMES.culture;
+          return `<div class="ha-chip" style="--cc:${th.accent}"><span class="em">${th.emoji}</span><span>${th.name}</span></div>`;
+        }).join("");
 
     const ROUND_COLORS = { qcm:"#4be0ff", buzzer:"#ffde3a", chrono:"#ff8a3a", steal:"#ff2a9d", patate:"#ffb13a", carton:"#22c55e" };
     const roundChips = (room.rounds||[]).map(rid => {
