@@ -4,7 +4,7 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
   <title>BRAIN CLASH — Joueur</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=Fredoka:wght@500;600;700&family=Russo+One&display=swap" rel="stylesheet"/>
   <style>
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
     html,body{height:100%;width:100%;background:#06080f;color:#e8edf5;font-family:'DM Sans',sans-serif;overflow:hidden;user-select:none}
@@ -55,35 +55,43 @@
     .buzz-hint{font-size:.72rem;color:#2a3a55;text-align:center;max-width:220px;line-height:1.5}
 
     /* ── Zone réponses : 75% de l'écran depuis le bas ── */
-    #state-answers{position:absolute;bottom:0;left:0;right:0;height:75vh;display:flex;flex-direction:column;padding:10px 12px 14px}
-    .answer-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:10px;min-height:0}
+    #state-answers{position:absolute;bottom:0;left:0;right:0;height:75vh;display:flex;flex-direction:column;padding:14px 12px 22px}
+    .answer-grid{flex:1;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px;min-height:0}
 
-    /* Bouton : remplit sa cellule, texte fluide */
+    /* Bouton générique — écran "choisir une cible" (steal/carton) */
     .answer-btn{border:none;border-radius:20px;cursor:pointer;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px;transition:all .15s;position:relative;overflow:hidden}
     .answer-btn:active:not([disabled]){transform:scale(0.96)}
     .answer-btn[disabled]{cursor:default}
-    .answer-letter{font-family:'Bebas Neue',sans-serif;font-size:clamp(1.4rem,5vw,2rem);line-height:1;color:white;opacity:.9}
-    .answer-text{font-size:clamp(.85rem,3.5vw,1.35rem);font-weight:600;color:rgba(255,255,255,.95);text-align:center;line-height:1.3;word-break:break-word}
 
-    /* Couleurs + glow lumineux par défaut */
-    .answer-btn.c0{background:linear-gradient(145deg,#1e3399,#2a45bb);border:2px solid #4a6ae0;box-shadow:0 0 22px #3050bb66,0 0 50px #1e339933,inset 0 1px 0 rgba(255,255,255,.12)}
-    .answer-btn.c1{background:linear-gradient(145deg,#991e1e,#bb2a2a);border:2px solid #e04a4a;box-shadow:0 0 22px #bb303066,0 0 50px #99101033,inset 0 1px 0 rgba(255,255,255,.12)}
-    .answer-btn.c2{background:linear-gradient(145deg,#1e7a3a,#22994a);border:2px solid #40cc66;box-shadow:0 0 22px #30bb5566,0 0 50px #1e993333,inset 0 1px 0 rgba(255,255,255,.12)}
-    .answer-btn.c3{background:linear-gradient(145deg,#7a5e1e,#997828);border:2px solid #ccaa40;box-shadow:0 0 22px #bb993066,0 0 50px #997a1033,inset 0 1px 0 rgba(255,255,255,.12)}
-    /* Pulse continu sur les boutons non-sélectionnés */
-    .answer-btn.c0,.answer-btn.c1,.answer-btn.c2,.answer-btn.c3{animation:btnGlow 3s ease-in-out infinite}
-    @keyframes btnGlow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.15)}}
+    /* ── Cartes réponses — cockpit néon ── */
+    .ans{position:relative;border:3px solid var(--ac);border-radius:22px;background:radial-gradient(ellipse at 50% 25%,var(--ac-mid) 0%,#0b0218 100%);box-shadow:0 0 0 1.5px rgba(255,255,255,.1),0 0 16px var(--ac),0 0 34px color-mix(in srgb,var(--ac) 55%,transparent),inset 0 0 22px color-mix(in srgb,var(--ac) 22%,transparent);padding:14px 10px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;cursor:pointer;overflow:hidden;transition:transform .15s ease;animation:ansBreathe 3.2s ease-in-out infinite;font-family:'Fredoka',sans-serif}
+    .ans:not([disabled]):active{transform:scale(.96)}
+    .ans[disabled]{cursor:default}
+    @keyframes ansBreathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.12)}}
+    .ans-A{--ac:#2a7bff;--ac-mid:#091d4a}
+    .ans-B{--ac:#ff2b2b;--ac-mid:#3d0808}
+    .ans-C{--ac:#22c55e;--ac-mid:#0a3a1c}
+    .ans-D{--ac:#c760ff;--ac-mid:#2a0a40}
+    .ans-lbl{width:54px;height:54px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,var(--ac) 55%,color-mix(in srgb,var(--ac) 50%,#000) 100%);border:3px solid #fff;box-shadow:0 0 16px var(--ac),0 0 28px color-mix(in srgb,var(--ac) 70%,transparent);display:flex;align-items:center;justify-content:center;font-family:'Russo One',sans-serif;font-size:26px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.4);flex-shrink:0}
+    .ans-text{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(1rem,4.6vw,1.5rem);line-height:1.15;color:#fff;text-shadow:0 2px 2px rgba(0,0,0,.6);text-align:center;overflow-wrap:break-word;max-width:100%}
+    .ans-spark{position:absolute;color:#fff;opacity:.55;text-shadow:0 0 6px #fff,0 0 14px var(--ac);animation:ansTwink 3.4s ease-in-out infinite;pointer-events:none;z-index:1;line-height:1}
+    @keyframes ansTwink{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.95;transform:scale(1.3)}}
 
-    .answer-btn.ok{background:linear-gradient(145deg,#145228,#1a7a38)!important;border:3px solid #22c55e!important;box-shadow:0 0 30px #22c55e99,0 0 60px #22c55e44!important;animation:correctGlow 1.2s ease-in-out infinite!important}
-    .answer-btn.no{background:linear-gradient(145deg,#7f1d1d,#991e1e)!important;border:3px solid #ef4444!important;box-shadow:0 0 25px #ef444488!important;animation:wrongShake .4s ease!important}
-    .answer-btn.dim{opacity:.28;filter:saturate(.3);animation:none!important}
-    .answer-btn.selected{border:3px solid white!important;box-shadow:0 0 20px rgba(255,255,255,0.45),0 0 40px rgba(255,255,255,0.2)!important;transform:scale(1.03);animation:selectedPulse 1.5s ease-in-out infinite!important}
-    @keyframes selectedPulse{0%,100%{box-shadow:0 0 20px rgba(255,255,255,0.45),0 0 40px rgba(255,255,255,0.2)}50%{box-shadow:0 0 30px rgba(255,255,255,0.65),0 0 60px rgba(255,255,255,0.3)}}
-    .answer-btn.dim-wait{opacity:.35;animation:none!important}
-    .answer-sent{font-size:.8rem;color:#4ade80;text-align:center;margin-top:4px;font-weight:600;animation:fadeIn .3s ease}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes correctGlow{0%,100%{box-shadow:0 0 25px #22c55e88,0 0 50px #22c55e44}50%{box-shadow:0 0 35px #22c55eaa,0 0 70px #22c55e66}}
-    @keyframes wrongShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+    /* États des cartes réponses */
+    .ans.dim{opacity:.25;filter:saturate(.4);animation:none}
+    .ans.selected{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.45),0 0 22px #fff,0 0 42px var(--ac),inset 0 0 22px color-mix(in srgb,var(--ac) 40%,transparent);transform:scale(1.03);animation:selPulse 1.4s ease-in-out infinite}
+    @keyframes selPulse{0%,100%{box-shadow:0 0 0 3px rgba(255,255,255,.4),0 0 22px #fff,0 0 42px var(--ac)}50%{box-shadow:0 0 0 4px rgba(255,255,255,.6),0 0 32px #fff,0 0 62px var(--ac)}}
+    .ans.ok{border-color:#4aff7a;box-shadow:0 0 0 2px rgba(255,255,255,.2),0 0 26px #4aff7a,0 0 50px rgba(74,255,122,.5),inset 0 0 26px rgba(74,255,122,.2);animation:okGlow 1s ease-in-out infinite}
+    @keyframes okGlow{0%,100%{transform:scale(1);filter:brightness(1.05)}50%{transform:scale(1.04);filter:brightness(1.25)}}
+    .ans.no{border-color:#ff5470;animation:noShake .35s ease}
+    @keyframes noShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+    .ans-badge-ok,.ans-badge-no{position:absolute;top:8px;right:10px;font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:.04em;padding:3px 8px;border-radius:8px;line-height:1;z-index:2}
+    .ans-badge-ok{color:#062c12;background:#4aff7a;box-shadow:0 0 12px #4aff7a}
+    .ans-badge-no{color:#fff;background:#ff5470;box-shadow:0 0 12px #ff5470}
+
+    /* Bandeau "réponse envoyée" */
+    .answer-sent{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);padding:10px 22px;border-radius:999px;background:rgba(10,40,20,.85);border:2px solid #4aff7a;box-shadow:0 0 18px rgba(74,255,122,.6),inset 0 0 14px rgba(74,255,122,.2);font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:.08em;color:#4aff7a;text-shadow:0 0 8px #4aff7a;white-space:nowrap;z-index:30;animation:fadeIn .3s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
     #state-buzzed-out{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
     .buzzed-out-icon{width:90px;height:90px;border-radius:50%;background:#7f1d1d;border:3px solid #ef4444;display:flex;align-items:center;justify-content:center;font-size:2.8rem;color:#ef4444;animation:buzzOutAppear .5s cubic-bezier(.36,.07,.19,.97) both}
     @keyframes buzzOutAppear{0%{transform:scale(0.3) rotate(-10deg);opacity:0}60%{transform:scale(1.15) rotate(3deg)}100%{transform:scale(1) rotate(0);opacity:1}}
@@ -837,14 +845,15 @@ function renderState(room, gs) {
       if (!q) return;
       const myAnsP = (gs.answers||{})[ME];
       const labels = ['A','B','C','D'];
-      const colors = ['c0','c1','c2','c3'];
       G('answer-grid').style.gridTemplateColumns = '1fr 1fr';
+      G('answer-grid').style.gridTemplateRows = 'auto 1fr 1fr';
       G('answer-grid').innerHTML = patInfo + q.a.map((ans, i) => {
-        let cls = colors[i];
         const canClick = myAnsP === undefined;
-        return `<button class="answer-btn ${cls}" ${canClick ? `onclick="actAnswer(${i})"` : 'disabled'}>
-          <span class="answer-letter">${labels[i]}</span>
-          <span class="answer-text">${ans}</span>
+        const state = (myAnsP !== undefined && i === myAnsP.ansIdx) ? 'selected' : '';
+        return `<button class="ans ans-${labels[i]} ${state}" ${canClick ? `onclick="actAnswer(${i})"` : 'disabled'}>
+          ${ansSparkles()}
+          <span class="ans-lbl">${labels[i]}</span>
+          <span class="ans-text">${ans}</span>
         </button>`;
       }).join('');
     } else {
@@ -885,6 +894,20 @@ function renderState(room, gs) {
   G('buzz-hint').textContent = 'Sois le premier à buzzer !';
 }
 
+// Étincelles décoratives à l'intérieur d'une carte réponse
+function ansSparkles(n) {
+  let out = '';
+  for (let i = 0; i < (n || 5); i++) {
+    const left = (10 + Math.random()*80).toFixed(1);
+    const top  = (8 + Math.random()*84).toFixed(1);
+    const size = (6 + Math.random()*10).toFixed(1);
+    const delay = (Math.random()*3).toFixed(2);
+    const glyph = Math.random() > .5 ? '✦' : '·';
+    out += `<span class="ans-spark" style="left:${left}%;top:${top}%;font-size:${size}px;animation-delay:${delay}s">${glyph}</span>`;
+  }
+  return out;
+}
+
 function renderAnswers(gs, q) {
   showState('state-answers');
   // Nettoyer les indicateurs de la question précédente
@@ -893,19 +916,31 @@ function renderAnswers(gs, q) {
   const oldReveal = document.querySelector('.reveal-msg');
   if (oldReveal) oldReveal.remove();
   G('answer-grid').style.gridTemplateColumns = '1fr 1fr';
+  G('answer-grid').style.gridTemplateRows = '1fr 1fr';
   if (!q) return;
   const myAns = (gs.answers||{})[ME];
   const labels = ['A','B','C','D'];
-  const colors = ['c0','c1','c2','c3'];
   G('answer-grid').innerHTML = q.a.map((ans, i) => {
-    let cls = colors[i];
-    if (gs.revealed) { if(i===q.c) cls+=' ok'; else if(i===myAns?.ansIdx) cls+=' no'; else cls+=' dim'; }
+    let state = '';
+    if (gs.revealed) {
+      if (i === q.c) state = 'ok';
+      else if (i === myAns?.ansIdx) state = 'no';
+      else state = 'dim';
+    } else if (myAns !== undefined && i === myAns.ansIdx) {
+      state = 'selected';
+    }
     const canClick = !gs.revealed && myAns === undefined;
-    return `<button class="answer-btn ${cls}" ${canClick ? `onclick="actAnswer(${i})"` : 'disabled'}>
-      <span class="answer-letter">${labels[i]}</span>
-      <span class="answer-text">${ans}</span>
+    const badge = state === 'ok' ? '<span class="ans-badge-ok">✓ BONNE</span>'
+                : state === 'no' ? '<span class="ans-badge-no">✗ FAUX</span>' : '';
+    return `<button class="ans ans-${labels[i]} ${state}" ${canClick ? `onclick="actAnswer(${i})"` : 'disabled'}>
+      ${ansSparkles()}${badge}
+      <span class="ans-lbl">${labels[i]}</span>
+      <span class="ans-text">${ans}</span>
     </button>`;
   }).join('');
+  if (myAns !== undefined && !gs.revealed) {
+    G('answer-grid').insertAdjacentHTML('afterend', '<div class="answer-sent">RÉPONSE ENVOYÉE ✓</div>');
+  }
 }
 
 function renderResult(gs, q) {
@@ -1090,16 +1125,14 @@ async function actBuzz() {
 
 async function actAnswer(ansIdx) {
   // Feedback visuel immédiat côté client
-  const btns = document.querySelectorAll('#answer-grid > .answer-btn');
+  const btns = document.querySelectorAll('#answer-grid > .ans');
   btns.forEach((btn, i) => {
     if (i === ansIdx) btn.classList.add('selected');
-    else btn.classList.add('dim-wait');
     btn.disabled = true;
     btn.removeAttribute('onclick');
   });
-  const grid = G('answer-grid');
-  if (!grid.querySelector('.answer-sent')) {
-    grid.insertAdjacentHTML('afterend', '<p class="answer-sent">Réponse envoyée ✓</p>');
+  if (!document.querySelector('.answer-sent')) {
+    G('answer-grid').insertAdjacentHTML('afterend', '<div class="answer-sent">RÉPONSE ENVOYÉE ✓</div>');
   }
   // Puis envoi Firebase
   const gs = await fg(`rooms/${CODE}/gameState`);
