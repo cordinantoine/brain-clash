@@ -46,13 +46,18 @@
     .game-body{flex:1;width:100%;display:flex;flex-direction:column;overflow:hidden;position:relative}
     .game-body::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% 30%,var(--accent-glow) 0%,transparent 70%);opacity:.3;pointer-events:none;animation:bgPulse 4s ease-in-out infinite}
     @keyframes bgPulse{0%,100%{opacity:.2}50%{opacity:.4}}
-    #state-buzz{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:16px}
-    .buzz-btn{width:min(200px,55vw);height:min(200px,55vw);border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px;transition:transform .1s}
-    .buzz-btn:active{transform:scale(0.94)}
-    .buzz-btn-inner{width:100%;height:100%;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:4px}
-    .buzz-label{font-family:'Bebas Neue',sans-serif;font-size:2.2rem;letter-spacing:.1em;color:white}
-    .buzz-sublabel{font-size:.65rem;color:rgba(255,255,255,.6);letter-spacing:.1em;text-transform:uppercase}
-    .buzz-hint{font-size:.72rem;color:#2a3a55;text-align:center;max-width:220px;line-height:1.5}
+    /* ── Écran Buzzer — cockpit néon ── */
+    #state-buzz{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:12px 22px 30px}
+    .buzz-q{font-family:'Fredoka',sans-serif;font-weight:700;font-size:clamp(1.05rem,5vw,1.4rem);line-height:1.2;color:#fff;text-align:center;text-shadow:0 0 14px rgba(192,80,255,.5);text-wrap:balance;max-width:320px}
+    .buzz-btn{width:min(220px,55vw);height:min(220px,55vw);border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,#ff4fa2 50%,#8a1656 100%);border:6px solid #fff;box-shadow:0 0 0 2px rgba(255,255,255,.3),0 0 30px #ff4fa2,0 0 70px rgba(255,79,162,.6);display:flex;align-items:center;justify-content:center;flex-direction:column;cursor:pointer;color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.4);animation:buzzBtnPulse 1.4s ease-in-out infinite;transition:transform .1s}
+    .buzz-btn:active{transform:scale(.94)}
+    .buzz-label{font-family:'Russo One',sans-serif;font-size:clamp(2rem,9vw,2.8rem);letter-spacing:.04em;line-height:1;color:#fff}
+    .buzz-sublabel{font-family:'Russo One',sans-serif;font-size:clamp(.75rem,3vw,.95rem);letter-spacing:.18em;margin-top:4px;color:rgba(255,255,255,.9);text-transform:uppercase}
+    @keyframes buzzBtnPulse{
+      0%,100%{box-shadow:0 0 0 2px rgba(255,255,255,.3),0 0 30px #ff4fa2,0 0 70px rgba(255,79,162,.5);transform:scale(1)}
+      50%{box-shadow:0 0 0 3px rgba(255,255,255,.6),0 0 46px #ff4fa2,0 0 100px rgba(255,79,162,.85);transform:scale(1.04)}
+    }
+    .buzz-hint{font-family:'Fredoka',sans-serif;font-weight:500;font-size:clamp(.78rem,3.2vw,.95rem);color:rgba(255,255,255,.55);letter-spacing:.04em;text-align:center;max-width:240px;line-height:1.45}
 
     /* ── Zone réponses : remplit l'espace disponible sous la bande de scores ── */
     #state-answers{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;padding:14px 12px 22px}
@@ -188,13 +193,12 @@
   <div class="scores-strip" id="scores-strip"></div>
   <div class="game-body">
     <div id="state-buzz" style="display:none">
+      <div class="buzz-q" id="buzz-q"></div>
       <button class="buzz-btn" id="buzz-btn">
-        <div class="buzz-btn-inner" id="buzz-inner">
-          <span class="buzz-label">BUZZER</span>
-          <span class="buzz-sublabel">Appuie !</span>
-        </div>
+        <span class="buzz-label">BUZZ</span>
+        <span class="buzz-sublabel">Appuie !</span>
       </button>
-      <p class="buzz-hint" id="buzz-hint">Sois le premier à buzzer !</p>
+      <p class="buzz-hint" id="buzz-hint">Sois le premier à dégainer 🔫</p>
     </div>
     <div id="state-answers" style="display:none">
       <div class="answer-grid" id="answer-grid"></div>
@@ -886,12 +890,9 @@ function renderState(room, gs) {
 
   // Afficher le bouton BUZZER (only for buzzer round now)
   showState('state-buzz');
-  const idx = players.indexOf(ME);
-  const color = COLORS[idx % 8];
-  G('buzz-inner').style.background = color;
-  G('buzz-inner').style.borderRadius = '50%';
+  G('buzz-q').textContent = q ? q.q : '';
   G('buzz-btn').onclick = actBuzz;
-  G('buzz-hint').textContent = 'Sois le premier à buzzer !';
+  G('buzz-hint').textContent = 'Sois le premier à dégainer 🔫';
 }
 
 // Étincelles décoratives à l'intérieur d'une carte réponse
