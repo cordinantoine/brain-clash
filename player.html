@@ -149,8 +149,14 @@
     .result-pts.good{color:#4ade80}
     .result-pts.bad{color:#f87171}
     /* ── Écran Scores (3f) — cockpit néon ── */
-    #state-scoreboard{flex:1;min-height:0;display:flex;flex-direction:column;overflow-y:auto}
+    /* Mode "solo" : on masque le header + bandeau d'avatars pour un classement immersif */
+    #screen-game.sb-mode .game-header,
+    #screen-game.sb-mode .scores-strip{display:none}
+    #screen-game.sb-mode .game-body{background:radial-gradient(ellipse at 50% 0%,#1c0a3a 0%,#0a0418 55%,#050010 100%)}
+    #screen-game.sb-mode .game-body::before{opacity:.5}
+    #state-scoreboard{flex:1;min-height:0;display:flex;flex-direction:column;overflow-y:auto;position:relative;z-index:2}
     .ph-scoreboard{flex:1;min-height:0;display:flex;flex-direction:column;padding:4px 14px 22px;gap:14px}
+    .ph-scoreboard.solo{padding-top:28px;justify-content:flex-start}
     .ph-scoreboard-title{font-family:'Russo One',sans-serif;font-size:1.85rem;letter-spacing:.14em;color:#b96dff;text-align:center;text-shadow:0 0 14px #b96dff,0 0 26px rgba(185,109,255,.6),0 3px 0 #1a0532;margin-top:6px}
     .ph-scoreboard-sub{font-family:'Fredoka',sans-serif;font-weight:500;font-size:.7rem;letter-spacing:.28em;color:rgba(255,255,255,.45);text-transform:uppercase;text-align:center;margin-top:-8px;margin-bottom:4px}
     .ph-rank-list{display:flex;flex-direction:column;gap:10px}
@@ -172,6 +178,9 @@
     .ph-rank-gain{font-family:'Russo One',sans-serif;font-size:.7rem;letter-spacing:.04em;color:#4aff7a;text-shadow:0 0 8px rgba(74,255,122,.7);line-height:1}
     .ph-rank-gain.zero{color:rgba(255,255,255,.35);text-shadow:none}
     .ph-rank-gain.neg{color:#ff5470;text-shadow:0 0 8px rgba(255,84,112,.7)}
+    .ph-rank-spark{position:absolute;color:#fff;opacity:.45;text-shadow:0 0 6px #fff,0 0 14px var(--rc,#b96dff);animation:ansTwink 3.2s ease-in-out infinite;pointer-events:none;font-size:.75rem;line-height:1}
+    @keyframes ansTwink{0%,100%{opacity:.25;transform:scale(1)}50%{opacity:.85;transform:scale(1.3)}}
+    @keyframes ansBreathe{0%,100%{filter:brightness(1)}50%{filter:brightness(1.12)}}
     .ph-scoreboard-next{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:14px;background:rgba(75,224,255,.08);border:1.5px solid rgba(75,224,255,.5);box-shadow:0 0 14px rgba(75,224,255,.3),inset 0 0 10px rgba(75,224,255,.12);font-family:'Russo One',sans-serif;font-size:.78rem;letter-spacing:.18em;color:#4be0ff;text-shadow:0 0 8px #4be0ff;animation:pulseFade 2s ease-in-out infinite}
     .ph-scoreboard-next .dot-pulse{width:8px;height:8px;border-radius:50%;background:#4be0ff;box-shadow:0 0 10px #4be0ff;animation:dotPulse 1.2s ease-in-out infinite}
     @keyframes pulseFade{0%,100%{opacity:.55}50%{opacity:1}}
@@ -265,7 +274,7 @@
       <p class="result-msg" id="result-msg"></p>
     </div>
     <div id="state-scoreboard" style="display:none">
-      <div class="ph-scoreboard">
+      <div class="ph-scoreboard solo">
         <div class="ph-scoreboard-title">CLASSEMENT</div>
         <div class="ph-scoreboard-sub" id="scoreboard-sub"></div>
         <div class="ph-rank-list" id="scoreboard-list"></div>
@@ -442,6 +451,8 @@ function showState(id) {
   ['state-buzz','state-answers','state-waiting','state-result','state-scoreboard','state-final','state-buzzed-out']
     .forEach(s => G(s).style.display = 'none');
   G(id).style.display = 'flex';
+  const sg = G('screen-game');
+  if (sg) sg.classList.toggle('sb-mode', id === 'state-scoreboard');
 }
 
 function setAccent(theme) {
@@ -1142,6 +1153,9 @@ function renderScoreboard(room, gs) {
     const medal = rank < 3
       ? `<div class="ph-rank-medal"><div class="ph-rank-ribbon"></div><div class="ph-rank-disc">${rank+1}</div></div>`
       : `<div class="ph-rank-medal"><div class="ph-rank-disc">${rank+1}</div></div>`;
+    const sparks = isMe
+      ? `<span class="ph-rank-spark" style="top:8px;right:96px">✦</span><span class="ph-rank-spark" style="bottom:10px;right:110px;animation-delay:1.2s">✧</span>`
+      : '';
     return `
       <div class="ph-rank ${rClass} ${isMe ? 'me' : ''}" style="--pc:${av.bg};--avb:${av.bg}">
         ${medal}
@@ -1150,6 +1164,7 @@ function renderScoreboard(room, gs) {
         <div class="ph-rank-delta">
           <div class="ph-rank-val">${p.score}</div>
         </div>
+        ${sparks}
       </div>
     `;
   }).join('');
