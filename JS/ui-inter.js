@@ -5,14 +5,22 @@
    6 variantes : une par type de round.
    ════════════════════════════════════════════ */
 
+// Mémorise le dernier son joué pour éviter de le rejouer lors d'une transition
+// (ex : carton picking → hit garde le même scorer, même question)
+let _lastSoundKey = '';
+
 function drawQuestionResult(room, gs) {
   // Annuler le RAF timer
   if (_timerRafId) { cancelAnimationFrame(_timerRafId); _timerRafId = null; }
 
-  // Sons
+  // Sons (dédupliqués par roundIdx/qIdx/scorer/pts)
   if (gs.result) {
-    const good = gs.result.scorer && (gs.result.pts || 0) >= 0;
-    good ? SFX.correct() : SFX.wrong();
+    const soundKey = `${gs.roundIdx}-${gs.qIdx}-${gs.result.scorer||''}-${gs.result.pts||0}`;
+    if (soundKey !== _lastSoundKey) {
+      _lastSoundKey = soundKey;
+      const good = gs.result.scorer && (gs.result.pts || 0) >= 0;
+      good ? SFX.correct() : SFX.wrong();
+    }
   }
 
   const rType = room.rounds[gs.roundIdx];
@@ -269,7 +277,8 @@ function interCarton(room, gs) {
   const msg = gs.result?.msg || '';
   const q = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
 
-  // Détermine le scénario à partir du message
+  // Détermine le scénario
+  // - picking   : pickTarget=true → le tireur choisit sa cible sur son téléphone
   // - hit       : "🎯 X crève (un ballon|le dernier ballon) de Y !"
   // - self      : "❌ X perd (un ballon|son dernier ballon) !"
   // - good      : "✅ X a bon !"          (bonne réponse, pas de cible disponible)
@@ -280,7 +289,8 @@ function interCarton(room, gs) {
   let mSelf = msg.match(/❌\s+(.+?)\s+perd\s+(?:un ballon|son dernier ballon)/);
   let mGood = msg.match(/✅\s+(.+?)\s+a bon/);
   let mWin  = msg.match(/🏆\s+(.+?)\s+est le dernier debout/);
-  if (mHit)        { shooter = mHit[1];  victim = mHit[2];  kind = 'hit'; }
+  if (gs.pickTarget && gs.buzzed) { shooter = gs.buzzed; kind = 'picking'; }
+  else if (mHit)        { shooter = mHit[1];  victim = mHit[2];  kind = 'hit'; }
   else if (mSelf)  { shooter = mSelf[1]; victim = mSelf[1]; kind = 'self'; }
   else if (mGood)  { shooter = mGood[1]; kind = 'good'; }
   else if (mWin)   { shooter = mWin[1];  kind = 'survivor'; }
@@ -297,7 +307,10 @@ function interCarton(room, gs) {
   let kicker, headlineText;
   const shooterC = shooter ? avFor(shooter).bg : '#4ad8ff';
   const victimC  = victim  ? avFor(victim).bg  : '#ff4fa2';
-  if (kind === 'hit') {
+  if (kind === 'picking') {
+    kicker = '🎯 EN JOUE…';
+    headlineText = `<span class="cinte-who shooter">${shooter}</span> vise sa cible <span class="cinte-pop">🎯</span>`;
+  } else if (kind === 'hit') {
     kicker = '🎯 TIR RÉUSSI';
     headlineText = `<span class="cinte-who shooter">${shooter}</span> crève un ballon de <span class="cinte-who victim">${victim}</span> <span class="cinte-pop">💥</span>`;
   } else if (kind === 'self') {
@@ -330,6 +343,7 @@ function interCarton(room, gs) {
     const isShooter = (p === shooter) && kind !== 'self' && kind !== 'survivor';
     const isVictim  = (p === victim)  && (kind === 'hit' || kind === 'self');
     const isDead = (roundElim.includes(p) || b <= 0) && !isVictim;
+    const isPickable = (kind === 'picking') && !isShooter && !isDead;
     // Pour la victime : on affiche aussi le ballon qui explose (b + 1)
     const totalBalloons = isVictim ? b + 1 : b;
 
@@ -348,7 +362,9 @@ function interCarton(room, gs) {
       : `<span class="cinte-bcount dead">💀 éliminé(e)</span>`;
 
     let badge = '';
-    if (isShooter && kind === 'hit') badge = `<div class="cinte-tag shooter">▶ TIREUR</div>`;
+    if (isShooter && kind === 'picking') badge = `<div class="cinte-tag shooter">🎯 TIREUR</div>`;
+    else if (isPickable) badge = `<div class="cinte-tag pickable"><span class="cinte-tag-dot"></span> CIBLE ?</div>`;
+    else if (isShooter && kind === 'hit') badge = `<div class="cinte-tag shooter">▶ TIREUR</div>`;
     else if (isShooter && kind === 'good') badge = `<div class="cinte-tag shooter">▶ TIREUR</div>`;
     else if (isShooter && kind === 'survivor') badge = `<div class="cinte-tag victim">🏆 SURVIVANT</div>`;
     else if (isVictim) badge = `<div class="cinte-tag victim">⚠ -1 BALLON</div>`;
@@ -358,6 +374,7 @@ function interCarton(room, gs) {
       'cinte-target',
       isVictim ? 'hit' : '',
       isShooter ? 'is-shooter' : '',
+      isPickable ? 'is-pickable' : '',
       isDead ? 'dead' : ''
     ].filter(Boolean).join(' ');
 

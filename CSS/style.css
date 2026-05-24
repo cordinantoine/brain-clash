@@ -1403,6 +1403,24 @@ input::placeholder { color:rgba(255,255,255,.3) }
     inset 0 0 22px rgba(255,138,58,.22);
   animation: cinteHitFlash 1.1s ease-in-out infinite;
 }
+.cinte-target.is-pickable {
+  border-color:#ffde3a;
+  box-shadow:
+    0 0 0 1.5px rgba(255,222,58,.32),
+    0 0 18px #ffde3a,
+    0 0 38px rgba(255,138,58,.45),
+    inset 0 0 22px rgba(255,222,58,.16);
+  animation: cintePickPulse 1.4s ease-in-out infinite;
+  cursor:default;
+}
+@keyframes cintePickPulse {
+  0%,100% { filter:brightness(.95); transform:translateX(0) }
+  50%     { filter:brightness(1.15); transform:translateX(2px) }
+}
+.cinte-target.is-pickable .cinte-name {
+  text-shadow:0 0 12px #ffde3a, 0 0 22px #ff8a3a, 0 2px 4px rgba(0,0,0,.6);
+}
+
 .cinte-target.dead {
   opacity:.4; filter: saturate(.3) grayscale(.4);
 }
@@ -1426,6 +1444,18 @@ input::placeholder { color:rgba(255,255,255,.3) }
   color:#1a0a01;
   box-shadow:0 0 14px #ffde3a, 0 0 26px #ff8a3a;
   animation: cinteLockBlink .6s steps(2) infinite;
+}
+.cinte-tag.pickable {
+  background: rgba(255,222,58,.16);
+  border:1.5px solid #ffde3a;
+  color:#ffde3a;
+  box-shadow:0 0 12px rgba(255,222,58,.55);
+  text-shadow:0 0 6px #ffde3a;
+  animation: cinteLockBlink 1s steps(2) infinite;
+}
+.cinte-tag-dot {
+  display:inline-block; width:7px; height:7px; border-radius:50%;
+  background:#ffde3a; box-shadow:0 0 6px #ffde3a;
 }
 .cinte-tag.dead {
   background:#4a0820; color:#ff5470;

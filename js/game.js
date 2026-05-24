@@ -571,7 +571,9 @@ function Watch(initialRoom) {
     if (gs.buzzed&&gs.buzzed!==ME) I_BUZZED=false;
     if (gs.revealed) I_BUZZED=false;
     lastPhase=key;
+    const _rTypeNow = room.rounds?.[gs.roundIdx];
     if      (gs.phase==="roundIntro")       drawIntro(room,gs);
+    else if (gs.phase==="question" && _rTypeNow==="carton" && gs.pickTarget) drawQuestionResult(room,gs);
     else if (gs.phase==="question")         drawQ_host(room,gs);
     else if (gs.phase==="questionResult")   drawQuestionResult(room,gs);
     else if (gs.phase==="patateExplosion")  drawQuestionResult(room,gs);
