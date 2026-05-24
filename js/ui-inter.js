@@ -69,7 +69,7 @@ function _interLayout(room, gs, contentHtml) {
   </div>`);
 }
 
-// ── QCM : style Buzzer adapté multi-gagnants ──
+// ── QCM : Reveal "Bonne réponse" — design néon vert/rouge ──
 function interQCM(room, gs) {
   const q = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
   if (!q) { drawScore(room, gs, false); return; }
@@ -78,50 +78,78 @@ function interQCM(room, gs) {
   const _rp = toArr(room.players);
   const correct = gs.players.filter(p => ans[p] !== undefined && ans[p].ansIdx === q.c);
   const pts = gs.result?.pts ?? Math.round(50 * gs.players.length * 0.5);
+  const hasWinners = correct.length > 0;
+  const answerLetter = String.fromCharCode(65 + q.c);
 
-  let content;
+  // Headline (bonne/mauvaise réponse)
+  const headline = `
+    <div class="qint-headline ${hasWinners ? '' : 'bad'}">
+      <div class="qint-emblem">${hasWinners ? '✓' : '✗'}</div>
+      <div class="qint-headline-body">
+        <div class="qint-kicker">${hasWinners ? '🎯 BONNE RÉPONSE' : '❌ MAUVAISE RÉPONSE'}</div>
+        <div class="qint-headline-text">
+          <span class="qint-ans-letter">${answerLetter}</span>
+          <span class="qint-answer">${q.a[q.c]}</span>
+        </div>
+      </div>
+    </div>
+  `;
 
-  if (correct.length === 0) {
-    content = `
-      <div style="font-size:5rem;animation:floatY 2s ease-in-out infinite">❌</div>
-      <div style="font-size:2rem;font-weight:800;color:#fca5a5;text-align:center;animation:sUp .35s ease both">Personne n'a trouvé !</div>
-      ${q ? `<div style="padding:10px 18px;border-radius:12px;background:rgba(255,255,255,.07);font-size:.88rem;text-align:center">Bonne réponse : <strong style="color:#86efac">${q.a[q.c]}</strong>${q.f ? ` — 💡 ${q.f}` : ''}</div>` : ''}
-    `;
-  } else if (correct.length === 1) {
-    const p = correct[0];
-    const idx = gs.players.indexOf(p);
-    const rp = _rp.find(x => x.name === p);
-    const av = AVATARS[(rp&&rp.avatar!==undefined)?rp.avatar:(idx%AVATARS.length)]||AVATARS[0];
-    content = `
-      <div style="animation:popIn .5s cubic-bezier(.36,.07,.19,.97) both">
-        <img src="${AVATAR_PATH}${av.file}" style="width:160px;height:160px;border-radius:50%;object-fit:cover;object-position:center top;border:5px solid ${av.bg};box-shadow:0 0 40px ${av.bg}99,0 0 80px ${av.bg}44" alt="">
+  // Winners or no-winners block
+  let winnersBlock;
+  if (!hasWinners) {
+    winnersBlock = `
+      <div class="qint-winners bad">
+        <div class="qint-rays"></div>
+        <div class="qint-winners-title bad">PERSONNE N'A TROUVÉ</div>
+        <div class="qint-no-winners">
+          <div class="qint-no-winners-icon">✗</div>
+          <div class="qint-no-winners-text">Aucun point distribué</div>
+          <div class="qint-no-winners-sub">La prochaine sera la bonne 💪</div>
+        </div>
       </div>
-      <div style="text-align:center;animation:sUp .35s ease both">
-        <div style="font-size:2rem;font-weight:900;color:white">${p}</div>
-        <div style="font-size:3rem;font-weight:900;color:#4ade80;text-shadow:0 0 20px #22c55e">+${pts} pts</div>
-      </div>
-      ${q ? `<div style="padding:10px 18px;border-radius:12px;background:rgba(255,255,255,.07);font-size:.82rem;color:rgba(255,255,255,.65);text-align:center">Bonne réponse : <strong style="color:#86efac">${q.a[q.c]}</strong>${q.f ? ` — 💡 ${q.f}` : ''}</div>` : ''}
     `;
   } else {
-    const size = correct.length <= 3 ? 110 : 72;
-    const avatarsHtml = correct.map((p, i) => {
+    const sizeCls = correct.length <= 3 ? 'lg' : (correct.length <= 5 ? 'md' : 'sm');
+    const cards = correct.map((p, i) => {
       const idx = gs.players.indexOf(p);
       const rp = _rp.find(x => x.name === p);
       const av = AVATARS[(rp&&rp.avatar!==undefined)?rp.avatar:(idx%AVATARS.length)]||AVATARS[0];
-      return `<div style="text-align:center;animation:popIn .5s cubic-bezier(.36,.07,.19,.97) ${i*.08}s both">
-        <img src="${AVATAR_PATH}${av.file}" style="width:${size}px;height:${size}px;border-radius:50%;object-fit:cover;object-position:center top;border:4px solid ${av.bg};box-shadow:0 0 28px ${av.bg}88" alt="">
-        <div style="font-size:${correct.length<=3?'.9rem':'.75rem'};font-weight:700;margin-top:6px;max-width:${size+10}px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p}</div>
-        ${correct.length<=3?`<div style="font-size:1.2rem;font-weight:900;color:#4ade80">+${pts}</div>`:''}
+      return `<div class="qint-winner-card ${sizeCls}" style="--pc:${av.bg};animation-delay:${i*.08}s">
+        <div class="qint-disc-wrap">
+          <div class="qint-disc"><img src="${AVATAR_PATH}${av.file}" alt=""></div>
+          <div class="qint-gain">+${pts}</div>
+        </div>
+        <div class="qint-winner-name">${p}</div>
       </div>`;
     }).join('');
-    content = `
-      ${correct.length >= 4 ? `<div style="font-size:1.8rem;font-weight:900;color:#4ade80;text-shadow:0 0 20px #22c55e;text-align:center;animation:sUp .3s ease both">+${pts} pts chacun !</div>` : ''}
-      <div style="display:flex;gap:${correct.length<=3?24:12}px;justify-content:center;flex-wrap:wrap;align-items:flex-end">${avatarsHtml}</div>
-      ${q ? `<div style="padding:10px 18px;border-radius:12px;background:rgba(255,255,255,.07);font-size:.82rem;color:rgba(255,255,255,.65);text-align:center">Bonne réponse : <strong style="color:#86efac">${q.a[q.c]}</strong>${q.f ? ` — 💡 ${q.f}` : ''}</div>` : ''}
+    const title = correct.length > 1 ? "ONT TROUVÉ LA BONNE RÉPONSE" : "A TROUVÉ LA BONNE RÉPONSE";
+    winnersBlock = `
+      <div class="qint-winners">
+        <div class="qint-rays"></div>
+        <div class="qint-winners-title">${title}</div>
+        <div class="qint-winners-row">${cards}</div>
+        <span class="qint-confetti" style="left:6%;top:18%;animation-delay:0s">✦</span>
+        <span class="qint-confetti" style="right:8%;top:22%;animation-delay:.6s">✦</span>
+        <span class="qint-confetti" style="left:14%;bottom:14%;animation-delay:.3s">✧</span>
+        <span class="qint-confetti" style="right:12%;bottom:18%;animation-delay:.9s">✦</span>
+        <span class="qint-confetti" style="left:48%;top:6%;font-size:1.1rem;animation-delay:.45s">✧</span>
+      </div>
     `;
   }
 
-  _interLayout(room, gs, content);
+  // Fun fact (anecdote)
+  const funfactBlock = q.f ? `
+    <div class="qint-funfact">
+      <div class="qint-funfact-icon">💡</div>
+      <div class="qint-funfact-body">
+        <div class="qint-funfact-kicker">LE SAVIEZ-VOUS ?</div>
+        <div class="qint-funfact-text">${q.f}</div>
+      </div>
+    </div>
+  ` : '';
+
+  _interLayout(room, gs, `<div class="qint-wrap">${headline}${winnersBlock}${funfactBlock}</div>`);
 }
 
 // ── Buzzer : avatar vainqueur ou timeout ──
