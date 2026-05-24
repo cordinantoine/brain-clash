@@ -588,7 +588,7 @@ function setAccent(theme) {
 function buildAvatarGrid() {
   G('avatar-grid-pick').innerHTML = AVATARS.map((av, i) =>
     `<div class="avatar-opt ${i===0?'selected':''}" id="av-opt-${i}" onclick="selectAvatar(${i})" style="background:${av.bg}">
-      <img src="JS/assets/avatars/${av.file}" alt="avatar ${i+1}" loading="lazy">
+      <img src="js/assets/avatars/${av.file}" alt="avatar ${i+1}" loading="lazy">
     </div>`
   ).join('');
 }
@@ -775,7 +775,7 @@ function renderLobbyPlayers(players) {
     const isMe = p.name === ME;
     return `
       <div class="lobby-player-row">
-        <img class="lobby-av" src="JS/assets/avatars/${av.file}" alt="" style="background:${av.bg};border:2px solid ${av.bg}">
+        <img class="lobby-av" src="js/assets/avatars/${av.file}" alt="" style="background:${av.bg};border:2px solid ${av.bg}">
         <span style="font-size:.9rem;font-weight:${isMe?700:400};color:${isMe?'#e8edf5':'#8a9ab5'}">${p.name}${isMe?' (toi)':''}</span>
       </div>
     `;
@@ -869,7 +869,7 @@ function updateScores(room, gs) {
     const gain = gains ? gains[i] : 0;
     return `
       <div class="score-pill ${isMe ? 'me' : ''}" style="${colorStyle}">
-        <img class="score-pill-avatar" src="JS/assets/avatars/${av.file}" alt="" style="border:2px solid ${av.bg}">
+        <img class="score-pill-avatar" src="js/assets/avatars/${av.file}" alt="" style="border:2px solid ${av.bg}">
         <span class="score-pill-name">${isMe ? 'Toi' : p}</span>
         <span class="score-pill-val">${gs.scores[i] || 0}</span>
         ${gain > 0 ? `<span class="score-pill-gain">+${gain}</span>` : ''}
@@ -1386,7 +1386,7 @@ function renderScoreboard(room, gs) {
     return `
       <div class="ph-rank ${rClass} ${isMe ? 'me' : ''}" style="--pc:${av.bg};--avb:${av.bg}">
         ${medal}
-        <div class="ph-rank-av"><img src="JS/assets/avatars/${av.file}" alt=""></div>
+        <div class="ph-rank-av"><img src="js/assets/avatars/${av.file}" alt=""></div>
         <div class="ph-rank-name">${isMe ? 'Toi' : p.name}${isMe ? '<span class="me-tag">TOI</span>' : ''}</div>
         <div class="ph-rank-delta">
           <div class="ph-rank-val">${p.score}</div>
@@ -1442,7 +1442,7 @@ function renderPickTarget(room, gs) {
     }
     return `<div class="target ${dead?'dead':''}" data-name="${p}" style="--tc:${tc};--avb:${tc}" onclick="${dead?'':`selectPickTarget('${p}', this)`}">
       <div class="target-range"></div>
-      <div class="target-av"><img src="JS/assets/avatars/${av.file}" alt=""></div>
+      <div class="target-av"><img src="js/assets/avatars/${av.file}" alt=""></div>
       <div class="target-body">
         <div class="target-name">${p}</div>
         <div class="target-balloons">${info}</div>
@@ -1505,7 +1505,7 @@ function renderChronoRanking(gs) {
     return `
       <div class="ph-rank ${rClass} ${isMe ? 'me' : ''}" style="--pc:${av.bg};--avb:${av.bg}">
         ${medal}
-        <div class="ph-rank-av"><img src="JS/assets/avatars/${av.file}" alt=""></div>
+        <div class="ph-rank-av"><img src="js/assets/avatars/${av.file}" alt=""></div>
         <div class="ph-rank-name">${isMe ? 'Toi' : entry.name}${isMe ? '<span class="me-tag">TOI</span>' : ''}</div>
         <div class="ph-rank-delta">
           <div class="ph-rank-gain ${gainCls}">${ptsTxt}</div>

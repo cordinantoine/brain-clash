@@ -98,7 +98,7 @@ const AVATARS = [
 ];
 
 // Chemin relatif vers les avatars (depuis index.html)
-const AVATAR_PATH = 'JS/assets/avatars/';
+const AVATAR_PATH = 'js/assets/avatars/';
 
 // ── Labels des réponses ──
 const LB = ["A", "B", "C", "D"];
