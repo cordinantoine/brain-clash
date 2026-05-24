@@ -479,6 +479,7 @@ input::placeholder { color:rgba(255,255,255,.3) }
 .ha-stage {
   position: relative;
   width: 1920px; height: 1080px;
+  flex-shrink: 0;
   transform-origin: center center;
   font-family: 'Fredoka', sans-serif;
   color: #fff;
@@ -1238,3 +1239,262 @@ input::placeholder { color:rgba(255,255,255,.3) }
 }
 .ha-launch-btn:disabled:hover,
 .ha-launch-btn.is-disabled:hover { transform: none; }
+
+/* ════════════════════════════════════════════
+   Carton inter — "Tir à la carabine" 🎯
+   ════════════════════════════════════════════ */
+@keyframes cinteBalloonWobble { 0%,100%{transform:rotate(-3deg)} 50%{transform:rotate(3deg) translateY(-2px)} }
+@keyframes cinteBalloonPop    { 0%{transform:scale(1);opacity:1} 25%{transform:scale(1.55);opacity:1} 55%{transform:scale(.35) rotate(20deg);opacity:.55} 100%{transform:scale(.35) rotate(20deg);opacity:.25} }
+@keyframes cinteHitFlash      { 0%,100%{filter:brightness(1)} 50%{filter:brightness(1.18)} }
+@keyframes cinteLockBlink     { 0%,100%{opacity:1} 50%{opacity:.55} }
+@keyframes cinteBreathe       { 0%,100%{opacity:.6} 50%{opacity:1} }
+@keyframes cinteCrosshair     { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+.cinte-wrap {
+  width:100%; height:100%;
+  display:flex; flex-direction:column; gap:14px;
+  min-height:0;
+}
+
+/* ── Round chip top ── */
+.cinte-chip {
+  align-self:flex-end;
+  display:inline-flex; align-items:center; gap:10px;
+  padding:8px 16px; border-radius:12px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,138,58,.32) 0%, transparent 80%),
+    linear-gradient(180deg, rgba(255,58,58,.14) 0%, rgba(255,58,58,.02) 100%);
+  border:2px solid #ff3a3a;
+  box-shadow:
+    0 0 0 1px rgba(255,177,177,.4),
+    0 0 14px rgba(255,58,58,.55),
+    inset 0 0 16px rgba(110,30,30,.30);
+  font-size:.72rem; letter-spacing:.18em; font-weight:900; color:#fff;
+  text-shadow:0 0 8px #ff8a3a, 0 0 14px #ff3a3a, 0 1px 0 rgba(0,0,0,.4);
+}
+.cinte-crosshair {
+  width:18px; height:18px; border-radius:50%;
+  border:2px solid #ff3a3a;
+  box-shadow:0 0 7px #ff3a3a, inset 0 0 4px rgba(255,58,58,.5);
+  position:relative; flex-shrink:0;
+  animation: cinteCrosshair 4s linear infinite;
+}
+.cinte-crosshair::before, .cinte-crosshair::after {
+  content:''; position:absolute; background:#ff3a3a; box-shadow:0 0 5px #ff3a3a;
+}
+.cinte-crosshair::before { left:50%; top:-4px; bottom:-4px; width:1.5px; transform:translateX(-50%) }
+.cinte-crosshair::after  { top:50%; left:-4px; right:-4px; height:1.5px; transform:translateY(-50%) }
+
+/* ── Headline banner ── */
+.cinte-headline {
+  flex-shrink:0;
+  position:relative; overflow:hidden;
+  padding:14px 20px; border-radius:18px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,138,58,.32) 0%, transparent 75%),
+    linear-gradient(180deg, #1a0312 0%, #100210 100%);
+  border:2.5px solid #ff3a3a;
+  box-shadow:
+    0 0 0 1.5px rgba(255,177,177,.32),
+    0 0 22px rgba(255,58,58,.55),
+    0 0 44px rgba(255,138,58,.32),
+    inset 0 0 26px rgba(110,30,30,.28);
+  display:flex; align-items:center; gap:14px;
+  animation: sUp .35s ease both;
+}
+.cinte-headline::before {
+  content:''; position:absolute; inset:-15%;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(255,138,58,.22) 0%, transparent 25%),
+    radial-gradient(circle at 80% 50%, rgba(255,79,162,.18) 0%, transparent 25%);
+  animation: cinteBreathe 3s ease-in-out infinite;
+  pointer-events:none;
+}
+.cinte-emblem {
+  position:relative; width:56px; height:56px; flex-shrink:0; z-index:2;
+  border-radius:50%;
+  border:2.5px solid #ff3a3a;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(255,138,58,.4) 0%, transparent 65%),
+    rgba(8,4,16,.7);
+  box-shadow: 0 0 14px #ff3a3a, inset 0 0 12px rgba(255,58,58,.4);
+  display:flex; align-items:center; justify-content:center;
+}
+.cinte-emblem::before, .cinte-emblem::after {
+  content:''; position:absolute; background:#ff3a3a; box-shadow:0 0 8px #ff3a3a;
+}
+.cinte-emblem::before { left:50%; top:-7px; bottom:-7px; width:2.5px; transform:translateX(-50%) }
+.cinte-emblem::after  { top:50%; left:-7px; right:-7px; height:2.5px; transform:translateY(-50%) }
+.cinte-emblem-dot {
+  width:9px; height:9px; border-radius:50%;
+  background:#ff8a3a;
+  box-shadow:0 0 10px #ff8a3a, 0 0 18px #ff3a3a;
+}
+
+.cinte-headline-body { flex:1; min-width:0; z-index:2 }
+.cinte-kicker {
+  font-size:.72rem; letter-spacing:.22em; font-weight:900;
+  color:#ff8a3a;
+  text-shadow:0 0 10px #ff8a3a, 0 0 18px #ff3a3a;
+  margin-bottom:4px;
+}
+.cinte-headline-text {
+  font-size:1.55rem; line-height:1.1; font-weight:800; color:#fff;
+  text-shadow: 0 0 14px #ff8a3a, 0 0 26px #ff3a3a, 0 2px 0 rgba(0,0,0,.4);
+}
+.cinte-who.shooter { color:#fff; text-shadow:0 0 12px var(--shooter-c,#4ad8ff), 0 0 24px var(--shooter-c,#4ad8ff), 0 2px 0 rgba(0,0,0,.4) }
+.cinte-who.victim  { color:#fff; text-shadow:0 0 12px var(--victim-c,#ff4fa2),  0 0 24px var(--victim-c,#ff4fa2),  0 2px 0 rgba(0,0,0,.4) }
+.cinte-pop { color:#ffde3a; text-shadow:0 0 12px #ffde3a, 0 0 22px #ff8a3a }
+
+.cinte-answer {
+  flex-shrink:0; min-width:150px;
+  padding:10px 18px; border-radius:14px;
+  background: rgba(34,197,94,.14);
+  border:2px solid #4aff7a;
+  box-shadow: 0 0 14px rgba(74,255,122,.5), inset 0 0 14px rgba(74,255,122,.18);
+  display:flex; flex-direction:column; align-items:center; gap:2px;
+  text-align:center; z-index:2;
+}
+.cinte-answer-label {
+  font-size:.6rem; letter-spacing:.22em; font-weight:900;
+  color:rgba(74,255,122,.9);
+  text-shadow:0 0 6px rgba(74,255,122,.5);
+}
+.cinte-answer-value {
+  font-size:1.05rem; font-weight:900;
+  color:#4aff7a;
+  text-shadow:0 0 10px #4aff7a, 0 0 18px rgba(74,255,122,.5);
+}
+
+/* ── Target rows ── */
+.cinte-targets {
+  flex:1; min-height:0;
+  display:flex; flex-direction:column; gap:10px;
+}
+.cinte-target {
+  position:relative; flex:1; min-height:0;
+  display:flex; align-items:center; gap:16px;
+  padding:10px 18px;
+  border-radius:16px;
+  border:2.5px solid var(--tc, #b96dff);
+  background:
+    radial-gradient(ellipse at 85% 50%, color-mix(in srgb, var(--tc, #b96dff) 22%, transparent) 0%, transparent 55%),
+    linear-gradient(150deg, #0d0820 0%, #08040f 100%);
+  box-shadow:
+    0 0 0 1.5px rgba(255,255,255,.08),
+    0 0 12px var(--tc, #b96dff),
+    inset 0 0 22px color-mix(in srgb, var(--tc, #b96dff) 12%, transparent);
+  overflow:hidden;
+  animation: sUp .3s ease both;
+}
+.cinte-target.is-shooter {
+  box-shadow:
+    0 0 0 1.5px rgba(255,255,255,.2),
+    0 0 18px var(--tc, #4ad8ff),
+    0 0 32px color-mix(in srgb, var(--tc, #4ad8ff) 45%, transparent),
+    inset 0 0 22px color-mix(in srgb, var(--tc, #4ad8ff) 16%, transparent);
+}
+.cinte-target.hit {
+  border-color:#ffde3a;
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.32),
+    0 0 22px #ffde3a,
+    0 0 44px #ff8a3a,
+    inset 0 0 22px rgba(255,138,58,.22);
+  animation: cinteHitFlash 1.1s ease-in-out infinite;
+}
+.cinte-target.dead {
+  opacity:.4; filter: saturate(.3) grayscale(.4);
+}
+
+.cinte-tag {
+  position:absolute; top:8px; right:14px; z-index:3;
+  font-size:.6rem; letter-spacing:.18em; font-weight:900;
+  padding:5px 10px; border-radius:8px;
+  display:inline-flex; align-items:center; gap:6px;
+  text-shadow: 0 1px 0 rgba(0,0,0,.4);
+}
+.cinte-tag.shooter {
+  background: rgba(74,216,255,.14);
+  border:1.5px solid #4ad8ff;
+  color:#4ad8ff;
+  box-shadow:0 0 10px rgba(74,216,255,.5);
+  text-shadow:0 0 6px #4ad8ff;
+}
+.cinte-tag.victim {
+  background: linear-gradient(90deg, #ff8a3a 0%, #ffde3a 100%);
+  color:#1a0a01;
+  box-shadow:0 0 14px #ffde3a, 0 0 26px #ff8a3a;
+  animation: cinteLockBlink .6s steps(2) infinite;
+}
+.cinte-tag.dead {
+  background:#4a0820; color:#ff5470;
+  border:1.5px solid #ff5470;
+  box-shadow:0 0 10px rgba(255,84,112,.45);
+}
+
+.cinte-avwrap {
+  width:64px; height:64px; flex-shrink:0;
+  border-radius:50%;
+  border:3px solid var(--tc, #fff);
+  box-shadow: 0 0 14px var(--tc, #fff);
+  overflow:hidden; z-index:2;
+}
+.cinte-av { width:100%; height:100%; object-fit:cover; object-position:center top; display:block }
+
+.cinte-info { flex:1; min-width:0; z-index:2; display:flex; flex-direction:column; gap:6px }
+.cinte-name {
+  font-size:1.4rem; font-weight:900; color:#fff;
+  text-shadow: 0 0 12px var(--tc, #fff), 0 2px 4px rgba(0,0,0,.6);
+  line-height:1; letter-spacing:.02em;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.cinte-target.hit .cinte-name {
+  color:#ffde3a; text-shadow:0 0 14px #ffde3a, 0 0 26px #ff8a3a, 0 2px 4px rgba(0,0,0,.6);
+}
+.cinte-balloons {
+  display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+}
+.cinte-balloon {
+  font-size:1.6rem; line-height:1; display:inline-block;
+  transform-origin:bottom center;
+  animation: cinteBalloonWobble 2.2s ease-in-out infinite;
+  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--tc, #fff) 60%, transparent));
+}
+.cinte-balloon.popped {
+  animation: cinteBalloonPop 1.4s ease-out .25s forwards;
+  filter: grayscale(1) brightness(.5) drop-shadow(0 0 5px #ff5470);
+}
+.cinte-balloon-empty {
+  width:24px; height:30px;
+  border-radius:50% 50% 50% 50% / 55% 55% 45% 45%;
+  border:2px dashed rgba(255,255,255,.22);
+  display:inline-block;
+}
+.cinte-bcount {
+  font-size:.74rem; font-weight:700; color:rgba(255,255,255,.7);
+  letter-spacing:.04em; margin-left:6px;
+}
+.cinte-bcount b { font-size:.92rem; margin-right:3px }
+.cinte-bcount.dead { color:#ff5470; text-shadow: 0 0 6px rgba(255,84,112,.5) }
+
+.cinte-fire {
+  position:relative; z-index:2; flex-shrink:0;
+  width:48px; height:48px; border-radius:50%;
+  border:2.5px solid var(--tc, #fff);
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--tc, #fff) 30%, transparent) 0%, transparent 65%),
+    rgba(8,4,16,.65);
+  box-shadow: 0 0 12px var(--tc, #fff), inset 0 0 10px color-mix(in srgb, var(--tc, #fff) 28%, transparent);
+  display:flex; align-items:center; justify-content:center;
+}
+.cinte-fire::before, .cinte-fire::after {
+  content:''; position:absolute; background:var(--tc, #fff); box-shadow:0 0 5px var(--tc, #fff);
+}
+.cinte-fire::before { left:50%; top:-5px; bottom:-5px; width:2px; transform:translateX(-50%) }
+.cinte-fire::after  { top:50%; left:-5px; right:-5px; height:2px; transform:translateY(-50%) }
+.cinte-fire-dot {
+  width:8px; height:8px; border-radius:50%;
+  background:var(--tc, #fff);
+  box-shadow:0 0 10px var(--tc, #fff), 0 0 18px var(--tc, #fff);
+}

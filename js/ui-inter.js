@@ -260,32 +260,132 @@ function interPatate(room, gs) {
   _interLayout(room, gs, content);
 }
 
-// ── Carton : ballons par joueur ──
+// ── Carton : Tir à la carabine — design néon orange/rouge ──
 function interCarton(room, gs) {
   const _rp = toArr(room.players);
   const balloons = toArr(gs.balloons).length ? toArr(gs.balloons) : gs.players.map(() => 3);
-  const roundElim = gs.roundElim || [];
+  const roundElim = toArr(gs.roundElim) || [];
   const scorer = gs.result?.scorer;
   const msg = gs.result?.msg || '';
-  const isGood = !!(scorer && (gs.result?.pts || 0) > 0);
   const q = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
 
-  const cards = gs.players.map((p, i) => {
-    const rp = _rp.find(x => x.name === p);
-    const av = AVATARS[(rp&&rp.avatar!==undefined)?rp.avatar:(i%AVATARS.length)]||AVATARS[0];
-    const b = balloons[i] || 0;
-    const dead = roundElim.includes(p);
-    const isScorer = p === scorer;
-    return `<div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:14px;background:${dead?'rgba(239,68,68,.08)':isScorer?av.bg+'28':'rgba(255,255,255,.05)'};border:2px solid ${dead?'rgba(239,68,68,.3)':isScorer?av.bg+'88':'rgba(255,255,255,.08)'};animation:sUp .3s ease ${i*.05}s both">
-      <img src="${AVATAR_PATH}${av.file}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:2px solid ${av.bg};opacity:${dead?.35:1}" alt="">
-      <span style="font-weight:700;font-size:.85rem;flex:1;text-decoration:${dead?'line-through':'none'};color:${dead?'rgba(255,255,255,.3)':'white'}">${p}</span>
-      <span style="font-size:1rem">${dead?'💀':'🎈'.repeat(b)||'💥'}</span>
-    </div>`;
-  }).join("");
+  // Détermine le scénario à partir du message
+  // - hit       : "🎯 X crève (un ballon|le dernier ballon) de Y !"
+  // - self      : "❌ X perd (un ballon|son dernier ballon) !"
+  // - good      : "✅ X a bon !"          (bonne réponse, pas de cible disponible)
+  // - timeout   : "⏱️ Temps écoulé !"
+  // - survivor  : "🏆 X est le dernier debout"
+  let shooter = null, victim = null, kind = 'fallback';
+  let mHit = msg.match(/🎯\s+(.+?)\s+crève\s+(?:un ballon|le dernier ballon)\s+de\s+(.+?)\s+!/);
+  let mSelf = msg.match(/❌\s+(.+?)\s+perd\s+(?:un ballon|son dernier ballon)/);
+  let mGood = msg.match(/✅\s+(.+?)\s+a bon/);
+  let mWin  = msg.match(/🏆\s+(.+?)\s+est le dernier debout/);
+  if (mHit)        { shooter = mHit[1];  victim = mHit[2];  kind = 'hit'; }
+  else if (mSelf)  { shooter = mSelf[1]; victim = mSelf[1]; kind = 'self'; }
+  else if (mGood)  { shooter = mGood[1]; kind = 'good'; }
+  else if (mWin)   { shooter = mWin[1];  kind = 'survivor'; }
+  else if (/⏱️\s+Temps écoulé/.test(msg)) { kind = 'timeout'; }
 
-  _interLayout(room, gs, `
-    <div style="font-size:1.3rem;font-weight:800;color:${isGood?'#86efac':'#fca5a5'};text-align:center;max-width:500px;line-height:1.4;animation:sUp .3s ease both">${msg.split('\n')[0]}</div>
-    ${q?`<div style="padding:8px 14px;border-radius:10px;background:rgba(255,255,255,.08);font-size:.82rem;text-align:center">Bonne réponse : <strong style="color:#86efac">${q.a[q.c]}</strong></div>`:''}
-    <div style="width:100%;display:flex;flex-direction:column;gap:7px;max-width:480px">${cards}</div>
-  `);
+  // Avatar helper
+  const avFor = (name) => {
+    const idx = gs.players.indexOf(name);
+    const rp = _rp.find(x => x.name === name);
+    return AVATARS[(rp && rp.avatar !== undefined) ? rp.avatar : (idx % AVATARS.length)] || AVATARS[0];
+  };
+
+  // Headline
+  let kicker, headlineText;
+  const shooterC = shooter ? avFor(shooter).bg : '#4ad8ff';
+  const victimC  = victim  ? avFor(victim).bg  : '#ff4fa2';
+  if (kind === 'hit') {
+    kicker = '🎯 TIR RÉUSSI';
+    headlineText = `<span class="cinte-who shooter">${shooter}</span> crève un ballon de <span class="cinte-who victim">${victim}</span> <span class="cinte-pop">💥</span>`;
+  } else if (kind === 'self') {
+    kicker = '💥 RICOCHET RATÉ';
+    headlineText = `<span class="cinte-who shooter">${shooter}</span> se tire dans le pied <span class="cinte-pop">💥</span>`;
+  } else if (kind === 'good') {
+    kicker = '🎯 BONNE RÉPONSE';
+    headlineText = `<span class="cinte-who shooter">${shooter}</span> trouve la bonne cible !`;
+  } else if (kind === 'survivor') {
+    kicker = '🏆 DERNIER DEBOUT';
+    headlineText = `<span class="cinte-who shooter">${shooter}</span> remporte le round !`;
+  } else if (kind === 'timeout') {
+    kicker = '⏱️ TEMPS ÉCOULÉ';
+    headlineText = `Personne n'a appuyé sur la gâchette !`;
+  } else {
+    kicker = '🎯 ROUND';
+    headlineText = msg.split('\n')[0] || 'Round en cours…';
+  }
+
+  const answerHtml = q ? `<div class="cinte-answer">
+    <div class="cinte-answer-label">BONNE RÉPONSE</div>
+    <div class="cinte-answer-value">${q.a[q.c]}</div>
+  </div>` : '';
+
+  // Target rows
+  const rows = gs.players.map((p, i) => {
+    const av = avFor(p);
+    const tc = av.bg;
+    const b = balloons[i] || 0;
+    const isShooter = (p === shooter) && kind !== 'self' && kind !== 'survivor';
+    const isVictim  = (p === victim)  && (kind === 'hit' || kind === 'self');
+    const isDead = (roundElim.includes(p) || b <= 0) && !isVictim;
+    // Pour la victime : on affiche aussi le ballon qui explose (b + 1)
+    const totalBalloons = isVictim ? b + 1 : b;
+
+    let balloonsHtml;
+    if (totalBalloons > 0) {
+      balloonsHtml = Array.from({length: totalBalloons}, (_, j) => {
+        const popped = isVictim && j === totalBalloons - 1;
+        return `<span class="cinte-balloon${popped ? ' popped' : ''}" style="animation-delay:${j*.18}s">🎈</span>`;
+      }).join('');
+    } else {
+      balloonsHtml = `<span class="cinte-balloon-empty"></span>`;
+    }
+
+    const countHtml = b > 0
+      ? `<span class="cinte-bcount"><b>${b}</b>ballon${b>1?'s':''} restant${b>1?'s':''}</span>`
+      : `<span class="cinte-bcount dead">💀 éliminé(e)</span>`;
+
+    let badge = '';
+    if (isShooter && kind === 'hit') badge = `<div class="cinte-tag shooter">▶ TIREUR</div>`;
+    else if (isShooter && kind === 'good') badge = `<div class="cinte-tag shooter">▶ TIREUR</div>`;
+    else if (isShooter && kind === 'survivor') badge = `<div class="cinte-tag victim">🏆 SURVIVANT</div>`;
+    else if (isVictim) badge = `<div class="cinte-tag victim">⚠ -1 BALLON</div>`;
+    else if (isDead) badge = `<div class="cinte-tag dead">💀 ÉLIMINÉ(E)</div>`;
+
+    const cls = [
+      'cinte-target',
+      isVictim ? 'hit' : '',
+      isShooter ? 'is-shooter' : '',
+      isDead ? 'dead' : ''
+    ].filter(Boolean).join(' ');
+
+    return `<div class="${cls}" style="--tc:${tc};animation-delay:${i*.06}s">
+      ${badge}
+      <div class="cinte-avwrap"><img class="cinte-av" src="${AVATAR_PATH}${av.file}" alt=""></div>
+      <div class="cinte-info">
+        <div class="cinte-name">${p}</div>
+        <div class="cinte-balloons">${balloonsHtml}${countHtml}</div>
+      </div>
+      <div class="cinte-fire"><span class="cinte-fire-dot"></span></div>
+    </div>`;
+  }).join('');
+
+  const content = `
+    <div class="cinte-wrap" style="--shooter-c:${shooterC};--victim-c:${victimC}">
+      <div class="cinte-chip"><span class="cinte-crosshair"></span> TIR À LA CARABINE</div>
+      <div class="cinte-headline">
+        <div class="cinte-emblem"><span class="cinte-emblem-dot"></span></div>
+        <div class="cinte-headline-body">
+          <div class="cinte-kicker">${kicker}</div>
+          <div class="cinte-headline-text">${headlineText}</div>
+        </div>
+        ${answerHtml}
+      </div>
+      <div class="cinte-targets">${rows}</div>
+    </div>
+  `;
+
+  _interLayout(room, gs, content);
 }
