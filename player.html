@@ -108,6 +108,40 @@
     @keyframes patExplode{0%{transform:scale(.3);opacity:0}30%{transform:scale(1.4);opacity:1}100%{transform:scale(2);opacity:0}}
     #state-waiting{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
     .waiting-text{font-size:.85rem;color:#4a5a7a;text-align:center}
+
+    /* ── Écran Picker (À toi de choisir) — cockpit néon ── */
+    .waiting-text:has(.pp-pick),.waiting-text:has(.pp-wait){width:100%;height:100%;display:flex;flex-direction:column;align-self:stretch;text-align:left;color:inherit;font-size:inherit;margin:0;flex:1;min-height:0}
+    .pp-pick{flex:1;min-height:0;display:flex;flex-direction:column;padding:10px 14px 14px;gap:10px}
+    .pp-pick-step{flex-shrink:0;align-self:center;display:inline-flex;align-items:center;gap:8px;padding:6px 14px;border-radius:999px;background:rgba(75,224,255,.08);border:1.5px solid rgba(75,224,255,.55);box-shadow:0 0 12px rgba(75,224,255,.35),inset 0 0 8px rgba(75,224,255,.15);font-family:'Russo One',sans-serif;font-size:10px;letter-spacing:.28em;color:#4be0ff;text-shadow:0 0 8px #4be0ff;white-space:nowrap}
+    .pp-pick-step .pp-dot{width:6px;height:6px;border-radius:50%;background:rgba(75,224,255,.25);border:1px solid rgba(75,224,255,.5)}
+    .pp-pick-step .pp-dot.on{background:#4be0ff;box-shadow:0 0 8px #4be0ff;border-color:#4be0ff}
+    .pp-pick-title{flex-shrink:0;font-family:'Russo One',sans-serif;font-size:1.4rem;letter-spacing:.04em;line-height:1;color:#fff;text-align:center;text-shadow:0 0 12px #ffb347,0 0 22px #ff8a1a,0 3px 0 #1a0a01;display:flex;align-items:center;justify-content:center;gap:10px;text-wrap:balance;margin-top:2px}
+    .pp-pick-title .em{font-size:1.7rem;filter:drop-shadow(0 0 8px #ff8a1a)}
+    .pp-pick-sub{flex-shrink:0;font-family:'Fredoka',sans-serif;font-weight:500;font-size:.78rem;letter-spacing:.02em;color:rgba(255,255,255,.65);text-align:center;line-height:1.3;max-width:280px;margin:0 auto;text-wrap:balance}
+    .pp-themes{flex:1;min-height:0;display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:center;margin-top:4px}
+    .pp-theme{all:unset;box-sizing:border-box;position:relative;border-radius:20px;background:radial-gradient(ellipse at 50% 20%,var(--ac-mid) 0%,#0b0218 100%);border:2.5px solid var(--ac);box-shadow:0 0 0 1.5px rgba(255,255,255,.08),0 0 14px var(--ac),0 0 28px color-mix(in srgb,var(--ac) 50%,transparent),inset 0 0 20px color-mix(in srgb,var(--ac) 20%,transparent);padding:12px 8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;cursor:pointer;overflow:hidden;animation:ansBreathe 3.6s ease-in-out infinite;transition:transform .15s ease;font-family:'Fredoka',sans-serif}
+    .pp-theme:active{transform:scale(.96)}
+    .pp-theme-icon{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,var(--ac) 55%,color-mix(in srgb,var(--ac) 50%,#000) 100%);border:2.5px solid #fff;box-shadow:0 0 14px var(--ac),0 0 24px color-mix(in srgb,var(--ac) 70%,transparent);display:flex;align-items:center;justify-content:center;font-size:1.6rem;line-height:1;text-shadow:0 2px 0 rgba(0,0,0,.4);flex-shrink:0}
+    .pp-theme-label{font-family:'Russo One',sans-serif;font-size:.82rem;letter-spacing:.04em;line-height:1.15;color:#fff;text-shadow:0 0 8px var(--ac),0 2px 2px rgba(0,0,0,.6);text-align:center;text-wrap:balance}
+    .pp-theme.selected{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.45),0 0 22px #fff,0 0 42px var(--ac),inset 0 0 22px color-mix(in srgb,var(--ac) 40%,transparent);transform:scale(1.03);animation:selPulse 1.4s ease-in-out infinite}
+    .pp-diff{flex-shrink:0;display:flex;flex-direction:column;gap:9px;margin-top:2px}
+    .pp-diff-card{all:unset;box-sizing:border-box;position:relative;display:flex;align-items:center;gap:14px;padding:11px 14px;border-radius:18px;background:radial-gradient(ellipse at 0% 50%,var(--dc-mid) 0%,#0b0218 80%);border:2.5px solid var(--dc);box-shadow:0 0 14px var(--dc),0 0 28px color-mix(in srgb,var(--dc) 50%,transparent),inset 0 0 20px color-mix(in srgb,var(--dc) 18%,transparent);animation:ansBreathe 3.6s ease-in-out infinite;cursor:pointer;overflow:hidden;font-family:'Fredoka',sans-serif}
+    .pp-diff-card:active{transform:scale(.97)}
+    .pp-diff-dot{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,var(--dc) 55%,color-mix(in srgb,var(--dc) 50%,#000) 100%);border:2.5px solid #fff;box-shadow:0 0 12px var(--dc),0 0 22px color-mix(in srgb,var(--dc) 60%,transparent);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:'Russo One',sans-serif;font-size:.95rem;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.4)}
+    .pp-diff-text{flex:1;min-width:0;line-height:1.1;text-align:left}
+    .pp-diff-name{font-family:'Russo One',sans-serif;font-size:1.05rem;letter-spacing:.06em;color:#fff;text-shadow:0 0 8px var(--dc)}
+    .pp-diff-pts{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.72rem;letter-spacing:.04em;color:rgba(255,255,255,.62);margin-top:3px}
+    .pp-diff-arrow{font-family:'Russo One',sans-serif;font-size:1.3rem;color:var(--dc);text-shadow:0 0 10px var(--dc);flex-shrink:0}
+    .pp-diff-card.selected{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.45),0 0 22px #fff,0 0 42px var(--dc),inset 0 0 22px color-mix(in srgb,var(--dc) 40%,transparent);animation:selPulse 1.4s ease-in-out infinite}
+    .pp-confirm{all:unset;flex-shrink:0;box-sizing:border-box;margin-top:4px;width:100%;padding:14px;border:2.5px solid #4aff7a;border-radius:16px;background:radial-gradient(ellipse at 50% 30%,#0a3a1c 0%,#04140a 100%);font-family:'Russo One',sans-serif;font-size:1rem;letter-spacing:.12em;color:#fff;text-shadow:0 0 10px #4aff7a;box-shadow:0 0 18px rgba(74,255,122,.55),0 0 36px rgba(74,255,122,.3),inset 0 0 18px rgba(74,255,122,.15);cursor:pointer;animation:selPulse 1.4s ease-in-out infinite;display:block;text-align:center}
+    .pp-confirm:active{transform:scale(.97)}
+
+    /* ── Écran "autre joueur choisit" — cockpit néon ── */
+    .pp-wait{flex:1;align-self:stretch;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px 22px;text-align:center}
+    .pp-wait-icon{font-size:3rem;filter:drop-shadow(0 0 14px #ffb347) drop-shadow(0 0 22px #ff8a1a);animation:patBounce 1.6s ease-in-out infinite}
+    .pp-wait-title{font-family:'Russo One',sans-serif;font-size:1.05rem;letter-spacing:.08em;color:#fff;text-shadow:0 0 12px #ffb347,0 0 22px #ff8a1a;line-height:1.2;text-wrap:balance}
+    .pp-wait-sub{font-family:'Fredoka',sans-serif;font-weight:500;font-size:.8rem;color:rgba(255,255,255,.6);max-width:260px;line-height:1.4;text-wrap:balance}
+    .pp-wait-summary{margin-top:6px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.82rem;color:#4aff7a;text-shadow:0 0 10px rgba(74,255,122,.55);padding:8px 14px;border-radius:12px;background:rgba(74,255,122,.08);border:1.5px solid rgba(74,255,122,.45)}
     #state-result{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
     .result-icon{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem}
     .result-icon.good{background:#14532d;border:2px solid #22c55e}
@@ -707,21 +741,25 @@ function renderState(room, gs) {
       const pickerThemes = toArr(room.pickerThemes || []);
       const selSlug = room.pickerSelectedTheme;
       const selDiff = room.pickerSelectedDifficulty;
-      const DIFFS = ['Facile', 'Intermédiaire', 'Expert'];
-      const DCOL = { 'Facile':'#22c55e', 'Intermédiaire':'#f59e0b', 'Expert':'#ef4444' };
+      const DIFFS = [
+        { name:'Facile',        glyph:'★',   pts:'×1 — réponse rapide',  color:'#4aff7a', mid:'#0a3a1c' },
+        { name:'Intermédiaire', glyph:'★★',  pts:'×2 — réponse à risque', color:'#ffb13a', mid:'#3a1d05' },
+        { name:'Expert',        glyph:'★★★', pts:'×3 — joue gros',        color:'#ff4fa2', mid:'#3a0820' },
+      ];
 
       if (!isPicker) {
         const pickerName = room.picker?.name || '?';
+        const selTheme = pickerThemes.find(t => t.slug === selSlug);
         const summary = (selSlug && selDiff)
-          ? `<div style="margin-top:12px;font-size:.85rem;color:#86efac">✓ ${(pickerThemes.find(t=>t.slug===selSlug)||{}).name||selSlug} · ${selDiff}</div>`
+          ? `<div class="pp-wait-summary">✓ ${selTheme?.name||selSlug} · ${selDiff}</div>`
           : selSlug
-            ? `<div style="margin-top:12px;font-size:.8rem;color:#94a3b8">Thème : <strong>${(pickerThemes.find(t=>t.slug===selSlug)||{}).name||selSlug}</strong> — choisit la difficulté…</div>`
+            ? `<div class="pp-wait-summary">Thème : ${selTheme?.name||selSlug} — choisit la difficulté…</div>`
             : '';
         G('waiting-text').innerHTML = `
-          <div style="text-align:center;padding:6px 4px">
-            <div style="font-size:2rem;margin-bottom:8px">🎯</div>
-            <div style="font-size:1rem;font-weight:700;color:#facc15;margin-bottom:4px">${pickerName} choisit le thème</div>
-            <div style="font-size:.78rem;color:#64748b">Patiente sur l'écran principal pour voir les choix.</div>
+          <div class="pp-wait">
+            <div class="pp-wait-icon">🎯</div>
+            <div class="pp-wait-title">${pickerName} CHOISIT…</div>
+            <div class="pp-wait-sub">Patiente pendant qu'iel sélectionne le thème et la difficulté 👀</div>
             ${summary}
           </div>`;
         return;
@@ -729,30 +767,44 @@ function renderState(room, gs) {
 
       // Picker (moi) : cartes thèmes → difficulté → confirm
       const themeCardsHtml = pickerThemes.map(th => {
-        const v = THEMES[th.slug] || { accent:'#a78bfa', emoji:'🎲' };
+        const v = THEMES[th.slug] || { accent:'#a78bfa', dark:'#5b21b6', emoji:'🎲' };
         const sel = selSlug === th.slug;
-        return `<button onclick="actPickerSelectTheme('${th.slug}')" style="all:unset;cursor:pointer;padding:14px 8px;border-radius:14px;background:${sel?v.accent+'33':'rgba(255,255,255,.04)'};border:2px solid ${sel?v.accent:'rgba(255,255,255,.1)'};text-align:center;${sel?`box-shadow:0 0 16px ${v.accent}66`:''}">
-          <div style="font-size:1.8rem;margin-bottom:4px">${v.emoji}</div>
-          <div style="font-size:.72rem;font-weight:700;color:${sel?v.accent:'#cbd5e1'};line-height:1.2">${th.name}</div>
+        return `<button onclick="actPickerSelectTheme('${th.slug}')" class="pp-theme${sel?' selected':''}" style="--ac:${v.accent};--ac-mid:${v.dark}">
+          <div class="pp-theme-icon">${v.emoji}</div>
+          <div class="pp-theme-label">${th.name}</div>
         </button>`;
       }).join('');
 
-      const diffBtnsHtml = selSlug ? `<div style="display:flex;gap:8px;margin-top:14px">${DIFFS.map(d => {
-        const sel = selDiff === d;
-        const c = DCOL[d];
-        return `<button onclick="actPickerSelectDifficulty('${d}')" style="all:unset;cursor:pointer;flex:1;padding:11px 6px;border-radius:11px;background:${sel?c+'33':'rgba(255,255,255,.04)'};border:2px solid ${sel?c:'rgba(255,255,255,.1)'};text-align:center;font-size:.85rem;font-weight:700;color:${sel?c:'#cbd5e1'}">${d}</button>`;
+      const diffCardsHtml = selSlug ? `<div class="pp-diff">${DIFFS.map(d => {
+        const sel = selDiff === d.name;
+        return `<button onclick="actPickerSelectDifficulty('${d.name}')" class="pp-diff-card${sel?' selected':''}" style="--dc:${d.color};--dc-mid:${d.mid}">
+          <div class="pp-diff-dot">${d.glyph}</div>
+          <div class="pp-diff-text">
+            <div class="pp-diff-name">${d.name}</div>
+            <div class="pp-diff-pts">${d.pts}</div>
+          </div>
+          <div class="pp-diff-arrow">›</div>
+        </button>`;
       }).join('')}</div>` : '';
 
       const confirmBtnHtml = (selSlug && selDiff)
-        ? `<button onclick="actPickerConfirm()" style="margin-top:14px;width:100%;padding:14px;border:none;border-radius:13px;background:#22c55e;color:white;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer">✓ Confirmer</button>`
+        ? `<button onclick="actPickerConfirm()" class="pp-confirm">✓ CONFIRMER</button>`
         : '';
 
+      const stepLabel = selSlug ? 'ÉTAPE 2 / 2 · DIFFICULTÉ' : 'ÉTAPE 1 / 2 · THÈME';
+      const dot2on = selSlug ? ' on' : '';
+
       G('waiting-text').innerHTML = `
-        <div style="text-align:center;width:100%;padding:6px 4px">
-          <div style="font-size:.8rem;color:#facc15;font-weight:700;margin-bottom:6px">🎯 À TOI DE CHOISIR !</div>
-          <div style="font-size:.72rem;color:#94a3b8;margin-bottom:12px">Sélectionne un thème puis une difficulté</div>
-          <div style="display:grid;grid-template-columns:repeat(${pickerThemes.length||4},1fr);gap:8px">${themeCardsHtml}</div>
-          ${diffBtnsHtml}
+        <div class="pp-pick">
+          <div class="pp-pick-step">
+            <span class="pp-dot on"></span>
+            <span class="pp-dot${dot2on}"></span>
+            <span>${stepLabel}</span>
+          </div>
+          <div class="pp-pick-title"><span class="em">🎯</span> À TOI DE CHOISIR !</div>
+          <div class="pp-pick-sub">Sélectionne un thème puis une difficulté</div>
+          <div class="pp-themes">${themeCardsHtml}</div>
+          ${diffCardsHtml}
           ${confirmBtnHtml}
         </div>`;
       return;
