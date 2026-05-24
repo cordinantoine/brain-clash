@@ -274,6 +274,49 @@
 
     /* ── Avatar dans le lobby ── */
     .lobby-av{width:28px;height:28px;border-radius:8px;object-fit:cover;object-position:center top;flex-shrink:0}
+
+    /* ── Score pill : badge gain "+X" affiché en inter-QCM ── */
+    .score-pill{position:relative}
+    .score-pill-gain{position:absolute;top:-7px;right:-5px;font-family:'Russo One',sans-serif;font-size:.62rem;padding:2px 6px;border-radius:8px;background:#4aff7a;color:#062c12;box-shadow:0 0 10px #4aff7a;letter-spacing:.04em;animation:scoreGainPop .55s cubic-bezier(.36,.07,.19,.97) both;line-height:1;z-index:2}
+    @keyframes scoreGainPop{
+      0%{transform:translateY(8px) scale(.6);opacity:0}
+      60%{transform:translateY(-2px) scale(1.15);opacity:1}
+      100%{transform:translateY(0) scale(1);opacity:1}
+    }
+
+    /* ── Écran 3h "Inter QCM" — Médaille néon ── */
+    .waiting-text:has(.iq-medal-wrap){width:100%;height:100%;display:flex;flex-direction:column;align-self:stretch;text-align:left;color:inherit;font-size:inherit;margin:0;flex:1;min-height:0}
+    .iq-medal-wrap{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;gap:14px;padding:8px 14px 14px;position:relative;overflow:hidden}
+    .iq-rays{position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:320px;height:320px;background:conic-gradient(from 0deg,rgba(74,255,122,0) 0deg,rgba(74,255,122,0) 8deg,rgba(74,255,122,.18) 10deg,rgba(74,255,122,0) 20deg,rgba(74,255,122,0) 38deg,rgba(74,255,122,.18) 40deg,rgba(74,255,122,0) 50deg,rgba(74,255,122,0) 68deg,rgba(74,255,122,.18) 70deg,rgba(74,255,122,0) 80deg,rgba(74,255,122,0) 98deg,rgba(74,255,122,.18) 100deg,rgba(74,255,122,0) 110deg,rgba(74,255,122,0) 128deg,rgba(74,255,122,.18) 130deg,rgba(74,255,122,0) 140deg,rgba(74,255,122,0) 158deg,rgba(74,255,122,.18) 160deg,rgba(74,255,122,0) 170deg,rgba(74,255,122,0) 188deg,rgba(74,255,122,.18) 190deg,rgba(74,255,122,0) 200deg,rgba(74,255,122,0) 218deg,rgba(74,255,122,.18) 220deg,rgba(74,255,122,0) 230deg,rgba(74,255,122,0) 248deg,rgba(74,255,122,.18) 250deg,rgba(74,255,122,0) 260deg,rgba(74,255,122,0) 278deg,rgba(74,255,122,.18) 280deg,rgba(74,255,122,0) 290deg,rgba(74,255,122,0) 308deg,rgba(74,255,122,.18) 310deg,rgba(74,255,122,0) 320deg,rgba(74,255,122,0) 338deg,rgba(74,255,122,.18) 340deg,rgba(74,255,122,0) 350deg);border-radius:50%;mask:radial-gradient(circle,transparent 60px,#000 80px,#000 140px,transparent 160px);-webkit-mask:radial-gradient(circle,transparent 60px,#000 80px,#000 140px,transparent 160px);animation:iqRaysSpin 12s linear infinite;pointer-events:none;z-index:0}
+    .iq-rays.bad{background:conic-gradient(from 0deg,rgba(255,84,112,0) 0deg,rgba(255,84,112,0) 8deg,rgba(255,84,112,.18) 10deg,rgba(255,84,112,0) 20deg,rgba(255,84,112,0) 38deg,rgba(255,84,112,.18) 40deg,rgba(255,84,112,0) 50deg,rgba(255,84,112,0) 68deg,rgba(255,84,112,.18) 70deg,rgba(255,84,112,0) 80deg,rgba(255,84,112,0) 98deg,rgba(255,84,112,.18) 100deg,rgba(255,84,112,0) 110deg,rgba(255,84,112,0) 128deg,rgba(255,84,112,.18) 130deg,rgba(255,84,112,0) 140deg,rgba(255,84,112,0) 158deg,rgba(255,84,112,.18) 160deg,rgba(255,84,112,0) 170deg,rgba(255,84,112,0) 188deg,rgba(255,84,112,.18) 190deg,rgba(255,84,112,0) 200deg,rgba(255,84,112,0) 218deg,rgba(255,84,112,.18) 220deg,rgba(255,84,112,0) 230deg,rgba(255,84,112,0) 248deg,rgba(255,84,112,.18) 250deg,rgba(255,84,112,0) 260deg,rgba(255,84,112,0) 278deg,rgba(255,84,112,.18) 280deg,rgba(255,84,112,0) 290deg,rgba(255,84,112,0) 308deg,rgba(255,84,112,.18) 310deg,rgba(255,84,112,0) 320deg,rgba(255,84,112,0) 338deg,rgba(255,84,112,.18) 340deg,rgba(255,84,112,0) 350deg)}
+    @keyframes iqRaysSpin{from{transform:translateX(-50%) rotate(0)}to{transform:translateX(-50%) rotate(360deg)}}
+    .iq-medal{position:relative;width:120px;height:120px;border-radius:50%;border:5px solid #fff;display:flex;align-items:center;justify-content:center;z-index:2;margin-top:4px;flex-shrink:0}
+    .iq-medal.good{background:radial-gradient(circle at 35% 30%,#fff 0%,#4aff7a 50%,#0a6e2a 100%);box-shadow:0 0 0 2px rgba(255,255,255,.35),0 0 28px #4aff7a,0 0 60px rgba(74,255,122,.55);animation:iqMedalGlow 1.2s ease-in-out infinite}
+    .iq-medal.bad{background:radial-gradient(circle at 35% 30%,#fff 0%,#ff5470 50%,#7a0822 100%);box-shadow:0 0 0 2px rgba(255,255,255,.35),0 0 28px #ff5470,0 0 60px rgba(255,84,112,.55)}
+    @keyframes iqMedalGlow{0%,100%{transform:scale(1);filter:brightness(1.05)}50%{transform:scale(1.04);filter:brightness(1.2)}}
+    .iq-medal-glyph{font-family:'Russo One',sans-serif;font-size:72px;color:#fff;text-shadow:0 3px 0 rgba(0,0,0,.5);line-height:1}
+    .iq-verdict{text-align:center;display:flex;flex-direction:column;align-items:center;gap:2px;z-index:2;flex-shrink:0}
+    .iq-verdict-line{font-family:'Russo One',sans-serif;font-size:18px;letter-spacing:.18em;line-height:1}
+    .iq-verdict-line.good{color:#4aff7a;text-shadow:0 0 12px #4aff7a,0 0 22px rgba(74,255,122,.55)}
+    .iq-verdict-line.bad{color:#ff5470;text-shadow:0 0 12px #ff5470,0 0 22px rgba(255,84,112,.55)}
+    .iq-pts{font-family:'Russo One',sans-serif;font-size:56px;line-height:1;display:inline-flex;align-items:baseline;gap:8px}
+    .iq-pts.good{color:#4aff7a;text-shadow:0 0 18px #4aff7a,0 0 34px rgba(74,255,122,.6)}
+    .iq-pts.bad{color:rgba(255,255,255,.4);text-shadow:0 0 12px rgba(255,84,112,.35)}
+    .iq-pts-unit{font-size:18px;letter-spacing:.12em;opacity:.85}
+    .iq-streak{margin-top:2px;font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:.14em;color:#ffb13a;text-shadow:0 0 10px #ff8a1a,0 0 18px rgba(255,138,58,.5);padding:4px 10px;border-radius:999px;background:rgba(255,138,58,.10);border:1.5px solid rgba(255,177,58,.65);box-shadow:0 0 12px rgba(255,138,58,.4)}
+    .iq-streak .flame{font-size:13px;margin-right:4px}
+    .iq-answer-card{width:100%;max-width:320px;padding:10px 14px 12px;border-radius:18px;background:rgba(10,5,30,.65);border:2px solid rgba(74,255,122,.6);box-shadow:0 0 16px rgba(74,255,122,.35),inset 0 0 18px rgba(74,255,122,.12);text-align:center;z-index:2;flex-shrink:0}
+    .iq-answer-kicker{font-family:'Russo One',sans-serif;font-size:10px;letter-spacing:.28em;color:rgba(255,255,255,.55);margin-bottom:6px}
+    .iq-answer-body{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap}
+    .iq-answer-letter{width:34px;height:34px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,#4aff7a 55%,#0a6e2a 100%);border:2.5px solid #fff;box-shadow:0 0 12px #4aff7a;font-family:'Russo One',sans-serif;font-size:17px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.4);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .iq-answer-text{font-family:'Fredoka',sans-serif;font-weight:700;font-size:20px;color:#fff;text-shadow:0 0 8px rgba(74,255,122,.4)}
+    .iq-answer-check{font-family:'Russo One',sans-serif;font-size:18px;color:#4aff7a;text-shadow:0 0 10px #4aff7a}
+    .iq-next{margin-top:auto;display:flex;align-items:center;justify-content:center;gap:10px;padding:8px 14px;border-radius:14px;background:rgba(75,224,255,.08);border:1.5px solid rgba(75,224,255,.45);box-shadow:0 0 14px rgba(75,224,255,.25),inset 0 0 10px rgba(75,224,255,.1);z-index:2;flex-shrink:0}
+    .iq-next-ring{position:relative;width:36px;height:36px;flex-shrink:0}
+    .iq-next-ring svg{display:block}
+    .iq-next-ring .iq-next-progress{stroke-dasharray:107;stroke-dashoffset:0;transform-origin:20px 20px;transform:rotate(-90deg);animation:iqNextSweep 4.5s linear forwards;filter:drop-shadow(0 0 6px #4be0ff)}
+    @keyframes iqNextSweep{from{stroke-dashoffset:0}to{stroke-dashoffset:107}}
+    .iq-next-lbl{font-family:'Russo One',sans-serif;font-size:11px;letter-spacing:.22em;color:#4be0ff;text-shadow:0 0 8px #4be0ff}
   </style>
 </head>
 <body>
@@ -762,7 +805,7 @@ function watchGame() {
     LAST_KEY = key;
 
     updateHeader(room, gs);
-    updateScores(gs);
+    updateScores(room, gs);
     renderState(room, gs);
   });
 }
@@ -801,8 +844,21 @@ function startTimer(gs, room) {
   TIMER_IV = setInterval(tick, 500);
 }
 
-function updateScores(gs) {
+function updateScores(room, gs) {
   const players = toArr(gs.players);
+
+  // Calcule les gains par joueur uniquement en inter-QCM (phase questionResult, rType qcm)
+  let gains = null;
+  const rType = room && room.rounds ? room.rounds[gs.roundIdx] : '';
+  if (gs.phase === 'questionResult' && rType === 'qcm') {
+    const q = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
+    const ans = gs.answers || {};
+    const pts = gs.result?.pts || 0;
+    if (q && pts > 0) {
+      gains = players.map(p => (ans[p] !== undefined && ans[p].ansIdx === q.c) ? pts : 0);
+    }
+  }
+
   G('scores-strip').innerHTML = players.map((p, i) => {
     const avIdx = PLAYER_AVATARS[i] ?? 0;
     const av = AVATARS[avIdx] || AVATARS[0];
@@ -810,11 +866,13 @@ function updateScores(gs) {
     const colorStyle = isMe
       ? ''
       : `border-color:${av.bg};box-shadow:0 0 10px ${av.bg}55,0 0 20px ${av.bg}22`;
+    const gain = gains ? gains[i] : 0;
     return `
       <div class="score-pill ${isMe ? 'me' : ''}" style="${colorStyle}">
         <img class="score-pill-avatar" src="JS/assets/avatars/${av.file}" alt="" style="border:2px solid ${av.bg}">
         <span class="score-pill-name">${isMe ? 'Toi' : p}</span>
         <span class="score-pill-val">${gs.scores[i] || 0}</span>
+        ${gain > 0 ? `<span class="score-pill-gain">+${gain}</span>` : ''}
       </div>
     `;
   }).join('');
@@ -1143,11 +1201,89 @@ function renderResult(gs, q) {
   }
 }
 
-function renderInterResult(room, gs) {
+// ── Inter QCM : design "médaille néon" (écran 3h) ──
+function renderInterQCM(room, gs) {
   showState('state-waiting');
   const el = G('waiting-text');
   if (!el) return;
+
+  const q = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
+  const myAns = (gs.answers||{})[ME];
+  const isCorrect = !!(q && myAns !== undefined && myAns.ansIdx === q.c);
+  const pts = gs.result?.pts || 0;
+  const myGain = isCorrect ? pts : 0;
+
+  const labels = ['A','B','C','D'];
+  const corrLabel = q ? labels[q.c] : '';
+  const corrAns   = q ? q.a[q.c]   : '';
+
+  const verdictText = isCorrect
+    ? 'BONNE RÉPONSE'
+    : (myAns === undefined ? 'PAS DE RÉPONSE' : 'MAUVAISE RÉPONSE');
+
+  // Série de bonnes réponses consécutives sur le round QCM en cours (côté client)
+  if (!window._qcmStreak) window._qcmStreak = { roundIdx:-1, count:0, lastQ:-1 };
+  const st = window._qcmStreak;
+  if (st.roundIdx !== gs.roundIdx) { st.roundIdx = gs.roundIdx; st.count = 0; st.lastQ = -1; }
+  if (st.lastQ !== gs.qIdx) {
+    st.lastQ = gs.qIdx;
+    st.count = isCorrect ? st.count + 1 : 0;
+  }
+  const streak = st.count;
+
+  const goodCls = isCorrect ? 'good' : 'bad';
+  const raysCls = isCorrect ? '' : 'bad';
+
+  el.innerHTML = `
+    <div class="iq-medal-wrap">
+      <div class="iq-rays ${raysCls}"></div>
+
+      <div class="iq-medal ${goodCls}">
+        <span class="iq-medal-glyph">${isCorrect ? '✓' : '✗'}</span>
+      </div>
+
+      <div class="iq-verdict">
+        <div class="iq-verdict-line ${goodCls}">${verdictText}</div>
+        <div class="iq-pts ${goodCls}">
+          ${isCorrect ? '+' + myGain : '+0'}
+          <span class="iq-pts-unit">PTS</span>
+        </div>
+        ${isCorrect && streak > 1
+          ? `<div class="iq-streak"><span class="flame">🔥</span> SÉRIE × ${streak}</div>`
+          : ''}
+      </div>
+
+      ${q ? `<div class="iq-answer-card">
+        <div class="iq-answer-kicker">LA BONNE RÉPONSE ÉTAIT</div>
+        <div class="iq-answer-body">
+          <span class="iq-answer-letter">${corrLabel}</span>
+          <span class="iq-answer-text">${corrAns}</span>
+          <span class="iq-answer-check">✓</span>
+        </div>
+      </div>` : ''}
+
+      <div class="iq-next">
+        <div class="iq-next-ring">
+          <svg viewBox="0 0 40 40" width="36" height="36">
+            <circle cx="20" cy="20" r="17" fill="none" stroke="rgba(74,216,255,.18)" stroke-width="3"/>
+            <circle class="iq-next-progress" cx="20" cy="20" r="17" fill="none" stroke="#4be0ff" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span class="iq-next-lbl">PROCHAINE QUESTION</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderInterResult(room, gs) {
   const rType = room.rounds[gs.roundIdx] || '';
+
+  // ── QCM : design "médaille néon" dédié ──
+  if (rType === 'qcm') { renderInterQCM(room, gs); return; }
+
+  showState('state-waiting');
+  const el = G('waiting-text');
+  if (!el) return;
   const q = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
   const myAns = (gs.answers||{})[ME];
   const isCorrect = myAns !== undefined && myAns.ansIdx === q?.c;
