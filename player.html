@@ -154,6 +154,62 @@
     .result-pts{font-family:'Bebas Neue',sans-serif;font-size:3rem;line-height:1}
     .result-pts.good{color:#4ade80}
     .result-pts.bad{color:#f87171}
+    /* ── Écran 3i Choisir une cible (Carabine / Steal) — cockpit néon ── */
+    #state-pick-target{flex:1;min-height:0;display:flex;flex-direction:column;padding:0;gap:0;overflow:hidden}
+    .ph-shoot-title{display:flex;align-items:center;justify-content:center;gap:12px;font-family:'Russo One',sans-serif;font-size:1.4rem;letter-spacing:.06em;color:#fff;text-shadow:0 0 12px #ff8a3a,0 0 22px #ff3a3a,0 3px 0 #1a0301;margin:2px 0 4px;text-wrap:balance}
+    .ph-shoot-title.top{margin:10px 12px 8px;padding:10px 14px;font-size:1.5rem;border-radius:16px;white-space:nowrap;background:radial-gradient(ellipse at 50% 0%,rgba(255,138,58,.28) 0%,transparent 70%),linear-gradient(180deg,rgba(255,58,58,.10) 0%,rgba(255,58,58,.02) 100%);border:2px solid #ff3a3a;box-shadow:0 0 0 1.5px rgba(255,177,177,.4),0 0 18px rgba(255,58,58,.65),0 0 36px rgba(255,138,58,.35),inset 0 0 24px rgba(110,30,30,.30)}
+    .ph-shoot-title.top.steal{border-color:#a855f7;text-shadow:0 0 12px #c084fc,0 0 22px #a855f7,0 3px 0 #1a0a32;background:radial-gradient(ellipse at 50% 0%,rgba(168,85,247,.32) 0%,transparent 70%),linear-gradient(180deg,rgba(168,85,247,.10) 0%,rgba(168,85,247,.02) 100%);box-shadow:0 0 0 1.5px rgba(216,180,254,.4),0 0 18px rgba(168,85,247,.65),0 0 36px rgba(192,132,252,.35),inset 0 0 24px rgba(60,30,110,.30)}
+    .ph-shoot-title.top .crosshair{width:24px;height:24px}
+    .ph-shoot-title .crosshair{width:28px;height:28px;border-radius:50%;border:2.5px solid #ff3a3a;box-shadow:0 0 10px #ff3a3a,inset 0 0 6px rgba(255,58,58,.5);position:relative;flex-shrink:0;animation:crosshairSpin 4s linear infinite}
+    .ph-shoot-title.steal .crosshair{border-color:#a855f7;box-shadow:0 0 10px #a855f7,inset 0 0 6px rgba(168,85,247,.5)}
+    .ph-shoot-title .crosshair::before,.ph-shoot-title .crosshair::after{content:'';position:absolute;background:#ff3a3a;box-shadow:0 0 6px #ff3a3a}
+    .ph-shoot-title.steal .crosshair::before,.ph-shoot-title.steal .crosshair::after{background:#a855f7;box-shadow:0 0 6px #a855f7}
+    .ph-shoot-title .crosshair::before{left:50%;top:-6px;bottom:-6px;width:2px;transform:translateX(-50%)}
+    .ph-shoot-title .crosshair::after{top:50%;left:-6px;right:-6px;height:2px;transform:translateY(-50%)}
+    @keyframes crosshairSpin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+    .ph-shoot{flex:1;min-height:0;display:flex;flex-direction:column;padding:4px 12px 8px;gap:10px}
+    .ph-targets{flex:1;min-height:0;display:flex;flex-direction:column;gap:12px}
+    .target{position:relative;flex:1;border-radius:22px;border:3px solid var(--tc);background:radial-gradient(ellipse at 80% 50%,color-mix(in srgb,var(--tc) 22%,transparent) 0%,transparent 60%),radial-gradient(ellipse at 50% 100%,color-mix(in srgb,var(--tc) 18%,transparent) 0%,transparent 70%),linear-gradient(150deg,#0d0820 0%,#08040f 100%);box-shadow:0 0 0 1.5px rgba(255,255,255,.08),0 0 16px var(--tc),0 0 36px color-mix(in srgb,var(--tc) 50%,transparent),inset 0 0 24px color-mix(in srgb,var(--tc) 14%,transparent);padding:14px 16px;display:flex;align-items:center;gap:14px;cursor:pointer;overflow:hidden;animation:ansBreathe 3.2s ease-in-out infinite;transition:transform .12s ease}
+    .target:active{transform:scale(.97)}
+    .target-range{position:absolute;right:-50px;top:50%;transform:translateY(-50%);width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.06) 0 12%,transparent 12% 18%,rgba(255,255,255,.04) 18% 30%,transparent 30% 36%,rgba(255,255,255,.03) 36% 50%,transparent 50% 56%,rgba(255,255,255,.02) 56% 100%);pointer-events:none;z-index:0}
+    .target-av{width:78px;height:78px;border-radius:50%;background:var(--avb,#2a2238);border:3px solid var(--tc);box-shadow:0 0 14px var(--tc),0 0 28px color-mix(in srgb,var(--tc) 50%,transparent);overflow:hidden;flex-shrink:0;position:relative;z-index:2}
+    .target-av img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+    .target-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;z-index:2}
+    .target-name{font-family:'Russo One',sans-serif;font-size:1.55rem;letter-spacing:.04em;color:#fff;text-shadow:0 0 10px var(--tc),0 0 18px color-mix(in srgb,var(--tc) 60%,transparent),0 2px 4px rgba(0,0,0,.6);line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .target-balloons{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+    .balloon{font-size:1.55rem;line-height:1;display:inline-block;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--tc) 60%,transparent));animation:balloonWobble 2.4s ease-in-out infinite;transform-origin:bottom center}
+    .balloon.b2{animation-delay:.3s}.balloon.b3{animation-delay:.6s}.balloon.b4{animation-delay:.9s}
+    @keyframes balloonWobble{0%,100%{transform:rotate(-4deg) translateY(0)}50%{transform:rotate(4deg) translateY(-2px)}}
+    .balloon-count{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.78rem;color:rgba(255,255,255,.65);margin-left:4px;letter-spacing:.02em}
+    .balloon-count b{color:#fff;font-weight:700;font-family:'Russo One',sans-serif;font-size:.95rem;text-shadow:0 0 8px var(--tc);margin-right:2px}
+    .target-fire{position:relative;z-index:2;flex-shrink:0;width:64px;height:64px;border-radius:50%;border:2.5px solid var(--tc);background:radial-gradient(circle at 50% 50%,color-mix(in srgb,var(--tc) 30%,transparent) 0%,transparent 65%),rgba(8,4,16,.65);box-shadow:0 0 14px var(--tc),inset 0 0 12px color-mix(in srgb,var(--tc) 30%,transparent);display:flex;align-items:center;justify-content:center}
+    .target-fire::before,.target-fire::after{content:'';position:absolute;background:var(--tc);box-shadow:0 0 6px var(--tc)}
+    .target-fire::before{left:50%;top:-5px;bottom:-5px;width:2px;transform:translateX(-50%)}
+    .target-fire::after{top:50%;left:-5px;right:-5px;height:2px;transform:translateY(-50%)}
+    .target-fire-inner{width:8px;height:8px;border-radius:50%;background:var(--tc);box-shadow:0 0 10px var(--tc),0 0 18px var(--tc)}
+    .target.selected{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.5),0 0 24px #fff,0 0 50px var(--tc),inset 0 0 26px color-mix(in srgb,var(--tc) 40%,transparent);animation:targetLock .6s ease-in-out infinite alternate;transform:scale(1.01)}
+    @keyframes targetLock{from{box-shadow:0 0 0 3px rgba(255,255,255,.4),0 0 22px #fff,0 0 44px var(--tc)}to{box-shadow:0 0 0 4px rgba(255,255,255,.7),0 0 36px #fff,0 0 70px var(--tc)}}
+    .target.selected .target-fire{background:radial-gradient(circle at 50% 50%,#fff 0%,var(--tc) 50%,color-mix(in srgb,var(--tc) 50%,#000) 100%);border-color:#fff;box-shadow:0 0 18px #fff,0 0 36px var(--tc)}
+    .target.selected .target-fire::before,.target.selected .target-fire::after{background:#fff;box-shadow:0 0 6px #fff}
+    .target.selected .target-fire-inner{background:#fff;box-shadow:0 0 10px #fff}
+    .target-lockon{position:absolute;top:10px;right:12px;z-index:3;font-family:'Russo One',sans-serif;font-size:.7rem;letter-spacing:.2em;color:#fff;padding:4px 9px;border-radius:7px;background:#ff3a3a;box-shadow:0 0 12px #ff3a3a,0 0 22px rgba(255,58,58,.5);text-shadow:0 1px 0 rgba(0,0,0,.4);animation:lockBlink .5s steps(2) infinite}
+    .target-lockon.steal{background:#a855f7;box-shadow:0 0 12px #a855f7,0 0 22px rgba(168,85,247,.5)}
+    @keyframes lockBlink{0%{opacity:1}50%{opacity:.4}100%{opacity:1}}
+    .target.dead{opacity:.4;filter:saturate(.3) grayscale(.4);cursor:not-allowed;animation:none}
+    .target.dead .target-name{text-shadow:0 2px 4px rgba(0,0,0,.6)}
+    .ph-validate{margin:4px 12px 14px;display:flex;align-items:center;justify-content:center;gap:12px;padding:16px 22px;border-radius:18px;border:3px solid #ff3a3a;background:radial-gradient(ellipse at 50% 0%,rgba(255,138,58,.35) 0%,transparent 75%),linear-gradient(180deg,#ff3a3a 0%,#b81c1c 100%);box-shadow:0 0 0 1.5px rgba(255,255,255,.35),0 0 22px rgba(255,58,58,.7),0 0 44px rgba(255,138,58,.45),inset 0 2px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(0,0,0,.35);font-family:'Russo One',sans-serif;font-size:1.2rem;letter-spacing:.14em;color:#fff;text-shadow:0 0 10px #ff8a3a,0 2px 0 rgba(0,0,0,.5);cursor:pointer;transition:transform .12s ease,filter .12s ease;animation:validatePulse 1.1s ease-in-out infinite;position:relative;overflow:hidden}
+    .ph-validate.steal{border-color:#a855f7;background:radial-gradient(ellipse at 50% 0%,rgba(192,132,252,.4) 0%,transparent 75%),linear-gradient(180deg,#a855f7 0%,#6d28d9 100%);box-shadow:0 0 0 1.5px rgba(255,255,255,.35),0 0 22px rgba(168,85,247,.7),0 0 44px rgba(192,132,252,.45),inset 0 2px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(0,0,0,.35);text-shadow:0 0 10px #c084fc,0 2px 0 rgba(0,0,0,.5);animation:validatePulseSteal 1.1s ease-in-out infinite}
+    .ph-validate:active{transform:scale(.97);filter:brightness(1.1)}
+    .ph-validate .vfire{width:22px;height:22px;border-radius:50%;border:2px solid #fff;background:radial-gradient(circle at 50% 50%,#fff 0%,#ff8a3a 60%,#b81c1c 100%);box-shadow:0 0 10px #fff,0 0 18px #ff8a3a;position:relative;flex-shrink:0}
+    .ph-validate.steal .vfire{background:radial-gradient(circle at 50% 50%,#fff 0%,#c084fc 60%,#6d28d9 100%);box-shadow:0 0 10px #fff,0 0 18px #c084fc}
+    .ph-validate .vfire::before,.ph-validate .vfire::after{content:'';position:absolute;background:#fff;box-shadow:0 0 4px #fff}
+    .ph-validate .vfire::before{left:50%;top:-5px;bottom:-5px;width:2px;transform:translateX(-50%)}
+    .ph-validate .vfire::after{top:50%;left:-5px;right:-5px;height:2px;transform:translateY(-50%)}
+    @keyframes validatePulse{0%,100%{box-shadow:0 0 0 1.5px rgba(255,255,255,.35),0 0 22px rgba(255,58,58,.7),0 0 44px rgba(255,138,58,.45),inset 0 2px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(0,0,0,.35)}50%{box-shadow:0 0 0 2px rgba(255,255,255,.6),0 0 32px rgba(255,58,58,.9),0 0 70px rgba(255,138,58,.7),inset 0 2px 0 rgba(255,255,255,.45),inset 0 -3px 0 rgba(0,0,0,.35)}}
+    @keyframes validatePulseSteal{0%,100%{box-shadow:0 0 0 1.5px rgba(255,255,255,.35),0 0 22px rgba(168,85,247,.7),0 0 44px rgba(192,132,252,.45),inset 0 2px 0 rgba(255,255,255,.35),inset 0 -3px 0 rgba(0,0,0,.35)}50%{box-shadow:0 0 0 2px rgba(255,255,255,.6),0 0 32px rgba(168,85,247,.9),0 0 70px rgba(192,132,252,.7),inset 0 2px 0 rgba(255,255,255,.45),inset 0 -3px 0 rgba(0,0,0,.35)}}
+    .ph-validate.disabled{border-color:rgba(255,255,255,.18);background:rgba(20,12,38,.7);box-shadow:inset 0 0 14px rgba(0,0,0,.5);color:rgba(255,255,255,.35);text-shadow:none;cursor:not-allowed;animation:none}
+    .ph-validate.disabled .vfire{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);box-shadow:none}
+    .ph-validate.disabled .vfire::before,.ph-validate.disabled .vfire::after{background:rgba(255,255,255,.3);box-shadow:none}
     /* ── Écran Scores (3f) — cockpit néon ── */
     /* Mode "solo" : on masque le header + bandeau d'avatars pour un classement immersif */
     #screen-game.sb-mode .game-header,
@@ -270,6 +326,21 @@
     </div>
     <div id="state-answers" style="display:none">
       <div class="answer-grid" id="answer-grid"></div>
+    </div>
+    <div id="state-pick-target" style="display:none">
+      <div class="ph-shoot-title top" id="pt-title">
+        <span class="crosshair"></span>
+        <span id="pt-title-text">SUR QUI TIRER ?</span>
+        <span class="crosshair"></span>
+      </div>
+      <div class="ph-shoot">
+        <div class="ph-targets" id="pt-targets"></div>
+      </div>
+      <div class="ph-validate disabled" id="pt-validate">
+        <span class="vfire"></span>
+        <span id="pt-validate-text">CHOISIS UNE CIBLE</span>
+        <span class="vfire"></span>
+      </div>
     </div>
     <div id="state-waiting" style="display:none">
       <p class="waiting-text" id="waiting-text">En attente…</p>
@@ -454,7 +525,7 @@ function showScreen(id) {
 }
 
 function showState(id) {
-  ['state-buzz','state-answers','state-waiting','state-result','state-scoreboard','state-final','state-buzzed-out']
+  ['state-buzz','state-answers','state-waiting','state-result','state-scoreboard','state-final','state-buzzed-out','state-pick-target']
     .forEach(s => G(s).style.display = 'none');
   G(id).style.display = 'flex';
   const sg = G('screen-game');
@@ -1201,31 +1272,74 @@ function renderFinal(gs) {
     : `<span>${winner?.name}</span> remporte la partie !`;
 }
 
+let pickSelected = null;
 function renderPickTarget(room, gs) {
-  showState('state-answers');
+  showState('state-pick-target');
   const players = toArr(gs.players);
   const rType = room.rounds[gs.roundIdx] || '';
   const roundElim = gs.roundElim || [];
   const eligible = players.filter(p => p !== ME && !roundElim.includes(p));
-
-  let title = '';
-  if (rType === 'steal') title = '😈 À qui voler des points ?';
-  else if (rType === 'carton') title = '🎯 Sur qui tirer ?';
-
+  const isSteal = rType === 'steal';
   const balloons = gs.balloons || players.map(() => 3);
-  G('answer-grid').style.gridTemplateColumns = '1fr';
-  G('answer-grid').innerHTML = `<div style="text-align:center;font-weight:700;font-size:.9rem;margin-bottom:4px;grid-column:1/-1">${title}</div>` +
-    eligible.map(p => {
-      const pi = players.indexOf(p);
-      const color = COLORS[pi % 8];
-      const info = rType === 'carton'
-        ? `${'🎈'.repeat(balloons[pi])} (${balloons[pi]} ballons)`
-        : `${gs.scores[pi] || 0} pts`;
-      return `<button class="answer-btn" style="background:${color}22;border:2px solid ${color}88;flex-direction:row;justify-content:space-between;padding:16px 18px" onclick="actPick('${p}')">
-        <span style="font-weight:700;color:white;font-size:clamp(1.2rem,4vw,2rem)">${p}</span>
-        <span style="font-size:clamp(.8rem,2.5vw,1rem);color:rgba(255,255,255,.7)">${info}</span>
-      </button>`;
-    }).join('');
+
+  const title = G('pt-title');
+  title.classList.toggle('steal', isSteal);
+  G('pt-title-text').textContent = isSteal ? 'À QUI VOLER ?' : 'SUR QUI TIRER ?';
+
+  pickSelected = null;
+  const targetsEl = G('pt-targets');
+  targetsEl.innerHTML = eligible.map(p => {
+    const pi = players.indexOf(p);
+    const avIdx = PLAYER_AVATARS[pi] ?? 0;
+    const av = AVATARS[avIdx] || AVATARS[0];
+    const tc = av.bg;
+    const dead = rType === 'carton' && balloons[pi] <= 0;
+    let info;
+    if (rType === 'carton') {
+      const b = balloons[pi] || 0;
+      info = b > 0
+        ? Array.from({length:b},(_,i)=>`<span class="balloon b${i+1}">🎈</span>`).join('')
+          + `<span class="balloon-count"><b>${b}</b>${b>1?'ballons':'ballon'}</span>`
+        : `<span class="balloon-count" style="color:#ff5470">💀 éliminé</span>`;
+    } else {
+      info = `<span class="balloon-count"><b>${gs.scores[pi] || 0}</b>pts</span>`;
+    }
+    return `<div class="target ${dead?'dead':''}" data-name="${p}" style="--tc:${tc};--avb:${tc}" onclick="${dead?'':`selectPickTarget('${p}', this)`}">
+      <div class="target-range"></div>
+      <div class="target-av"><img src="JS/assets/avatars/${av.file}" alt=""></div>
+      <div class="target-body">
+        <div class="target-name">${p}</div>
+        <div class="target-balloons">${info}</div>
+      </div>
+      <div class="target-fire"><span class="target-fire-inner"></span></div>
+    </div>`;
+  }).join('');
+
+  const validateEl = G('pt-validate');
+  validateEl.classList.toggle('steal', isSteal);
+  validateEl.classList.add('disabled');
+  G('pt-validate-text').textContent = isSteal ? 'CHOISIS UNE CIBLE' : 'CHOISIS UNE CIBLE';
+  validateEl.onclick = () => {
+    if (validateEl.classList.contains('disabled') || !pickSelected) return;
+    actPick(pickSelected);
+  };
+}
+
+function selectPickTarget(name, el) {
+  pickSelected = name;
+  const grid = G('pt-targets');
+  if (!grid) return;
+  grid.querySelectorAll('.target').forEach(t => {
+    t.classList.remove('selected');
+    const old = t.querySelector('.target-lockon');
+    if (old) old.remove();
+  });
+  el.classList.add('selected');
+  const isSteal = G('pt-title').classList.contains('steal');
+  el.insertAdjacentHTML('afterbegin', `<div class="target-lockon ${isSteal?'steal':''}">● LOCKED</div>`);
+  const validateEl = G('pt-validate');
+  validateEl.classList.remove('disabled');
+  G('pt-validate-text').textContent = isSteal ? `VOLER À ${name.toUpperCase()}` : `TIRER SUR ${name.toUpperCase()}`;
 }
 
 function renderChronoRanking(gs) {
