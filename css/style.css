@@ -1483,20 +1483,20 @@ input::placeholder { color:rgba(255,255,255,.3) }
   color:#ffde3a; text-shadow:0 0 14px #ffde3a, 0 0 26px #ff8a3a, 0 2px 4px rgba(0,0,0,.6);
 }
 .cinte-balloons {
-  display:flex; align-items:center; gap:6px; flex-wrap:wrap;
+  display:flex; align-items:center; gap:10px; flex-wrap:wrap;
 }
 .cinte-balloon {
-  font-size:1.6rem; line-height:1; display:inline-block;
+  font-size:2.6rem; line-height:1; display:inline-block;
   transform-origin:bottom center;
   animation: cinteBalloonWobble 2.2s ease-in-out infinite;
-  filter: drop-shadow(0 0 4px color-mix(in srgb, var(--tc, #fff) 60%, transparent));
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--tc, #fff) 65%, transparent));
 }
 .cinte-balloon.popped {
   animation: cinteBalloonPop 1.4s ease-out .25s forwards;
-  filter: grayscale(1) brightness(.5) drop-shadow(0 0 5px #ff5470);
+  filter: grayscale(1) brightness(.5) drop-shadow(0 0 7px #ff5470);
 }
 .cinte-balloon-empty {
-  width:24px; height:30px;
+  width:38px; height:46px;
   border-radius:50% 50% 50% 50% / 55% 55% 45% 45%;
   border:2px dashed rgba(255,255,255,.22);
   display:inline-block;
