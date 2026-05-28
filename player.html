@@ -146,6 +146,38 @@
     .pp-wait-title{font-family:'Russo One',sans-serif;font-size:1.05rem;letter-spacing:.08em;color:#fff;text-shadow:0 0 12px #ffb347,0 0 22px #ff8a1a;line-height:1.2;text-wrap:balance}
     .pp-wait-sub{font-family:'Fredoka',sans-serif;font-weight:500;font-size:.8rem;color:rgba(255,255,255,.6);max-width:260px;line-height:1.4;text-wrap:balance}
     .pp-wait-summary{margin-top:6px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:.82rem;color:#4aff7a;text-shadow:0 0 10px rgba(74,255,122,.55);padding:8px 14px;border-radius:12px;background:rgba(74,255,122,.08);border:1.5px solid rgba(74,255,122,.45)}
+
+    /* ── Écran "un autre a buzzé" — cockpit néon ── */
+    .waiting-text:has(.bz-wrap){width:100%;height:100%;display:flex;flex-direction:column;align-self:stretch;text-align:left;color:inherit;font-size:inherit;margin:0;flex:1;min-height:0}
+    .bz-wrap{flex:1;min-height:0;display:flex;flex-direction:column;gap:14px;padding:12px 12px 18px}
+    .bz-hero{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:18px 22px;border-radius:24px;overflow:hidden;background:radial-gradient(ellipse at 50% 28%,color-mix(in srgb,var(--bc) 26%,transparent) 0%,transparent 62%),linear-gradient(180deg,#130a2a 0%,#0a0420 100%);border:3px solid var(--bc);box-shadow:0 0 0 1.5px rgba(255,255,255,.12),0 0 24px color-mix(in srgb,var(--bc) 60%,transparent),0 0 50px color-mix(in srgb,var(--bc) 35%,transparent),inset 0 0 28px color-mix(in srgb,var(--bc) 16%,transparent)}
+    .bz-sonar{position:absolute;top:46px;left:50%;transform:translateX(-50%);width:110px;height:110px;pointer-events:none;z-index:0}
+    .bz-ping{position:absolute;inset:0;border-radius:50%;border:2px solid var(--bc);opacity:0;animation:bzPing 2.4s ease-out infinite}
+    @keyframes bzPing{0%{transform:scale(.7);opacity:.7}100%{transform:scale(2.1);opacity:0}}
+    .bz-avatar{position:relative;z-index:2;flex-shrink:0;width:88px;height:88px;border-radius:50%;border:3px solid #fff;overflow:hidden;background:var(--bc);box-shadow:0 0 22px var(--bc),0 0 44px color-mix(in srgb,var(--bc) 55%,transparent);animation:avBob 2.6s ease-in-out infinite}
+    .bz-avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover;object-position:center top;display:block}
+    @keyframes avBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+    .bz-kicker{z-index:2;font-family:'Russo One',sans-serif;font-size:.78rem;letter-spacing:.24em;color:#fff;opacity:.85;text-transform:uppercase;text-shadow:0 0 8px color-mix(in srgb,var(--bc) 80%,transparent);text-align:center;margin-top:2px}
+    .bz-name{z-index:2;font-family:'Russo One',sans-serif;font-size:clamp(1.8rem,7vw,2.4rem);letter-spacing:.02em;line-height:1;color:#fff;text-shadow:0 0 14px var(--bc),0 0 28px color-mix(in srgb,var(--bc) 60%,transparent),0 3px 0 #0a0118;text-align:center;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:0 6px}
+    .bz-answering{z-index:2;display:inline-flex;align-items:center;gap:9px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:1rem;color:rgba(255,255,255,.85)}
+    .bz-dots{display:inline-flex;gap:4px}
+    .bz-dots i{width:6px;height:6px;border-radius:50%;background:var(--bc);box-shadow:0 0 8px var(--bc);animation:bzDotBounce 1.2s ease-in-out infinite}
+    .bz-dots i:nth-child(2){animation-delay:.2s}
+    .bz-dots i:nth-child(3){animation-delay:.4s}
+    @keyframes bzDotBounce{0%,100%{transform:translateY(0);opacity:.5}50%{transform:translateY(-5px);opacity:1}}
+    .bz-timer-row{z-index:2;margin-top:6px;display:flex;align-items:center;gap:12px;padding:8px 18px 8px 10px;border-radius:18px;background:rgba(8,4,22,.55);border:1.5px solid color-mix(in srgb,var(--bc) 55%,transparent);box-shadow:inset 0 0 16px rgba(0,0,0,.4)}
+    .bz-ring{position:relative;width:72px;height:72px;flex-shrink:0}
+    .bz-ring svg{display:block;width:100%;height:100%}
+    .bz-ring-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Russo One',sans-serif;font-size:1.8rem;line-height:1;color:var(--bc);text-shadow:0 0 12px var(--bc)}
+    .bz-timer-lbl{line-height:1.15}
+    .bz-timer-top{font-family:'Russo One',sans-serif;font-size:.95rem;letter-spacing:.14em;color:#fff}
+    .bz-timer-bot{font-family:'Fredoka',sans-serif;font-weight:500;font-size:.8rem;color:rgba(255,255,255,.6);margin-top:2px}
+    .bz-locked{flex:0 0 auto;display:flex;align-items:center;gap:16px;padding:14px 18px;border-radius:22px;background:rgba(10,5,24,.55);border:2px solid rgba(255,255,255,.1);box-shadow:inset 0 0 18px rgba(0,0,0,.45)}
+    .bz-locked-disc{width:64px;height:64px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.9rem;background:radial-gradient(circle at 38% 32%,#2a2438 0%,#140e22 100%);border:2px solid rgba(255,255,255,.16);box-shadow:inset 0 0 12px rgba(0,0,0,.6);filter:grayscale(.3)}
+    .bz-locked-text{flex:1;min-width:0}
+    .bz-locked-title{font-family:'Russo One',sans-serif;font-size:.95rem;letter-spacing:.08em;color:rgba(255,255,255,.78);line-height:1.1}
+    .bz-locked-sub{font-family:'Fredoka',sans-serif;font-weight:500;font-size:.82rem;line-height:1.35;color:rgba(255,255,255,.66);margin-top:6px;text-wrap:pretty}
+
     #state-result{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px}
     .result-icon{width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem}
     .result-icon.good{background:#14532d;border:2px solid #22c55e}
@@ -1193,7 +1225,7 @@ function renderState(room, gs) {
   if (amBuzzer) { renderAnswers(gs, q); return; }
   if (gs.buzzed && !amBuzzer) {
     showState('state-waiting');
-    G('waiting-text').textContent = `🔔 ${gs.buzzed} répond… (3s)`;
+    renderBuzzerWaitForOther(gs);
     return;
   }
 
@@ -1202,6 +1234,74 @@ function renderState(room, gs) {
   G('buzz-q').textContent = q ? q.q : '';
   G('buzz-btn').onclick = actBuzz;
   G('buzz-hint').textContent = 'Sois le premier à dégainer 🔫';
+}
+
+// ── Écran "un autre a buzzé" — design néon avec countdown ring ──
+let BUZZ_WAIT_IV = null;
+function renderBuzzerWaitForOther(gs) {
+  if (BUZZ_WAIT_IV) { clearInterval(BUZZ_WAIT_IV); BUZZ_WAIT_IV = null; }
+
+  const players = toArr(gs.players);
+  const bIdx = players.indexOf(gs.buzzed);
+  const avIdx = PLAYER_AVATARS[bIdx] ?? 0;
+  const av = AVATARS[avIdx] || AVATARS[0];
+  const bc = av.bg;
+
+  // Le buzzer a 3s pour répondre (cf. game.js / actBuzz → HTIMER 3000ms)
+  const ANSWER_TIME = 3;
+  const elapsedAtBuzz = (gs.timerDur || 30) - (gs._buzzerTimeRemaining || gs.timerDur || 30);
+  const buzzAt = (gs.timerStart || Date.now()) + elapsedAtBuzz * 1000;
+  const deadline = buzzAt + ANSWER_TIME * 1000;
+  const R = 30, C = 2 * Math.PI * R;
+
+  G('waiting-text').innerHTML = `
+    <div class="bz-wrap" style="--bc:${bc}">
+      <div class="bz-hero">
+        <div class="bz-sonar">
+          <span class="bz-ping"></span>
+          <span class="bz-ping" style="animation-delay:.8s"></span>
+          <span class="bz-ping" style="animation-delay:1.6s"></span>
+        </div>
+        <div class="bz-avatar"><img src="js/assets/avatars/${av.file}" alt=""></div>
+        <div class="bz-kicker">A BUZZÉ EN PREMIER</div>
+        <div class="bz-name">${gs.buzzed}</div>
+        <div class="bz-answering"><span class="bz-dots"><i></i><i></i><i></i></span>répond…</div>
+        <div class="bz-timer-row">
+          <div class="bz-ring">
+            <svg viewBox="0 0 72 72">
+              <circle cx="36" cy="36" r="${R}" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="5"/>
+              <circle id="bz-ring-arc" cx="36" cy="36" r="${R}" fill="none" stroke="${bc}" stroke-width="5" stroke-linecap="round"
+                stroke-dasharray="${C.toFixed(2)}" stroke-dashoffset="0" transform="rotate(-90 36 36)"
+                style="filter:drop-shadow(0 0 6px ${bc})"/>
+            </svg>
+            <span class="bz-ring-num" id="bz-ring-num">${ANSWER_TIME}</span>
+          </div>
+          <div class="bz-timer-lbl">
+            <div class="bz-timer-top">SECONDES</div>
+            <div class="bz-timer-bot">pour répondre</div>
+          </div>
+        </div>
+      </div>
+      <div class="bz-locked">
+        <div class="bz-locked-disc">🔒</div>
+        <div class="bz-locked-text">
+          <div class="bz-locked-title">TROP TARD POUR BUZZER</div>
+          <div class="bz-locked-sub">Si sa réponse est fausse, tu pourras rebuzzer. Reste prêt ! ⚡</div>
+        </div>
+      </div>
+    </div>`;
+
+  const arc = document.getElementById('bz-ring-arc');
+  const num = document.getElementById('bz-ring-num');
+  const tick = () => {
+    const leftMs = Math.max(0, deadline - Date.now());
+    const left = leftMs / 1000;
+    if (num) num.textContent = Math.max(0, Math.ceil(left));
+    if (arc) arc.setAttribute('stroke-dashoffset', ((1 - left / ANSWER_TIME) * C).toFixed(2));
+    if (leftMs <= 0 && BUZZ_WAIT_IV) { clearInterval(BUZZ_WAIT_IV); BUZZ_WAIT_IV = null; }
+  };
+  tick();
+  BUZZ_WAIT_IV = setInterval(tick, 80);
 }
 
 // Étincelles décoratives à l'intérieur d'une carte réponse
