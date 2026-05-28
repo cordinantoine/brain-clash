@@ -317,6 +317,44 @@
     .iq-next-ring .iq-next-progress{stroke-dasharray:107;stroke-dashoffset:0;transform-origin:20px 20px;transform:rotate(-90deg);animation:iqNextSweep 4.5s linear forwards;filter:drop-shadow(0 0 6px #4be0ff)}
     @keyframes iqNextSweep{from{stroke-dashoffset:0}to{stroke-dashoffset:107}}
     .iq-next-lbl{font-family:'Russo One',sans-serif;font-size:11px;letter-spacing:.22em;color:#4be0ff;text-shadow:0 0 8px #4be0ff}
+
+    /* ── Écran Ready (3c attente-prêt) — Carte néon ── */
+    .waiting-text:has(.rc-wrap){width:100%;height:100%;display:flex;flex-direction:column;align-self:stretch;text-align:left;color:inherit;font-size:inherit;margin:0;flex:1;min-height:0}
+    .rc-wrap{flex:1;min-height:0;display:flex;flex-direction:column;gap:14px;padding:8px 14px 14px}
+    .rc-card{position:relative;flex:1;min-height:0;width:100%;border-radius:26px;padding:24px 22px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:radial-gradient(ellipse at 50% 0%,rgba(185,109,255,.22) 0%,transparent 65%),linear-gradient(180deg,#160a2e 0%,#0c0420 100%);border:3px solid #b96dff;box-shadow:0 0 0 1.5px rgba(220,180,255,.4),0 0 22px rgba(185,109,255,.55),0 0 50px rgba(150,80,230,.3),inset 0 0 30px rgba(110,50,180,.25);overflow:hidden;transition:border-color .3s ease,box-shadow .3s ease}
+    .rc-card.confirmed{border-color:#4aff7a;box-shadow:0 0 0 1.5px rgba(180,255,200,.4),0 0 24px rgba(74,255,122,.55),0 0 54px rgba(74,255,122,.3),inset 0 0 30px rgba(20,120,60,.22)}
+    .rc-spark{position:absolute;color:#fff;opacity:.5;text-shadow:0 0 6px #fff,0 0 14px #b96dff;animation:rcTwink 3.4s ease-in-out infinite;pointer-events:none;z-index:1;line-height:1}
+    @keyframes rcTwink{0%,100%{opacity:.25;transform:scale(1)}50%{opacity:.9;transform:scale(1.3)}}
+    .rc-icon-wrap{position:relative;width:96px;height:96px;display:flex;align-items:center;justify-content:center;z-index:2;flex-shrink:0}
+    .rc-icon-ring{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 50% 40%,rgba(185,109,255,.45) 0%,transparent 70%);border:2.5px solid rgba(185,109,255,.6);box-shadow:0 0 22px rgba(185,109,255,.6),inset 0 0 22px rgba(185,109,255,.3);animation:rcRingPulse 2.6s ease-in-out infinite}
+    .rc-card.confirmed .rc-icon-ring{background:radial-gradient(circle at 50% 40%,rgba(74,255,122,.4) 0%,transparent 70%);border-color:rgba(74,255,122,.6);box-shadow:0 0 22px rgba(74,255,122,.6),inset 0 0 22px rgba(74,255,122,.3)}
+    @keyframes rcRingPulse{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.08);opacity:1}}
+    .rc-icon{font-size:48px;line-height:1;filter:drop-shadow(0 0 14px rgba(185,109,255,.6));z-index:2;animation:rcIconBob 3s ease-in-out infinite}
+    @keyframes rcIconBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+    .rc-kicker{font-family:'Russo One',sans-serif;font-size:10px;letter-spacing:.3em;color:#4be0ff;text-shadow:0 0 10px #4be0ff;text-transform:uppercase;z-index:2}
+    .rc-title{font-family:'Russo One',sans-serif;font-size:1.9rem;letter-spacing:.02em;line-height:1;color:#fff;text-align:center;text-shadow:0 0 14px #b96dff,0 0 26px rgba(185,109,255,.6),0 3px 0 #1a0532;z-index:2;text-wrap:balance;max-width:280px}
+    .rc-sub{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.92rem;line-height:1.3;color:rgba(255,255,255,.82);text-align:center;max-width:280px;z-index:2;text-wrap:balance}
+    .rc-theme{margin-top:-2px;font-family:'Fredoka',sans-serif;font-weight:500;font-size:.75rem;color:rgba(255,255,255,.6);text-align:center;z-index:2;letter-spacing:.02em}
+    .rc-theme b{color:#fff;font-weight:700}
+    .rc-ready{all:unset;box-sizing:border-box;margin-top:4px;z-index:2;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 32px;border-radius:999px;border:3px solid #d8b4ff;background:radial-gradient(ellipse at 50% 0%,rgba(220,180,255,.5) 0%,transparent 75%),linear-gradient(180deg,#c98bff 0%,#8a3df0 100%);box-shadow:0 0 0 1.5px rgba(255,255,255,.35),0 0 24px rgba(185,109,255,.75),0 0 48px rgba(150,80,230,.45),inset 0 2px 0 rgba(255,255,255,.4),inset 0 -3px 0 rgba(0,0,0,.3);font-family:'Russo One',sans-serif;font-size:1.05rem;letter-spacing:.12em;color:#fff;text-shadow:0 0 10px rgba(255,255,255,.5),0 2px 0 rgba(60,20,110,.6);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:transform .12s ease,filter .12s ease;animation:rcReadyPulse 1.3s ease-in-out infinite}
+    .rc-ready:active{transform:scale(.96);filter:brightness(1.1)}
+    .rc-ready-glyph{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.95);color:#8a3df0;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 0 12px rgba(255,255,255,.7);flex-shrink:0;font-family:'Russo One',sans-serif}
+    @keyframes rcReadyPulse{0%,100%{box-shadow:0 0 0 1.5px rgba(255,255,255,.35),0 0 24px rgba(185,109,255,.7),0 0 48px rgba(150,80,230,.4),inset 0 2px 0 rgba(255,255,255,.4),inset 0 -3px 0 rgba(0,0,0,.3);transform:scale(1)}50%{box-shadow:0 0 0 2px rgba(255,255,255,.6),0 0 34px rgba(185,109,255,.95),0 0 74px rgba(150,80,230,.65),inset 0 2px 0 rgba(255,255,255,.5),inset 0 -3px 0 rgba(0,0,0,.3);transform:scale(1.035)}}
+    .rc-confirmed-pill{margin-top:4px;z-index:2;display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:13px 34px;border-radius:999px;border:3px solid #4aff7a;background:radial-gradient(ellipse at 50% 0%,rgba(120,255,170,.35) 0%,transparent 75%),linear-gradient(180deg,rgba(20,90,45,.9) 0%,rgba(8,50,25,.9) 100%);box-shadow:0 0 0 1.5px rgba(180,255,200,.4),0 0 22px rgba(74,255,122,.6),0 0 44px rgba(74,255,122,.35),inset 0 0 18px rgba(74,255,122,.18);font-family:'Russo One',sans-serif;font-size:1.05rem;letter-spacing:.14em;color:#4aff7a;text-shadow:0 0 12px rgba(74,255,122,.8);animation:rcConfirmIn .45s cubic-bezier(.2,1.3,.5,1) both}
+    @keyframes rcConfirmIn{0%{transform:scale(.8);opacity:0}100%{transform:scale(1);opacity:1}}
+    .rc-confirmed-check{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,#4aff7a 55%,#0a6e2a 100%);border:2px solid #fff;box-shadow:0 0 12px #4aff7a;display:flex;align-items:center;justify-content:center;font-size:14px;color:#06330f;flex-shrink:0;font-family:'Russo One',sans-serif}
+    .rc-status{flex-shrink:0;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Russo One',sans-serif;font-size:11px;letter-spacing:.14em;text-align:center;line-height:1.5;text-wrap:balance}
+    .rc-status.tap{font-family:'Fredoka',sans-serif;font-weight:600;font-size:.8rem;letter-spacing:.02em;color:rgba(255,255,255,.6);animation:rcStatusFade 2s ease-in-out infinite}
+    .rc-status.waiting{color:#4be0ff;text-shadow:0 0 8px #4be0ff}
+    .rc-status.waiting b{color:#fff;margin-left:4px;text-shadow:0 0 8px #4be0ff}
+    .rc-status-dot{width:8px;height:8px;border-radius:50%;background:#4be0ff;box-shadow:0 0 10px #4be0ff;animation:rcDotPulse 1.2s ease-in-out infinite;flex-shrink:0}
+    @keyframes rcDotPulse{0%,100%{transform:scale(.7);opacity:.6}50%{transform:scale(1.2);opacity:1}}
+    @keyframes rcStatusFade{0%,100%{opacity:.55}50%{opacity:1}}
+
+    /* Pastille "prêt" sur les score-pill pendant l'attente */
+    .score-pill.is-ready{border-color:#4aff7a !important;box-shadow:0 0 12px rgba(74,255,122,.55),0 0 24px rgba(74,255,122,.3) !important;background:rgba(20,90,45,.18) !important}
+    .score-pill-ready{position:absolute;top:-7px;right:-5px;z-index:3;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,#4aff7a 55%,#0a6e2a 100%);border:2px solid #fff;box-shadow:0 0 10px #4aff7a,0 0 18px rgba(74,255,122,.55);display:flex;align-items:center;justify-content:center;font-family:'Russo One',sans-serif;font-size:9px;color:#06330f;animation:rcReadyPop .4s cubic-bezier(.2,1.4,.5,1) both;line-height:1}
+    @keyframes rcReadyPop{0%{transform:scale(0) rotate(-30deg);opacity:0}100%{transform:scale(1) rotate(0deg);opacity:1}}
   </style>
 </head>
 <body>
@@ -859,16 +897,21 @@ function updateScores(room, gs) {
     }
   }
 
+  // Affiche un ✓ "prêt" sur le pill pendant la phase roundIntro
+  const showReady = gs.phase === 'roundIntro';
+
   G('scores-strip').innerHTML = players.map((p, i) => {
     const avIdx = PLAYER_AVATARS[i] ?? 0;
     const av = AVATARS[avIdx] || AVATARS[0];
     const isMe = p === ME;
+    const isReady = showReady && !!(gs.ready && gs.ready[p]);
     const colorStyle = isMe
       ? ''
       : `border-color:${av.bg};box-shadow:0 0 10px ${av.bg}55,0 0 20px ${av.bg}22`;
     const gain = gains ? gains[i] : 0;
     return `
-      <div class="score-pill ${isMe ? 'me' : ''}" style="${colorStyle}">
+      <div class="score-pill ${isMe ? 'me' : ''} ${isReady ? 'is-ready' : ''}" style="${colorStyle}">
+        ${isReady ? '<span class="score-pill-ready">✓</span>' : ''}
         <img class="score-pill-avatar" src="js/assets/avatars/${av.file}" alt="" style="border:2px solid ${av.bg}">
         <span class="score-pill-name">${isMe ? 'Toi' : p}</span>
         <span class="score-pill-val">${gs.scores[i] || 0}</span>
@@ -995,16 +1038,47 @@ function renderState(room, gs) {
 
     const r = RT.find(x => x.id === (room.rounds[gs.roundIdx] || ''));
     const isReady = !!(gs.ready && gs.ready[ME]);
+    const readyCount = players.filter(p => gs.ready && gs.ready[p]).length;
+    const totalPlayers = players.length;
     showState('state-waiting');
+
+    // Sparkles aléatoires à l'intérieur de la carte
+    const sparkles = Array.from({length: 6}, () => {
+      const left = 8 + Math.random() * 84;
+      const top  = 8 + Math.random() * 84;
+      const size = 7 + Math.random() * 11;
+      const delay = Math.random() * 3;
+      const glyph = Math.random() > .5 ? '✦' : '·';
+      return `<span class="rc-spark" style="left:${left.toFixed(1)}%;top:${top.toFixed(1)}%;font-size:${size.toFixed(0)}px;animation-delay:${delay.toFixed(2)}s">${glyph}</span>`;
+    }).join('');
+
+    const themeLine = room.currentThemeName
+      ? `<div class="rc-theme">Thème : <b>${room.currentThemeName}</b>${room.currentDifficulty ? ` · ${room.currentDifficulty}` : ''}</div>`
+      : '';
+
+    const ctaHtml = isReady
+      ? `<div class="rc-confirmed-pill"><span class="rc-confirmed-check">✓</span>PRÊT !</div>`
+      : `<button class="rc-ready" onclick="actReady()"><span class="rc-ready-glyph">✓</span>JE SUIS PRÊT</button>`;
+
+    const statusHtml = isReady
+      ? `<div class="rc-status waiting"><span class="rc-status-dot"></span>ON ATTEND LES AUTRES… <b>${readyCount}/${totalPlayers}</b> PRÊTS</div>`
+      : `<div class="rc-status tap">APPUIE QUAND TU ES PRÊT À JOUER 👇</div>`;
+
     G('waiting-text').innerHTML = `
-      <div style="text-align:center">
-        <div style="font-size:2.5rem;margin-bottom:8px">${r ? r.icon : '🎮'}</div>
-        <div style="font-size:1.1rem;font-weight:700;margin-bottom:4px">${r ? r.name : 'Round'}</div>
-        <div style="font-size:.72rem;color:#4a5a7a;margin-bottom:8px">${r ? r.desc : ''}</div>
-        ${room.currentThemeName ? `<div style="font-size:.78rem;color:#cbd5e1;margin-bottom:14px">Thème : <strong>${room.currentThemeName}</strong> · ${room.currentDifficulty||''}</div>` : '<div style="margin-bottom:8px"></div>'}
-        <button onclick="actReady()" style="padding:14px 32px;border:none;border-radius:14px;font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;letter-spacing:.05em;transition:all .15s;${isReady ? 'background:#14532d;color:#86efac;cursor:default' : 'background:var(--accent);color:white'}" ${isReady ? 'disabled' : ''}>
-          ${isReady ? '✓ En attente…' : 'READY ✓'}
-        </button>
+      <div class="rc-wrap">
+        <div class="rc-card${isReady ? ' confirmed' : ''}">
+          ${sparkles}
+          <div class="rc-icon-wrap">
+            <div class="rc-icon-ring"></div>
+            <div class="rc-icon">${r ? r.icon : '🎮'}</div>
+          </div>
+          <div class="rc-kicker">PROCHAINE MANCHE</div>
+          <div class="rc-title">${r ? r.name : 'Round'}</div>
+          <div class="rc-sub">${r ? r.desc : ''}</div>
+          ${themeLine}
+          ${ctaHtml}
+        </div>
+        ${statusHtml}
       </div>`;
     return;
   }

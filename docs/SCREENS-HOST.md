@@ -110,26 +110,54 @@ Bonne réponse révélée (en vert), buzz indicator si pertinent, anecdote.
 
 ---
 
-## 11–16. Écran intermédiaire 🕗
+## 11–16. Écran intermédiaire
 
-Affiché 4,5 s entre chaque question. Une variante par type de round.
+Affiché 4,5 s entre chaque question. Layout 2 colonnes : scores à gauche (avatar + nom + score, encadré néon), résultat à droite encadré d'une bordure LED animée.
 
-**QCM**
+### 11. QCM ✅
+
+Design néon "reveal" : headline ✓/✗ avec lettre de la bonne réponse, bloc gagnants (cartes médaille avec avatar + gain), aucun gagnant → "PERSONNE N'A TROUVÉ", anecdote "💡 LE SAVIEZ-VOUS ?".
+
 ![](screens-host/11-inter-qcm.png)
 
-**Buzzer**
+---
+
+### 12. Buzzer 🕗
+
+Avatar du vainqueur en grand (ou ⏱️ si temps écoulé), nombre de points remportés, bonne réponse + anecdote.
+
 ![](screens-host/12-inter-buzzer.png)
 
-**Chrono**
+---
+
+### 13. Chrono 🕗
+
+Classement de la question par rapidité (🥇/🥈/🥉), points par joueur, bonne réponse.
+
 ![](screens-host/13-inter-chrono.png)
 
-**Steal (Vol de Points)**
+---
+
+### 14. Steal 🕗
+
+Voleur et victime côte à côte avec avatars, points volés (+X / -X), bonne réponse.
+
 ![](screens-host/14-inter-steal.png)
 
-**Patate Chaude** (explosion)
+---
+
+### 15. Patate Chaude 🕗
+
+💥 BOOM si explosion (avatar du perdant, perte de points), ou 🥔 passage de la patate avec indiquation du nouveau porteur.
+
 ![](screens-host/15-inter-patate.png)
 
-**Tir à la Carabine** (Carton)
+---
+
+### 16. Tir à la Carabine ✅
+
+Design "cinte" : chip de round, headline kicker (TIR RÉUSSI / RICOCHET RATÉ / EN JOUE… / TEMPS ÉCOULÉ), liste des joueurs avec ballons 🎈 restants et badges (TIREUR / -1 BALLON / ÉLIMINÉ / CIBLE ?), bonne réponse.
+
 ![](screens-host/16-inter-carton.png)
 
 ---

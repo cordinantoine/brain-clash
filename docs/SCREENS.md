@@ -119,31 +119,31 @@ Classement de fin de partie, avec bouton retour à l'accueil.
 
 ![](screens/03g-final.png)
 
-### 3h. Écran intermédiaire 🕗
+### 3h. Écran intermédiaire
 
 Affiché 4,5 s entre chaque question. Une variante par type de round.
 
-**QCM**
+**QCM ✅** — médaille néon ✓/✗ personnalisée : bonne/mauvaise réponse, gain, série de bonnes réponses (🔥 SÉRIE × N), carte "bonne réponse était", décompte SVG 4,5 s.
 ![](screens/03h-inter-qcm.png)
 
-**Buzzer**
+**Buzzer 🕗**
 ![](screens/03h-inter-buzzer.png)
 
-**Chrono**
+**Chrono 🕗**
 ![](screens/03h-inter-chrono.png)
 
-**Steal**
+**Steal 🕗**
 ![](screens/03h-inter-steal.png)
 
-**Patate** (explosion)
+**Patate 🕗** (explosion)
 ![](screens/03h-inter-patate.png)
 
-**Carton**
+**Carton 🕗** — chip résultat personnel (score, ballons restants), bonne réponse révélée.
 ![](screens/03h-inter-carton.png)
 
-### 3i. Choisir une cible 🕗
+### 3i. Choisir une cible ✅
 
-Round steal ou carton — après avoir bien répondu, tu choisis sur qui voler / tirer.
+Round steal ou carton — après avoir bien répondu, tu choisis sur qui voler / tirer. Style cockpit néon : viseur animé en en-tête, carte cible avec avatar, ballons, réticule ; bouton TIRER/VOLER verrouillé tant qu'aucune cible n'est sélectionnée.
 
 **Steal**
 ![](screens/03i-choisir-cible-steal.png)

@@ -169,7 +169,7 @@ const SCENES = [
 
   { file:'16-inter-carton.png', setup:`(() => {
     __setBaseGlobals();
-    drawQuestionResult(__baseRoom({rounds:['carton'],theme:'culture'}), __baseGs({phase:'questionResult', balloons:[3,2,1], result:{msg:'Antoine crève un ballon de Léa !',pts:0,scorer:'Antoine'}}));
+    drawQuestionResult(__baseRoom({rounds:['carton'],theme:'culture'}), __baseGs({phase:'questionResult', balloons:[3,2,1], result:{msg:'🎯 Antoine crève un ballon de Léa !',pts:0,scorer:'Antoine'}}));
   })()` },
 
   // ── Classements ──
