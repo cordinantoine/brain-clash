@@ -137,15 +137,40 @@ const SCENES = [
     drawQ_host(__baseRoom({theme:'culture'}), __baseGs({revealed:true, answers:{Antoine:{ansIdx:0,time:1}}, result:{msg:'Antoine répond bien !',pts:100,scorer:'Antoine'}, scores:[440,220,180]}));
   })()` },
 
-  // ── Écrans intermédiaires (6 variantes) ──
+  { file:'10b-question-revelation-personne.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQ_host(__baseRoom({theme:'culture'}), __baseGs({revealed:true, answers:{Antoine:{ansIdx:1,time:1},Léa:{ansIdx:2,time:2},Max:{ansIdx:3,time:3}}, result:{msg:'Personne n\\'a trouvé !',pts:0}}));
+  })()` },
+
+  { file:'10c-question-revelation-timeout.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQ_host(__baseRoom({theme:'culture'}), __baseGs({revealed:true, answers:{}, result:{msg:'⏱️ Temps écoulé !',pts:0}}));
+  })()` },
+
+  { file:'10d-question-buzz-en-cours.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQ_host(__baseRoom({rounds:['buzzer','qcm','chrono','steal','patate','carton'],theme:'culture'}), __baseGs({buzzed:'Antoine', answers:{}}));
+  })()` },
+
+  // ── Écrans intermédiaires (variantes) ──
   { file:'11-inter-qcm.png', setup:`(() => {
     __setBaseGlobals();
     drawQuestionResult(__baseRoom({rounds:['qcm'],theme:'culture'}), __baseGs({phase:'questionResult', answers:{Antoine:{ansIdx:0,time:1},Max:{ansIdx:0,time:2}}, result:{msg:'+100 pts',pts:100}, scores:[440,220,280]}));
   })()` },
 
+  { file:'11b-inter-qcm-personne.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQuestionResult(__baseRoom({rounds:['qcm'],theme:'culture'}), __baseGs({phase:'questionResult', answers:{Antoine:{ansIdx:1,time:1},Léa:{ansIdx:2,time:2},Max:{ansIdx:3,time:3}}, result:{msg:'Personne n\\'a trouvé !',pts:0}, scores:[340,220,180]}));
+  })()` },
+
   { file:'12-inter-buzzer.png', setup:`(() => {
     __setBaseGlobals();
     drawQuestionResult(__baseRoom({rounds:['buzzer'],theme:'culture'}), __baseGs({phase:'questionResult', buzzed:'Antoine', answers:{Antoine:{ansIdx:0,time:1}}, result:{msg:'Antoine remporte 300 pts !',pts:300,scorer:'Antoine'}, scores:[640,220,180]}));
+  })()` },
+
+  { file:'12b-inter-buzzer-timeout.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQuestionResult(__baseRoom({rounds:['buzzer'],theme:'culture'}), __baseGs({phase:'questionResult', answers:{}, result:{msg:'⏱️ Temps écoulé !',pts:0}, scores:[340,220,180]}));
   })()` },
 
   { file:'13-inter-chrono.png', setup:`(() => {
@@ -162,14 +187,44 @@ const SCENES = [
     drawQuestionResult(__baseRoom({rounds:['steal'],theme:'culture'}), __baseGs({phase:'questionResult', result:{msg:'Antoine vole 50 pts à Léa !',pts:50,scorer:'Antoine'}, scores:[390,170,180]}));
   })()` },
 
+  { file:'14b-inter-steal-personne.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQuestionResult(__baseRoom({rounds:['steal'],theme:'culture'}), __baseGs({phase:'questionResult', result:{msg:'Personne n\\'a trouvé !',pts:0}, scores:[340,220,180]}));
+  })()` },
+
   { file:'15-inter-patate.png', setup:`(() => {
     __setBaseGlobals();
     drawQuestionResult(__baseRoom({rounds:['patate'],theme:'culture'}), __baseGs({phase:'questionResult', patateManche:3, patateHolder:'Léa', result:{msg:'💥 BOOM ! Léa a la patate',pts:-200,scorer:'Léa'}, scores:[340,20,180]}));
   })()` },
 
+  { file:'15b-inter-patate-passe.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQuestionResult(__baseRoom({rounds:['patate'],theme:'culture'}), __baseGs({phase:'questionResult', patateManche:1, patateHolder:'Max', result:{msg:'Antoine passe la patate à Max',pts:0,scorer:'Antoine'}, scores:[340,220,180]}));
+  })()` },
+
   { file:'16-inter-carton.png', setup:`(() => {
     __setBaseGlobals();
     drawQuestionResult(__baseRoom({rounds:['carton'],theme:'culture'}), __baseGs({phase:'questionResult', balloons:[3,2,1], result:{msg:'🎯 Antoine crève un ballon de Léa !',pts:0,scorer:'Antoine'}}));
+  })()` },
+
+  { file:'16b-inter-carton-picking.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQuestionResult(__baseRoom({rounds:['carton'],theme:'culture'}), __baseGs({phase:'questionResult', balloons:[3,3,2], pickTarget:true, buzzed:'Antoine', result:{msg:'🎯 Antoine choisit sa cible…',pts:0,scorer:'Antoine'}}));
+  })()` },
+
+  { file:'16c-inter-carton-self.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQuestionResult(__baseRoom({rounds:['carton'],theme:'culture'}), __baseGs({phase:'questionResult', balloons:[2,3,3], result:{msg:'❌ Antoine perd un ballon !',pts:0,scorer:'Antoine'}}));
+  })()` },
+
+  { file:'16d-inter-carton-timeout.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQuestionResult(__baseRoom({rounds:['carton'],theme:'culture'}), __baseGs({phase:'questionResult', balloons:[3,3,3], result:{msg:'⏱️ Temps écoulé !',pts:0}}));
+  })()` },
+
+  { file:'16e-inter-carton-survivor.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQuestionResult(__baseRoom({rounds:['carton'],theme:'culture'}), __baseGs({phase:'questionResult', balloons:[3,0,0], roundElim:['Léa','Max'], result:{msg:'🏆 Antoine est le dernier debout !',pts:500,scorer:'Antoine'}, scores:[840,220,180]}));
   })()` },
 
   // ── Classements ──

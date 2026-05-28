@@ -10,7 +10,7 @@ npm install           # première fois seulement (puppeteer-core)
 node shot.js          # serveur "Brain Clash (Host)" doit tourner sur :8080
 ```
 
-Les 20 PNG dans `docs/screens-host/` sont écrasés à chaque exécution.
+Les 30 PNG dans `docs/screens-host/` sont écrasés à chaque exécution.
 
 Légende :
 - ✅ refondu (cockpit néon)
@@ -104,9 +104,19 @@ Plateau TV en cours de question : carte question, 4 réponses A/B/C/D, sidebar c
 
 ## 10. Question — révélation ✅
 
-Bonne réponse révélée (en vert), buzz indicator si pertinent, anecdote.
+Quatre variantes selon le résultat.
 
+**10a. Bonne réponse trouvée** — réponse révélée en vert, scorer mis en avant, anecdote.
 ![](screens-host/10-question-revelation.png)
+
+**10b. Personne n'a trouvé** — bonne réponse en vert, bandeau d'échec en rouge.
+![](screens-host/10b-question-revelation-personne.png)
+
+**10c. Temps écoulé** — aucune réponse, indicateur `⏱️ Temps écoulé !`.
+![](screens-host/10c-question-revelation-timeout.png)
+
+**10d. Buzz en cours** (round buzzer, avant révélation) — "🔔 X répond…" affiché pendant que le buzzer répond.
+![](screens-host/10d-question-buzz-en-cours.png)
 
 ---
 
@@ -116,17 +126,25 @@ Affiché 4,5 s entre chaque question. Layout 2 colonnes : scores à gauche (avat
 
 ### 11. QCM ✅
 
-Design néon "reveal" : headline ✓/✗ avec lettre de la bonne réponse, bloc gagnants (cartes médaille avec avatar + gain), aucun gagnant → "PERSONNE N'A TROUVÉ", anecdote "💡 LE SAVIEZ-VOUS ?".
+Design néon "reveal" : headline ✓/✗ avec lettre de la bonne réponse, bloc gagnants (cartes médaille avec avatar + gain), anecdote "💡 LE SAVIEZ-VOUS ?".
 
+**11a. Gagnants** — un ou plusieurs joueurs ont trouvé.
 ![](screens-host/11-inter-qcm.png)
+
+**11b. Personne n'a trouvé** — bandeau rouge "PERSONNE N'A TROUVÉ", aucun point distribué.
+![](screens-host/11b-inter-qcm-personne.png)
 
 ---
 
 ### 12. Buzzer 🕗
 
-Avatar du vainqueur en grand (ou ⏱️ si temps écoulé), nombre de points remportés, bonne réponse + anecdote.
+Avatar du vainqueur en grand, nombre de points remportés, bonne réponse + anecdote.
 
+**12a. Vainqueur** — un joueur a buzzé puis répondu correctement.
 ![](screens-host/12-inter-buzzer.png)
+
+**12b. Temps écoulé** — personne n'a buzzé à temps (ou tous ont buzzé out).
+![](screens-host/12b-inter-buzzer-timeout.png)
 
 ---
 
@@ -142,23 +160,44 @@ Classement de la question par rapidité (🥇/🥈/🥉), points par joueur, bon
 
 Voleur et victime côte à côte avec avatars, points volés (+X / -X), bonne réponse.
 
+**14a. Vol réussi** — un joueur a bien répondu et vole des points à un autre.
 ![](screens-host/14-inter-steal.png)
+
+**14b. Personne n'a trouvé** — aucune réponse correcte, pas de vol.
+![](screens-host/14b-inter-steal-personne.png)
 
 ---
 
 ### 15. Patate Chaude 🕗
 
-💥 BOOM si explosion (avatar du perdant, perte de points), ou 🥔 passage de la patate avec indiquation du nouveau porteur.
+🥔 passage entre les manches, 💥 BOOM lors de l'explosion finale.
 
+**15a. Explosion** — fin de manche, le porteur perd des points.
 ![](screens-host/15-inter-patate.png)
+
+**15b. Passe** — un joueur passe la patate à un autre.
+![](screens-host/15b-inter-patate-passe.png)
 
 ---
 
 ### 16. Tir à la Carabine ✅
 
-Design "cinte" : chip de round, headline kicker (TIR RÉUSSI / RICOCHET RATÉ / EN JOUE… / TEMPS ÉCOULÉ), liste des joueurs avec ballons 🎈 restants et badges (TIREUR / -1 BALLON / ÉLIMINÉ / CIBLE ?), bonne réponse.
+Design "cinte" : chip de round, headline kicker, liste des joueurs avec ballons 🎈 restants et badges (TIREUR / -1 BALLON / ÉLIMINÉ / CIBLE ? / SURVIVANT), bonne réponse.
 
+**16a. Tir réussi** — le tireur crève un ballon adverse.
 ![](screens-host/16-inter-carton.png)
+
+**16b. Picking** — le tireur a bien répondu, il est en train de choisir sa cible sur son téléphone (badges "CIBLE ?" sur les joueurs visables).
+![](screens-host/16b-inter-carton-picking.png)
+
+**16c. Ricochet (tir sur soi-même)** — mauvaise réponse, le tireur perd un de ses propres ballons.
+![](screens-host/16c-inter-carton-self.png)
+
+**16d. Temps écoulé** — personne n'a appuyé sur la gâchette.
+![](screens-host/16d-inter-carton-timeout.png)
+
+**16e. Dernier debout** — un seul joueur reste avec des ballons → il remporte le round.
+![](screens-host/16e-inter-carton-survivor.png)
 
 ---
 
