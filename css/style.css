@@ -2404,3 +2404,249 @@ input::placeholder { color:rgba(255,255,255,.3) }
   font-size:.78rem; line-height:1.25;
   color:#fff;
 }
+
+/* ════════════════════════════════════════════
+   CHRONO INTER — Classement néon cyan
+   ════════════════════════════════════════════ */
+@keyframes chinteRaysSpin   { from { transform:rotate(0) } to { transform:rotate(360deg) } }
+@keyframes chinteRowIn {
+  from { opacity:0; transform:translateY(14px) scale(.97) }
+  to   { opacity:1; transform:none }
+}
+
+.chinte-wrap {
+  position:relative;
+  width:100%; height:100%;
+  display:flex; flex-direction:column;
+  gap:12px;
+  z-index:1;
+}
+
+.chinte-chip {
+  align-self:center;
+  display:inline-flex; align-items:center; gap:10px;
+  padding:7px 16px;
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(75,224,255,.32) 0%, transparent 80%),
+    linear-gradient(180deg, rgba(75,224,255,.14) 0%, rgba(75,224,255,.02) 100%);
+  border:2px solid #4be0ff;
+  box-shadow:0 0 0 1px rgba(180,240,255,.45), 0 0 14px rgba(75,224,255,.55), inset 0 0 14px rgba(20,80,140,.3);
+  font-family:'Russo One',sans-serif;
+  font-size:.7rem; letter-spacing:.18em;
+  color:#fff;
+  text-shadow:0 0 8px #4be0ff, 0 0 14px #2a9adf;
+}
+.chinte-chip-bell {
+  width:22px; height:22px;
+  border-radius:7px;
+  background:radial-gradient(circle at 35% 30%, #fff 0%, #9be8ff 50%, #1a7ec0 100%);
+  border:2px solid #fff;
+  box-shadow:0 0 8px #4be0ff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.65rem;
+}
+
+.chinte-headline {
+  position:relative;
+  padding:12px 18px;
+  border-radius:18px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(75,224,255,.28) 0%, transparent 75%),
+    linear-gradient(180deg, #08202e 0%, #04111a 100%);
+  border:2.5px solid #4be0ff;
+  box-shadow:
+    0 0 0 1px rgba(180,240,255,.35),
+    0 0 18px rgba(75,224,255,.5),
+    0 0 38px rgba(60,150,230,.3),
+    inset 0 0 24px rgba(20,80,140,.28);
+  display:flex; align-items:center; gap:14px;
+  animation:sUp .35s ease both;
+}
+.chinte-emblem {
+  width:54px; height:54px; flex-shrink:0;
+  border-radius:13px;
+  border:2.5px solid #fff;
+  background:radial-gradient(circle at 35% 30%, #fff 0%, #9be8ff 48%, #1a7ec0 100%);
+  box-shadow:0 0 14px #4be0ff, 0 0 26px rgba(75,224,255,.5);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.6rem;
+}
+.chinte-headline-body { flex:1; min-width:0 }
+.chinte-headline-kicker {
+  font-family:'Russo One',sans-serif;
+  font-size:.6rem; letter-spacing:.25em;
+  color:#9be8ff;
+  text-shadow:0 0 8px #4be0ff, 0 0 14px rgba(75,224,255,.55);
+  margin-bottom:3px;
+}
+.chinte-headline-text {
+  font-family:'Russo One',sans-serif;
+  font-size:1.25rem; line-height:1.1;
+  color:#fff;
+  text-shadow:0 0 12px rgba(75,224,255,.5), 0 2px 0 rgba(0,0,0,.4);
+}
+
+.chinte-board {
+  flex:1; min-height:0;
+  position:relative;
+  border-radius:22px;
+  padding:18px 22px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:12px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(75,224,255,.14) 0%, transparent 58%),
+    radial-gradient(ellipse at 50% 100%, rgba(120,80,230,.12) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(10,12,32,.6) 0%, rgba(6,8,22,.72) 100%);
+  border:2px solid rgba(75,224,255,.45);
+  box-shadow:0 0 0 1px rgba(255,255,255,.06), 0 0 22px rgba(75,224,255,.28), inset 0 0 30px rgba(0,0,0,.4);
+  overflow:hidden;
+  animation:fadeIn .4s ease both;
+}
+.chinte-rays {
+  position:absolute; inset:0;
+  pointer-events:none;
+  background:
+    conic-gradient(from 0deg at 50% 50%,
+      transparent 0deg,
+      rgba(75,224,255,.07) 5deg,
+      transparent 10deg,
+      transparent 30deg,
+      rgba(120,80,230,.06) 35deg,
+      transparent 40deg,
+      transparent 62deg,
+      rgba(75,224,255,.06) 67deg,
+      transparent 72deg);
+  mask:radial-gradient(circle at 50% 50%, #000 0%, transparent 72%);
+  -webkit-mask:radial-gradient(circle at 50% 50%, #000 0%, transparent 72%);
+  animation:chinteRaysSpin 26s linear infinite;
+  opacity:.7;
+}
+
+.chinte-answer {
+  position:relative; z-index:2;
+  display:inline-flex; align-items:center; gap:14px;
+  padding:10px 22px;
+  border-radius:14px;
+  background:rgba(34,197,94,.12);
+  border:2.5px solid #4aff7a;
+  box-shadow:0 0 0 1px rgba(180,255,200,.3), 0 0 18px rgba(74,255,122,.5), inset 0 0 12px rgba(74,255,122,.12);
+}
+.chinte-answer-label {
+  font-family:'Russo One',sans-serif;
+  font-size:.7rem; letter-spacing:.08em;
+  color:rgba(255,255,255,.9);
+  text-shadow:0 1px 2px rgba(0,0,0,.5);
+  white-space:nowrap;
+}
+.chinte-answer-value {
+  font-family:'Russo One',sans-serif;
+  font-size:1.05rem; letter-spacing:.01em;
+  color:#4aff7a;
+  text-shadow:0 0 12px #4aff7a, 0 0 22px rgba(74,255,122,.6);
+  line-height:1;
+}
+
+.chinte-list {
+  position:relative; z-index:2;
+  width:100%; max-width:640px;
+  display:flex; flex-direction:column; gap:10px;
+}
+.chinte-row {
+  display:flex; align-items:center; gap:14px;
+  padding:10px 16px;
+  border-radius:16px;
+  background:linear-gradient(90deg, color-mix(in srgb, var(--rc,#4be0ff) 12%, transparent) 0%, rgba(10,12,30,.5) 60%);
+  border:2px solid var(--rc,#4be0ff);
+  box-shadow:0 0 14px color-mix(in srgb, var(--rc,#4be0ff) 40%, transparent), inset 0 0 18px rgba(0,0,0,.35);
+  opacity:0;
+  animation:chinteRowIn .45s cubic-bezier(.2,.8,.3,1) both;
+}
+.chinte-medal {
+  flex-shrink:0;
+  width:38px; height:38px;
+  border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Russo One',sans-serif;
+  font-size:1rem;
+  color:#1a1030;
+  border:2.5px solid #fff;
+  text-shadow:0 1px 0 rgba(255,255,255,.4);
+}
+.chinte-medal.m1 { background:radial-gradient(circle at 35% 30%, #fff 0%, #ffde3a 55%, #b88800 100%); box-shadow:0 0 14px #ffde3a, 0 0 24px rgba(255,222,58,.6) }
+.chinte-medal.m2 { background:radial-gradient(circle at 35% 30%, #fff 0%, #d6deea 55%, #8b97ab 100%); box-shadow:0 0 12px #c8d2e0, 0 0 22px rgba(200,210,224,.55) }
+.chinte-medal.m3 { background:radial-gradient(circle at 35% 30%, #fff 0%, #ff9d5a 55%, #b35a1c 100%); box-shadow:0 0 12px #ff8a3a, 0 0 22px rgba(255,138,58,.55) }
+
+.chinte-av {
+  width:44px; height:44px; flex-shrink:0;
+  border-radius:50%;
+  border:2.5px solid #fff;
+  box-shadow:0 0 10px var(--pc,#4be0ff);
+  overflow:hidden;
+}
+.chinte-av img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block }
+.chinte-name {
+  flex:1; min-width:0;
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:700;
+  font-size:1.05rem;
+  color:#fff;
+  text-shadow:0 2px 2px rgba(0,0,0,.6);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.chinte-gain {
+  flex-shrink:0;
+  font-family:'Russo One',sans-serif;
+  font-size:1.4rem; line-height:1;
+  color:#4aff7a;
+  text-shadow:0 0 14px rgba(74,255,122,.6), 0 2px 2px rgba(0,0,0,.5);
+}
+.chinte-gain.zero {
+  color:rgba(255,255,255,.32);
+  text-shadow:0 2px 2px rgba(0,0,0,.5);
+  font-size:1.3rem;
+}
+.chinte-empty {
+  position:relative; z-index:2;
+  color:rgba(255,255,255,.4); text-align:center;
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-size:.95rem;
+}
+
+.chinte-funfact {
+  position:relative; z-index:2;
+  margin-top:2px;
+  padding:9px 14px;
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse at 0% 50%, rgba(255,222,58,.18) 0%, transparent 50%),
+    rgba(10,5,30,.6);
+  border:2px solid rgba(255,222,58,.5);
+  box-shadow:0 0 12px rgba(255,222,58,.25), inset 0 0 10px rgba(255,222,58,.08);
+  display:flex; align-items:center; gap:12px;
+  max-width:92%;
+}
+.chinte-funfact-icon {
+  width:30px; height:30px; flex-shrink:0;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #fff 0%, #ffde3a 55%, #8a6800 100%);
+  border:2px solid #fff;
+  box-shadow:0 0 10px #ffde3a;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.9rem;
+}
+.chinte-funfact-body { flex:1; min-width:0 }
+.chinte-funfact-kicker {
+  font-family:'Russo One',sans-serif;
+  font-size:.52rem; letter-spacing:.28em;
+  color:#ffde3a;
+  text-shadow:0 0 8px #ffde3a;
+  margin-bottom:1px;
+}
+.chinte-funfact-text {
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:500;
+  font-size:.78rem; line-height:1.25;
+  color:#fff;
+}

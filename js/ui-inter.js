@@ -238,29 +238,68 @@ function interBuzzer(room, gs) {
   _interLayout(room, gs, content);
 }
 
-// ── Chrono : classement de vitesse ──
+// ── Chrono : classement de vitesse — design néon cyan ──
 function interChrono(room, gs) {
+  const q = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
   const ranking = toArr(gs.chronoRanking || []);
   const _rp = toArr(room.players);
-  const medals = ['🥇','🥈','🥉'];
-  const rows = ranking.map((entry, rank) => {
+
+  const headlineHtml = `
+    <div class="chinte-headline">
+      <div class="chinte-emblem">⏱️</div>
+      <div class="chinte-headline-body">
+        <div class="chinte-headline-kicker">MANCHE CHRONO · CETTE QUESTION</div>
+        <div class="chinte-headline-text">Classement de la question</div>
+      </div>
+    </div>
+  `;
+
+  const answerHtml = q ? `
+    <div class="chinte-answer">
+      <span class="chinte-answer-label">Bonne réponse :</span>
+      <span class="chinte-answer-value">${q.a[q.c]}</span>
+    </div>
+  ` : '';
+
+  const medalClass = ['m1','m2','m3'];
+  const rowsHtml = ranking.length ? ranking.map((entry, rank) => {
     const idx = gs.players.indexOf(entry.name);
     const rp = _rp.find(x => x.name === entry.name);
     const avIdx = (rp && rp.avatar !== undefined) ? rp.avatar : (idx % AVATARS.length);
     const av = AVATARS[avIdx] || AVATARS[0];
-    return `<div style="display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:14px;background:${entry.correct?'rgba(34,197,94,.12)':'rgba(255,255,255,.04)'};border:1px solid ${entry.correct?'rgba(34,197,94,.3)':'rgba(255,255,255,.08)'};animation:sUp .3s ease ${rank*.06}s both">
-      <span style="font-size:1.2rem;width:30px;text-align:center">${medals[rank]||('#'+(rank+1))}</span>
-      <img src="${AVATAR_PATH}${av.file}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid ${av.bg}" alt="">
-      <span style="font-weight:700;flex:1;font-size:.9rem">${entry.name}</span>
-      <span style="font-weight:900;font-size:1rem;color:${entry.correct?'#4ade80':'rgba(255,255,255,.3)'}">${entry.pts>0?'+'+entry.pts:'—'}</span>
+    const gainCls = entry.pts > 0 ? '' : 'zero';
+    const gainTxt = entry.pts > 0 ? `+${entry.pts}` : '—';
+    return `<div class="chinte-row" style="--rc:${entry.correct ? '#4be0ff' : 'rgba(180,200,230,.35)'};--pc:${av.bg};animation-delay:${rank*.08}s">
+      <div class="chinte-medal ${medalClass[rank] || 'm3'}">${rank+1}</div>
+      <div class="chinte-av"><img src="${AVATAR_PATH}${av.file}" alt=""></div>
+      <div class="chinte-name">${entry.name}</div>
+      <div class="chinte-gain ${gainCls}">${gainTxt}</div>
     </div>`;
-  }).join("");
-  const q = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
-  _interLayout(room, gs, `
-    <div style="font-size:1.4rem;font-weight:800;text-align:center">⏱️ Classement de la question</div>
-    ${q?`<div style="padding:8px 16px;border-radius:10px;background:rgba(255,255,255,.08);font-size:.82rem;text-align:center">Bonne réponse : <strong style="color:#86efac">${q.a[q.c]}</strong></div>`:''}
-    <div style="width:100%;display:flex;flex-direction:column;gap:7px;max-width:520px">${rows||'<div style="color:rgba(255,255,255,.4);text-align:center">Aucune réponse</div>'}</div>
-  `);
+  }).join('') : `<div class="chinte-empty">Aucune réponse</div>`;
+
+  const funfactHtml = q?.f ? `
+    <div class="chinte-funfact">
+      <div class="chinte-funfact-icon">💡</div>
+      <div class="chinte-funfact-body">
+        <div class="chinte-funfact-kicker">LE SAVIEZ-VOUS ?</div>
+        <div class="chinte-funfact-text">${q.f}</div>
+      </div>
+    </div>
+  ` : '';
+
+  const content = `
+    <div class="chinte-wrap">
+      <div class="chinte-chip"><span class="chinte-chip-bell">⏱️</span>MANCHE CHRONO</div>
+      ${headlineHtml}
+      <div class="chinte-board">
+        <div class="chinte-rays"></div>
+        ${answerHtml}
+        <div class="chinte-list">${rowsHtml}</div>
+        ${funfactHtml}
+      </div>
+    </div>
+  `;
+  _interLayout(room, gs, content);
 }
 
 // ── Steal : vol de points ──
