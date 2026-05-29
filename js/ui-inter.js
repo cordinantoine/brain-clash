@@ -351,26 +351,74 @@ function interSteal(room, gs) {
   const victimName = victimMatch ? victimMatch[1] : null;
   let content;
   if (scorer && victimName) {
+    // ── Vol réussi — design néon orange (devil identity) + duel + coins ──
     const ti = gs.players.indexOf(scorer), vi = gs.players.indexOf(victimName);
     const trp = _rp.find(x=>x.name===scorer), vrp = _rp.find(x=>x.name===victimName);
     const tav = AVATARS[(trp&&trp.avatar!==undefined)?trp.avatar:(ti%AVATARS.length)]||AVATARS[0];
     const vav = AVATARS[(vrp&&vrp.avatar!==undefined)?vrp.avatar:(vi%AVATARS.length)]||AVATARS[0];
-    content = `
-      <div style="font-size:1.4rem;font-weight:800;color:#f59e0b;text-align:center;animation:sUp .3s ease both">😈 Vol de points !</div>
-      <div style="display:flex;align-items:center;gap:24px;justify-content:center">
-        <div style="text-align:center;animation:popIn .4s ease both">
-          <img src="${AVATAR_PATH}${tav.file}" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid ${tav.bg};box-shadow:0 0 28px ${tav.bg}88" alt="">
-          <div style="font-size:.85rem;font-weight:700;margin-top:6px">${scorer}</div>
-          <div style="font-size:.8rem;color:#4ade80;font-weight:800">+${stolen} pts</div>
-        </div>
-        <div style="font-size:2.5rem;animation:floatY 1.5s ease-in-out infinite">😈</div>
-        <div style="text-align:center;opacity:.7;animation:popIn .4s ease .1s both">
-          <img src="${AVATAR_PATH}${vav.file}" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid #ef4444;box-shadow:0 0 28px #ef444488;filter:grayscale(.3)" alt="">
-          <div style="font-size:.85rem;font-weight:700;margin-top:6px">${victimName}</div>
-          <div style="font-size:.8rem;color:#f87171;font-weight:800">-${stolen} pts</div>
+
+    const headlineHtml = q?.q ? `
+      <div class="swin-headline">
+        <div class="swin-headline-emblem">😈</div>
+        <div class="swin-headline-body">
+          <div class="swin-headline-kicker">VOL RÉUSSI · LA QUESTION</div>
+          <div class="swin-headline-text">${q.q}</div>
         </div>
       </div>
-      ${q?`<div style="padding:8px 16px;border-radius:10px;background:rgba(255,255,255,.08);font-size:.82rem;text-align:center">Bonne réponse : <strong style="color:#86efac">${q.a[q.c]}</strong></div>`:''}
+    ` : '';
+
+    const coinCount = Math.max(5, Math.min(9, Math.round(stolen / 12)));
+    let coinsHtml = '';
+    for (let k = 0; k < coinCount; k++) {
+      const delay = (k * 1.7 / coinCount).toFixed(2);
+      coinsHtml += `<span class="swin-coin" style="animation-delay:${delay}s"><span class="swin-coin-face"></span></span>`;
+    }
+
+    const answerHtml = q ? `
+      <div class="swin-answer">
+        <span class="swin-answer-label">BONNE RÉPONSE</span>
+        <span class="swin-answer-divider"></span>
+        <span class="swin-answer-value">${q.a[q.c]}</span>
+      </div>
+    ` : '';
+
+    const funfactHtml = q?.f ? `
+      <div class="swin-funfact">
+        <div class="swin-funfact-icon">💡</div>
+        <div class="swin-funfact-body">
+          <div class="swin-funfact-kicker">LE SAVIEZ-VOUS ?</div>
+          <div class="swin-funfact-text">${q.f}</div>
+        </div>
+      </div>
+    ` : '';
+
+    content = `
+      <div class="swin-wrap">
+        ${headlineHtml}
+        <div class="swin-panel">
+          <div class="swin-panel-rays"></div>
+          <div class="swin-title">
+            <span class="swin-devil">😈</span>
+            VOL DE POINTS&nbsp;!
+          </div>
+          <div class="swin-duel">
+            <div class="swin-coinflow">${coinsHtml}</div>
+            <div class="swin-duelist thief" style="--pc:${tav.bg};--avb:${tav.bg}">
+              <div class="swin-duel-av"><img src="${AVATAR_PATH}${tav.file}" alt=""></div>
+              <div class="swin-duel-name">${scorer}</div>
+              <div class="swin-delta gain">+${stolen} pts</div>
+            </div>
+            <div class="swin-core"></div>
+            <div class="swin-duelist victim" style="--pc:${vav.bg};--avb:${vav.bg}">
+              <div class="swin-duel-av"><img src="${AVATAR_PATH}${vav.file}" alt=""><span class="swin-tear">💧</span></div>
+              <div class="swin-duel-name">${victimName}</div>
+              <div class="swin-delta loss">−${stolen} pts</div>
+            </div>
+          </div>
+          ${answerHtml}
+        </div>
+        ${funfactHtml}
+      </div>
     `;
   } else {
     // ── Personne n'a trouvé (ou timeout) — design néon rouge/violet ──

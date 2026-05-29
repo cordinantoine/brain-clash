@@ -3191,3 +3191,310 @@ input::placeholder { color:rgba(255,255,255,.3) }
   text-shadow:0 0 10px rgba(255,138,58,.7), 0 2px 0 rgba(0,0,0,.4);
 }
 .pinte-sub-spud { font-size:1.15rem; filter:drop-shadow(0 0 6px rgba(255,138,58,.9)) }
+
+/* ════════════════════════════════════════════════════════════
+   Inter Steal — Vol réussi (14-inter-steal)
+   Identité orange (devil) + duel thief/victim + Mario coin lob
+   ════════════════════════════════════════════════════════════ */
+@keyframes swinEmblemBreathe {
+  0%,100% { transform:scale(1); }
+  50%     { transform:scale(1.05); }
+}
+@keyframes swinRaysSpin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+@keyframes swinDevilShake {
+  0%,100% { transform:rotate(-6deg) scale(1); }
+  50%     { transform:rotate(6deg) scale(1.08); }
+}
+@keyframes swinThiefPulse {
+  0%,100% { transform:translateY(0) scale(1); }
+  50%     { transform:translateY(-6px) scale(1.03); }
+}
+@keyframes swinCoinArc {
+  0%   { transform:translate(168px, 0);    opacity:0; }
+  8%   { opacity:1; }
+  25%  { transform:translate(84px, -48px); }
+  50%  { transform:translate(0px, -60px); }
+  75%  { transform:translate(-84px, -44px); }
+  92%  { opacity:1; }
+  100% { transform:translate(-168px, 4px); opacity:0; }
+}
+@keyframes swinCoinSpin {
+  0%   { transform:scaleX(1); }
+  25%  { transform:scaleX(.12); }
+  50%  { transform:scaleX(1); }
+  75%  { transform:scaleX(.12); }
+  100% { transform:scaleX(1); }
+}
+
+.swin-wrap {
+  position:relative;
+  width:100%; height:100%;
+  display:flex; flex-direction:column;
+  gap:12px;
+  z-index:1;
+}
+
+.swin-headline {
+  position:relative;
+  padding:12px 18px;
+  border-radius:18px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,138,58,.30) 0%, transparent 75%),
+    linear-gradient(180deg, #2a1208 0%, #160a08 100%);
+  border:2px solid #ff8a3a;
+  box-shadow:0 0 0 1px rgba(255,210,170,.35), 0 0 18px rgba(255,138,58,.5), inset 0 0 22px rgba(140,60,20,.3);
+  display:flex; align-items:center; gap:14px;
+  animation:sUp .35s ease both;
+}
+.swin-headline-emblem {
+  width:52px; height:52px; flex-shrink:0;
+  border-radius:13px;
+  border:2.5px solid #fff;
+  background:radial-gradient(circle at 35% 30%, #ffd0a8 0%, #ff8a3a 48%, #d1551e 100%);
+  box-shadow:0 0 12px #ff8a3a, 0 0 24px rgba(255,138,58,.5);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.6rem;
+  animation:swinEmblemBreathe 2.4s ease-in-out infinite;
+}
+.swin-headline-body { flex:1; min-width:0 }
+.swin-headline-kicker {
+  font-family:'Russo One',sans-serif;
+  font-size:.6rem; letter-spacing:.25em;
+  color:#ffc089;
+  text-shadow:0 0 8px #ff8a3a;
+  margin-bottom:3px;
+}
+.swin-headline-text {
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:700;
+  font-size:1.05rem; line-height:1.15;
+  color:#fff;
+  text-shadow:0 0 10px rgba(255,138,58,.5), 0 2px 0 rgba(0,0,0,.4);
+}
+
+.swin-panel {
+  flex:1; min-height:0;
+  position:relative;
+  border-radius:22px;
+  padding:18px 22px 22px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:18px;
+  background:
+    radial-gradient(ellipse at 50% 28%, rgba(255,138,58,.22) 0%, transparent 58%),
+    radial-gradient(ellipse at 50% 100%, rgba(185,109,255,.12) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(28,12,8,.6) 0%, rgba(10,4,20,.74) 100%);
+  border:2px solid rgba(255,138,58,.55);
+  box-shadow:0 0 0 1px rgba(255,255,255,.06), 0 0 22px rgba(255,138,58,.32), inset 0 0 30px rgba(0,0,0,.4);
+  overflow:hidden;
+  animation:fadeIn .4s ease both;
+}
+.swin-panel-rays {
+  position:absolute; inset:0;
+  pointer-events:none;
+  background:
+    conic-gradient(from 0deg at 50% 45%,
+      transparent 0deg,
+      rgba(255,138,58,.09) 5deg,
+      transparent 10deg,
+      transparent 28deg,
+      rgba(255,138,58,.07) 33deg,
+      transparent 38deg,
+      transparent 60deg,
+      rgba(185,109,255,.07) 65deg,
+      transparent 70deg);
+  mask:radial-gradient(circle at 50% 45%, #000 0%, transparent 70%);
+  -webkit-mask:radial-gradient(circle at 50% 45%, #000 0%, transparent 70%);
+  animation:swinRaysSpin 22s linear infinite;
+  opacity:.8;
+}
+
+.swin-title {
+  position:relative; z-index:3;
+  display:flex; align-items:center; gap:14px;
+  font-family:'Russo One',sans-serif;
+  font-size:2rem; letter-spacing:.03em;
+  color:#ff8a3a;
+  text-align:center; line-height:1;
+  text-shadow:0 0 14px rgba(255,138,58,.7), 0 0 26px rgba(255,106,26,.55), 0 3px 0 rgba(0,0,0,.4);
+}
+.swin-devil {
+  font-size:1.8rem;
+  filter:drop-shadow(0 0 10px rgba(255,84,40,.9));
+  animation:swinDevilShake 2.6s ease-in-out infinite;
+}
+
+.swin-duel {
+  position:relative; z-index:3;
+  display:flex; align-items:center; justify-content:center;
+  gap:24px;
+  margin-top:2px;
+}
+.swin-duelist {
+  display:flex; flex-direction:column; align-items:center; gap:8px;
+  width:150px;
+}
+.swin-duel-av {
+  position:relative;
+  width:108px; height:108px;
+  border-radius:50%;
+  border:4px solid var(--pc);
+  background:var(--avb);
+  box-shadow:0 0 18px var(--pc), inset 0 0 10px rgba(0,0,0,.4);
+  overflow:hidden;
+}
+.swin-duel-av img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block }
+
+.swin-duelist.thief .swin-duel-av {
+  border-color:#4aff7a;
+  box-shadow:0 0 0 3px rgba(255,255,255,.18), 0 0 22px #4aff7a, 0 0 50px rgba(74,255,122,.6);
+  animation:swinThiefPulse 2.2s ease-in-out infinite;
+}
+.swin-duelist.victim .swin-duel-av {
+  border-color:#ff5470;
+  box-shadow:0 0 18px rgba(255,84,112,.6), inset 0 0 14px rgba(0,0,0,.5);
+  filter:saturate(.6) brightness(.82);
+}
+.swin-tear {
+  position:absolute;
+  bottom:-4px; right:4px;
+  font-size:1.3rem;
+  filter:drop-shadow(0 0 6px rgba(120,180,255,.8));
+  z-index:4;
+}
+
+.swin-duel-name {
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:700; font-size:1.05rem;
+  color:#fff;
+  text-shadow:0 2px 3px rgba(0,0,0,.6);
+}
+.swin-delta {
+  font-family:'Russo One',sans-serif;
+  font-size:1.05rem; line-height:1;
+  padding:7px 16px;
+  border-radius:12px;
+}
+.swin-delta.gain {
+  color:#4aff7a;
+  background:rgba(34,197,94,.14);
+  border:2px solid #4aff7a;
+  box-shadow:0 0 16px rgba(74,255,122,.5), inset 0 0 12px rgba(74,255,122,.12);
+  text-shadow:0 0 12px rgba(74,255,122,.7);
+}
+.swin-delta.loss {
+  color:#ff6a86;
+  background:rgba(255,84,112,.12);
+  border:2px solid #ff5470;
+  box-shadow:0 0 14px rgba(255,84,112,.4), inset 0 0 12px rgba(255,84,112,.1);
+  text-shadow:0 0 10px rgba(255,84,112,.6);
+}
+
+.swin-core {
+  position:relative;
+  width:110px; height:108px;
+  flex-shrink:0;
+}
+.swin-coinflow {
+  position:absolute;
+  top:54px;
+  left:50%;
+  width:0; height:0;
+  pointer-events:none;
+  z-index:6;
+}
+.swin-coin {
+  position:absolute;
+  top:0; left:0;
+  width:0; height:0;
+  opacity:0;
+  animation:swinCoinArc 1.7s cubic-bezier(.45,0,.55,1) infinite;
+}
+.swin-coin-face {
+  position:absolute;
+  top:-16px; left:-16px;
+  width:32px; height:32px;
+  border-radius:50%;
+  background:radial-gradient(circle at 38% 30%, #fff6c8 0%, #ffd83a 40%, #f0b400 72%, #b07d00 100%);
+  border:2.5px solid #fff2b0;
+  box-shadow:
+    0 0 10px rgba(255,216,58,.95),
+    0 0 22px rgba(255,200,30,.6),
+    inset 0 -3px 5px rgba(150,100,0,.45),
+    inset 0 3px 4px rgba(255,255,255,.6);
+  animation:swinCoinSpin .55s linear infinite;
+}
+.swin-coin-face::before {
+  content:'';
+  position:absolute; inset:5px;
+  border-radius:50%;
+  border:2px solid rgba(180,120,0,.45);
+  box-shadow:inset 0 0 5px rgba(255,255,255,.4);
+}
+
+.swin-answer {
+  position:relative; z-index:3;
+  margin-top:2px;
+  align-self:center;
+  display:inline-flex; align-items:center; gap:16px;
+  padding:11px 22px;
+  border-radius:16px;
+  background:rgba(34,197,94,.12);
+  border:2.5px solid #4aff7a;
+  box-shadow:0 0 0 1px rgba(180,255,200,.3), 0 0 20px rgba(74,255,122,.5), inset 0 0 14px rgba(74,255,122,.12);
+}
+.swin-answer-label {
+  font-family:'Russo One',sans-serif;
+  font-size:.68rem; letter-spacing:.18em;
+  color:rgba(74,255,122,.92);
+  text-shadow:0 0 8px rgba(74,255,122,.5);
+  white-space:nowrap;
+}
+.swin-answer-divider {
+  width:2px; height:26px;
+  background:rgba(74,255,122,.5);
+  box-shadow:0 0 8px rgba(74,255,122,.5);
+  border-radius:2px;
+}
+.swin-answer-value {
+  font-family:'Russo One',sans-serif;
+  font-size:1.4rem; letter-spacing:.01em;
+  color:#4aff7a;
+  text-shadow:0 0 12px #4aff7a, 0 0 22px rgba(74,255,122,.5);
+  line-height:1;
+}
+
+.swin-funfact {
+  position:relative;
+  padding:9px 14px;
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse at 0% 50%, rgba(255,222,58,.18) 0%, transparent 50%),
+    rgba(10,5,30,.6);
+  border:2px solid rgba(255,222,58,.5);
+  box-shadow:0 0 12px rgba(255,222,58,.25), inset 0 0 10px rgba(255,222,58,.08);
+  display:flex; align-items:center; gap:12px;
+}
+.swin-funfact-icon {
+  width:30px; height:30px; flex-shrink:0;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #fff 0%, #ffde3a 55%, #8a6800 100%);
+  border:2px solid #fff;
+  box-shadow:0 0 10px #ffde3a;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.9rem;
+}
+.swin-funfact-body { flex:1; min-width:0 }
+.swin-funfact-kicker {
+  font-family:'Russo One',sans-serif;
+  font-size:.52rem; letter-spacing:.28em;
+  color:#ffde3a;
+  text-shadow:0 0 8px #ffde3a;
+  margin-bottom:1px;
+}
+.swin-funfact-text {
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:500;
+  font-size:.78rem; line-height:1.25;
+  color:#fff;
+}
