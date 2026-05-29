@@ -2650,3 +2650,258 @@ input::placeholder { color:rgba(255,255,255,.3) }
   font-size:.78rem; line-height:1.25;
   color:#fff;
 }
+
+/* ════════════════════════════════════════════════════════════
+   Inter Buzzer — Bonne réponse (12-inter-buzzer)
+   Chip ambre (MANCHE BUZZER) + headline vert + disc vainqueur
+   ════════════════════════════════════════════════════════════ */
+@keyframes binwRaysSpin   { from { transform:rotate(0) } to { transform:rotate(360deg) } }
+@keyframes binwDiscBreathe {
+  0%,100% { box-shadow: 0 0 0 3px rgba(255,255,255,.18), 0 0 18px var(--pc,#4be0ff), 0 0 36px color-mix(in srgb, var(--pc,#4be0ff) 50%, transparent), inset 0 0 14px rgba(0,0,0,.35); }
+  50%     { box-shadow: 0 0 0 3px rgba(255,255,255,.22), 0 0 32px var(--pc,#4be0ff), 0 0 64px color-mix(in srgb, var(--pc,#4be0ff) 70%, transparent), inset 0 0 14px rgba(0,0,0,.35); }
+}
+@keyframes binwGainSwing {
+  0%,100% { transform: rotate(8deg) scale(1); }
+  50%     { transform: rotate(4deg) scale(1.08); }
+}
+@keyframes binwWinnerLift {
+  from { transform:translateY(18px) scale(.92); opacity:0 }
+  to   { transform:none; opacity:1 }
+}
+@keyframes binwConfettiFloat {
+  0%,100% { transform:translateY(0) rotate(-6deg) }
+  50%     { transform:translateY(-8px) rotate(8deg) }
+}
+
+.binw-wrap {
+  position:relative;
+  width:100%; height:100%;
+  display:flex; flex-direction:column;
+  gap:14px;
+  z-index:1;
+}
+.binw-chip {
+  align-self:center;
+  display:inline-flex; align-items:center; gap:10px;
+  padding:7px 16px;
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,180,60,.32) 0%, transparent 80%),
+    linear-gradient(180deg, rgba(255,180,60,.14) 0%, rgba(255,180,60,.02) 100%);
+  border:2px solid #ffb43c;
+  box-shadow:0 0 0 1px rgba(255,220,150,.45), 0 0 14px rgba(255,180,60,.55), inset 0 0 14px rgba(140,80,10,.3);
+  font-family:'Russo One',sans-serif;
+  font-size:.7rem; letter-spacing:.18em;
+  color:#fff;
+  text-shadow:0 0 8px #ffb43c, 0 0 14px #ff8a1a;
+}
+.binw-chip-bell {
+  width:22px; height:22px;
+  border-radius:7px;
+  background:radial-gradient(circle at 35% 30%, #fff 0%, #ffd47a 50%, #d68a1a 100%);
+  border:2px solid #fff;
+  box-shadow:0 0 8px #ffb43c;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.65rem;
+}
+
+.binw-headline {
+  position:relative;
+  padding:12px 18px;
+  border-radius:18px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(74,255,122,.30) 0%, transparent 75%),
+    linear-gradient(180deg, #07221a 0%, #021008 100%);
+  border:2.5px solid #4aff7a;
+  box-shadow:
+    0 0 0 1px rgba(180,255,200,.35),
+    0 0 18px rgba(74,255,122,.55),
+    0 0 38px rgba(34,197,94,.35),
+    inset 0 0 24px rgba(20,80,40,.28);
+  display:flex; align-items:center; gap:14px;
+  animation:sUp .35s ease both;
+}
+.binw-emblem {
+  width:58px; height:58px; flex-shrink:0;
+  border-radius:50%;
+  border:3px solid #fff;
+  background:radial-gradient(circle at 35% 30%, #fff 0%, #4aff7a 55%, #0a6e2a 100%);
+  box-shadow:0 0 14px #4aff7a, 0 0 26px rgba(74,255,122,.55);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Russo One',sans-serif;
+  font-size:1.7rem; color:#fff;
+  text-shadow:0 2px 0 rgba(0,0,0,.4);
+}
+.binw-headline-body { flex:1; min-width:0 }
+.binw-kicker {
+  font-family:'Russo One',sans-serif;
+  font-size:.6rem; letter-spacing:.26em;
+  color:#4aff7a;
+  text-shadow:0 0 8px #4aff7a, 0 0 14px rgba(74,255,122,.55);
+  margin-bottom:3px;
+}
+.binw-headline-text {
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:700;
+  font-size:1.4rem; line-height:1.1;
+  color:#fff;
+  text-shadow:0 0 12px rgba(74,255,122,.5), 0 2px 0 rgba(0,0,0,.4);
+}
+.binw-headline-text .binw-answer {
+  color:#4aff7a;
+  text-shadow:0 0 12px #4aff7a, 0 0 24px #22c55e, 0 2px 0 rgba(0,0,0,.4);
+  padding:0 2px;
+}
+.binw-q {
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:500;
+  font-size:.78rem;
+  color:rgba(255,255,255,.7);
+  margin-top:3px;
+  font-style:italic;
+}
+.binw-q::before, .binw-q::after { content:'"'; opacity:.55; margin:0 3px }
+
+.binw-winners {
+  flex:1; min-height:0;
+  position:relative;
+  border-radius:22px;
+  padding:18px 22px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:12px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(74,255,122,.16) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 100%, rgba(74,216,255,.12) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(18,8,40,.55) 0%, rgba(8,4,20,.7) 100%);
+  border:2px solid rgba(120,180,255,.28);
+  box-shadow:0 0 0 1px rgba(255,255,255,.06), 0 0 22px rgba(70,170,255,.3), inset 0 0 30px rgba(0,0,0,.4);
+  overflow:hidden;
+}
+.binw-rays {
+  position:absolute; inset:0;
+  pointer-events:none;
+  background:
+    conic-gradient(from 0deg at 50% 55%,
+      transparent 0deg,
+      rgba(74,255,122,.10) 4deg,
+      transparent 8deg,
+      transparent 22deg,
+      rgba(74,255,122,.10) 26deg,
+      transparent 30deg,
+      transparent 44deg,
+      rgba(74,255,122,.08) 48deg,
+      transparent 52deg,
+      transparent 70deg,
+      rgba(74,255,122,.08) 74deg,
+      transparent 78deg);
+  mask:radial-gradient(circle at 50% 55%, #000 0%, #000 55%, transparent 78%);
+  -webkit-mask:radial-gradient(circle at 50% 55%, #000 0%, #000 55%, transparent 78%);
+  animation:binwRaysSpin 18s linear infinite;
+  opacity:.8;
+}
+.binw-winners-title {
+  position:relative; z-index:2;
+  font-family:'Russo One',sans-serif;
+  font-size:.72rem; letter-spacing:.26em;
+  color:rgba(255,255,255,.8);
+  text-align:center;
+  text-shadow:0 0 8px rgba(74,255,122,.6);
+  margin-bottom:2px;
+}
+.binw-winners-row {
+  position:relative; z-index:2;
+  flex:1; min-height:0;
+  display:flex; align-items:center; justify-content:center;
+  gap:40px; flex-wrap:wrap;
+}
+.binw-winner-card {
+  position:relative;
+  display:flex; flex-direction:column; align-items:center;
+  gap:14px;
+  animation:binwWinnerLift .55s ease-out both;
+}
+.binw-disc-wrap {
+  position:relative;
+  width:160px; height:160px;
+}
+.binw-disc {
+  position:relative;
+  width:100%; height:100%;
+  border-radius:50%;
+  border:5px solid var(--pc,#4be0ff);
+  overflow:hidden;
+  animation:binwDiscBreathe 2.6s ease-in-out infinite;
+}
+.binw-disc img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block }
+.binw-gain {
+  position:absolute;
+  top:-12px; right:-22px;
+  z-index:3;
+  font-family:'Russo One',sans-serif;
+  font-size:1.5rem; letter-spacing:.02em;
+  padding:8px 14px;
+  border-radius:14px;
+  background:linear-gradient(180deg, #4aff7a 0%, #0e8a3a 100%);
+  color:#062c12;
+  border:2.5px solid #fff;
+  box-shadow:
+    0 0 0 2px #4aff7a,
+    0 0 18px #4aff7a,
+    0 0 38px rgba(74,255,122,.5),
+    0 3px 0 rgba(0,0,0,.35);
+  text-shadow:0 1px 0 rgba(255,255,255,.3);
+  transform:rotate(8deg);
+  animation:binwGainSwing 2.2s ease-in-out infinite;
+}
+.binw-winner-name {
+  font-family:'Russo One',sans-serif;
+  font-size:1.6rem;
+  color:#fff;
+  text-shadow:0 0 12px var(--pc,#4be0ff), 0 0 22px var(--pc,#4be0ff), 0 2px 4px rgba(0,0,0,.6);
+  letter-spacing:.02em;
+  line-height:1;
+}
+.binw-confetti {
+  position:absolute;
+  font-size:1rem;
+  z-index:1;
+  animation:binwConfettiFloat 3.2s ease-in-out infinite;
+  filter:drop-shadow(0 0 6px rgba(255,255,255,.4));
+  pointer-events:none;
+}
+
+.binw-funfact {
+  position:relative; z-index:2;
+  padding:9px 14px;
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse at 0% 50%, rgba(255,222,58,.18) 0%, transparent 50%),
+    rgba(10,5,30,.6);
+  border:2px solid rgba(255,222,58,.5);
+  box-shadow:0 0 12px rgba(255,222,58,.25), inset 0 0 10px rgba(255,222,58,.08);
+  display:flex; align-items:center; gap:12px;
+}
+.binw-funfact-icon {
+  width:30px; height:30px; flex-shrink:0;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #fff 0%, #ffde3a 55%, #8a6800 100%);
+  border:2px solid #fff;
+  box-shadow:0 0 10px #ffde3a;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.9rem;
+}
+.binw-funfact-body { flex:1; min-width:0 }
+.binw-funfact-kicker {
+  font-family:'Russo One',sans-serif;
+  font-size:.52rem; letter-spacing:.28em;
+  color:#ffde3a;
+  text-shadow:0 0 8px #ffde3a;
+  margin-bottom:1px;
+}
+.binw-funfact-text {
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:500;
+  font-size:.78rem; line-height:1.25;
+  color:#fff;
+}

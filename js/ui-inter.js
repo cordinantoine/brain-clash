@@ -159,20 +159,58 @@ function interBuzzer(room, gs) {
   const scorer = gs.result?.scorer;
   let content;
   if (scorer) {
+    // ── Bonne réponse — design néon vert (chip ambre + headline vert + disc vainqueur) ──
     const idx = gs.players.indexOf(scorer);
     const rp = _rp.find(x => x.name === scorer);
     const avIdx = (rp && rp.avatar !== undefined) ? rp.avatar : (idx % AVATARS.length);
     const av = AVATARS[avIdx] || AVATARS[0];
     const pts = gs.result?.pts || 0;
+
+    const headlineHtml = `
+      <div class="binw-headline">
+        <div class="binw-emblem">✓</div>
+        <div class="binw-headline-body">
+          <div class="binw-kicker">🔔 BONNE RÉPONSE</div>
+          <div class="binw-headline-text"><span class="binw-answer">${q ? q.a[q.c] : ''}</span></div>
+          ${q?.q ? `<div class="binw-q">${q.q}</div>` : ''}
+        </div>
+      </div>
+    `;
+
+    const funfactHtml = q?.f ? `
+      <div class="binw-funfact">
+        <div class="binw-funfact-icon">💡</div>
+        <div class="binw-funfact-body">
+          <div class="binw-funfact-kicker">LE SAVIEZ-VOUS ?</div>
+          <div class="binw-funfact-text">${q.f}</div>
+        </div>
+      </div>
+    ` : '';
+
     content = `
-      <div style="animation:popIn .5s cubic-bezier(.36,.07,.19,.97) both">
-        <img src="${AVATAR_PATH}${av.file}" style="width:160px;height:160px;border-radius:50%;object-fit:cover;object-position:center top;border:5px solid ${av.bg};box-shadow:0 0 40px ${av.bg}99,0 0 80px ${av.bg}44" alt="">
+      <div class="binw-wrap" style="--pc:${av.bg}">
+        <div class="binw-chip"><span class="binw-chip-bell">🔔</span>MANCHE BUZZER</div>
+        ${headlineHtml}
+        <div class="binw-winners">
+          <div class="binw-rays"></div>
+          <div class="binw-winners-title">A BUZZÉ EN PREMIER</div>
+          <div class="binw-winners-row">
+            <div class="binw-winner-card">
+              <div class="binw-disc-wrap">
+                <div class="binw-disc"><img src="${AVATAR_PATH}${av.file}" alt=""></div>
+                <div class="binw-gain">+${pts}</div>
+              </div>
+              <div class="binw-winner-name">${scorer}</div>
+            </div>
+          </div>
+          <span class="binw-confetti" style="left:8%;top:18%;animation-delay:0s">✦</span>
+          <span class="binw-confetti" style="right:8%;top:22%;animation-delay:.6s">✦</span>
+          <span class="binw-confetti" style="left:14%;bottom:14%;animation-delay:.3s">✧</span>
+          <span class="binw-confetti" style="right:12%;bottom:18%;animation-delay:.9s;font-size:.85rem">✦</span>
+          <span class="binw-confetti" style="left:48%;top:6%;font-size:.85rem;animation-delay:.45s">✧</span>
+        </div>
+        ${funfactHtml}
       </div>
-      <div style="text-align:center;animation:sUp .35s ease both">
-        <div style="font-size:2rem;font-weight:900;color:white">${scorer}</div>
-        <div style="font-size:3rem;font-weight:900;color:#4ade80;text-shadow:0 0 20px #22c55e">+${pts} pts</div>
-      </div>
-      ${q?`<div style="padding:10px 18px;border-radius:12px;background:rgba(255,255,255,.07);font-size:.82rem;color:rgba(255,255,255,.65);text-align:center">Bonne réponse : <strong style="color:#86efac">${q.a[q.c]}</strong>${q.f?` — 💡 ${q.f}`:''}</div>`:''}
     `;
   } else {
     // ── Temps écoulé — design néon ambre / panneau rose-rouge ──
