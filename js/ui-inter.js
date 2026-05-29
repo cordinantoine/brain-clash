@@ -503,22 +503,79 @@ function interPatate(room, gs) {
   const isPass = msg.includes('passe');
   let content;
   if (isExplosion) {
+    // ── BOOM : design néon orange/rouge avec explosion et joueur éliminé ──
     const loser = gs.result?.scorer;
     const lossPts = Math.abs(gs.result?.pts || 0);
-    let loserHtml = '';
+    const mancheCur = gs.patateManche || 0;
+    const mancheTotal = 4;
+
+    // Avatar du perdant
+    let loserBlock = '';
     if (loser) {
       const idx = gs.players.indexOf(loser);
       const rp = _rp.find(x => x.name === loser);
       const av = AVATARS[(rp&&rp.avatar!==undefined)?rp.avatar:(idx%AVATARS.length)]||AVATARS[0];
-      loserHtml = `<img src="${AVATAR_PATH}${av.file}" style="width:100px;height:100px;border-radius:50%;object-fit:cover;border:4px solid #ef4444;box-shadow:0 0 28px #ef444488;animation:wrongShake .35s ease both" alt="">
-        <div style="font-size:1.1rem;font-weight:700">${loser}</div>
-        <div style="font-size:1.5rem;font-weight:900;color:#f87171">-${lossPts} pts</div>`;
+      loserBlock = `
+        <div class="pboom-loser" style="--avb:${av.bg}">
+          <div class="pboom-loser-disc-wrap">
+            <div class="pboom-loser-disc"><img src="${AVATAR_PATH}${av.file}" alt=""></div>
+            <div class="pboom-loser-spud">🥔</div>
+          </div>
+          <div class="pboom-loser-name">${loser}</div>
+          <div class="pboom-loser-delta">−${lossPts} pts</div>
+        </div>`;
     }
+
+    // Débris embers (12 directions)
+    let debrisHtml = '';
+    for (let k = 0; k < 12; k++) {
+      const ang = (k / 12) * Math.PI * 2 + 0.3;
+      const dist = 130 + (k % 3) * 34;
+      const dx = Math.cos(ang) * dist;
+      const dy = Math.sin(ang) * dist;
+      const delay = (k % 5) * 0.18;
+      debrisHtml += `<span class="pboom-debris" style="--dx:${dx}px;--dy:${dy}px;animation-delay:${delay}s"></span>`;
+    }
+
+    // Puffs (overlapping fireball cloud)
+    const puffs = [
+      { d:78,  x:-44, y:-24, t:2.1, smoke:true },
+      { d:84,  x:42,  y:-28, t:2.4, smoke:true },
+      { d:72,  x:50,  y:20,  t:1.9, smoke:false },
+      { d:80,  x:-48, y:24,  t:2.3, smoke:false },
+      { d:66,  x:2,   y:-46, t:2.0, smoke:true },
+      { d:70,  x:6,   y:46,  t:2.5, smoke:false },
+      { d:88,  x:-18, y:2,   t:1.8, smoke:false },
+      { d:84,  x:24,  y:-4,  t:2.2, smoke:false },
+    ];
+    const puffsHtml = puffs.map((p, k) =>
+      `<span class="pboom-puff ${p.smoke?'smoke':''}" style="--d:${p.d}px;--x:${p.x}px;--y:${p.y}px;--t:${p.t}s;animation-delay:${(k%4)*0.2}s"></span>`
+    ).join('');
+
     content = `
-      <div style="font-size:6rem;animation:popIn .5s cubic-bezier(.36,.07,.19,.97) both">💥</div>
-      <div style="font-size:2.2rem;font-weight:900;color:#f87171;text-shadow:0 0 24px #ef4444;animation:sUp .3s ease both">BOOM !</div>
-      <div style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px">${loserHtml}</div>
-      <div style="font-size:.72rem;color:rgba(255,255,255,.5)">🥔 Manche ${gs.patateManche||0}/4 terminée</div>
+      <div class="pboom-wrap">
+        <div class="pinte-chip"><span class="pinte-chip-spud">🥔</span>PATATE CHAUDE</div>
+        <div class="pboom-scene">
+          <div class="pboom-rays"></div>
+          <div class="pboom-kicker">MANCHE ${mancheCur} / ${mancheTotal}</div>
+          <div class="pboom-head">
+            <div class="pboom-burst">
+              <span class="pboom-shock"></span>
+              <span class="pboom-shock b"></span>
+              ${debrisHtml}
+              <div class="pboom-cloud">${puffsHtml}</div>
+              <span class="pboom-fireball"></span>
+              <span class="pboom-flash"></span>
+            </div>
+            <div class="pboom-text">BOOM&nbsp;!</div>
+          </div>
+          ${loserBlock}
+          <div class="pboom-done">
+            <span class="pboom-done-spud">🥔</span>
+            MANCHE ${mancheCur}/${mancheTotal} TERMINÉE
+          </div>
+        </div>
+      </div>
     `;
   } else if (isPass) {
     // ── Passe : design néon "comète enflammée" entre les 2 joueurs ──

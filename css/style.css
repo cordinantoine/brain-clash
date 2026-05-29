@@ -3193,6 +3193,274 @@ input::placeholder { color:rgba(255,255,255,.3) }
 .pinte-sub-spud { font-size:1.15rem; filter:drop-shadow(0 0 6px rgba(255,138,58,.9)) }
 
 /* ════════════════════════════════════════════════════════════
+   Patate inter — "BOOM" (15-inter-patate)
+   Explosion néon orange/rouge avec fireball, débris, onde de choc
+   ════════════════════════════════════════════════════════════ */
+@keyframes pboomCloudBoil {
+  0%,100% { transform:translate(-50%,-50%) scale(1)    rotate(-2deg); }
+  50%     { transform:translate(-50%,-50%) scale(1.05) rotate(2deg); }
+}
+@keyframes pboomPuffBoil {
+  from { transform:translate(var(--x), var(--y)) scale(1); }
+  to   { transform:translate(var(--x), var(--y)) scale(1.12); }
+}
+@keyframes pboomFireballPulse {
+  0%,100% { transform:scale(1);    opacity:.96; }
+  50%     { transform:scale(1.14); opacity:1; }
+}
+@keyframes pboomFlashOut {
+  0%   { transform:translate(-50%,-50%) scale(.3); opacity:.95; }
+  40%  { opacity:.5; }
+  100% { transform:translate(-50%,-50%) scale(2.6); opacity:0; }
+}
+@keyframes pboomShockOut {
+  0%   { transform:translate(-50%,-50%) scale(.4); opacity:0; }
+  14%  { opacity:.9; }
+  100% { transform:translate(-50%,-50%) scale(2.4); opacity:0; }
+}
+@keyframes pboomDebrisFly {
+  0%   { transform:translate(-50%,-50%) scale(.4); opacity:0; }
+  12%  { opacity:1; }
+  100% { transform:translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(.2); opacity:0; }
+}
+@keyframes pboomPop {
+  0%,100% { transform:translate(-50%,-50%) scale(1)    rotate(-1.5deg); }
+  50%     { transform:translate(-50%,-50%) scale(1.05) rotate(1.5deg); }
+}
+@keyframes pboomLoserShake {
+  0%,100% { transform:rotate(-2deg); }
+  25%     { transform:rotate(2deg); }
+  50%     { transform:rotate(-1.5deg); }
+  75%     { transform:rotate(1.5deg); }
+}
+@keyframes pboomStageShake {
+  10%, 90% { transform:translate(-2px, 1px); }
+  20%, 80% { transform:translate(3px, -1px); }
+  30%, 50%, 70% { transform:translate(-5px, 2px); }
+  40%, 60% { transform:translate(5px, -2px); }
+}
+
+.pboom-wrap {
+  position:relative;
+  width:100%; height:100%;
+  display:flex; flex-direction:column;
+  gap:12px;
+  z-index:1;
+  animation:pboomStageShake .55s cubic-bezier(.36,.07,.19,.97) both;
+}
+.pboom-scene {
+  flex:1; min-height:0;
+  position:relative;
+  border-radius:24px;
+  padding:18px 24px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:10px;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(255,84,40,.22) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 100%, rgba(255,138,58,.12) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(30,10,8,.6) 0%, rgba(8,4,18,.74) 100%);
+  border:2.5px solid rgba(255,84,40,.4);
+  box-shadow:0 0 0 1px rgba(255,255,255,.06), 0 0 30px rgba(255,84,40,.34), inset 0 0 40px rgba(0,0,0,.4);
+  overflow:hidden;
+  animation:fadeIn .4s ease both;
+}
+.pboom-rays {
+  position:absolute; inset:0;
+  pointer-events:none;
+  background:
+    conic-gradient(from 0deg at 50% 38%,
+      transparent 0deg, rgba(255,138,58,.14) 4deg, transparent 9deg,
+      transparent 20deg, rgba(255,84,40,.12) 25deg, transparent 30deg,
+      transparent 44deg, rgba(255,180,60,.12) 49deg, transparent 54deg,
+      transparent 70deg, rgba(255,84,40,.10) 75deg, transparent 80deg);
+  mask:radial-gradient(circle at 50% 38%, #000 0%, #000 30%, transparent 60%);
+  -webkit-mask:radial-gradient(circle at 50% 38%, #000 0%, #000 30%, transparent 60%);
+  animation:pinteRaysSpin 26s linear infinite;
+  opacity:.85;
+}
+
+.pboom-kicker {
+  position:relative; z-index:3;
+  align-self:center;
+  display:inline-flex; align-items:center; gap:10px;
+  padding:6px 16px;
+  border-radius:999px;
+  background:rgba(255,138,58,.10);
+  border:2px solid rgba(255,138,58,.5);
+  box-shadow:0 0 14px rgba(255,138,58,.3);
+  font-family:'Russo One',sans-serif;
+  font-size:.62rem; letter-spacing:.22em;
+  color:#ffb43c;
+  text-shadow:0 0 8px #ff8a3a;
+}
+
+.pboom-head {
+  position:relative; z-index:3;
+  flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  margin-top:4px;
+}
+.pboom-burst {
+  position:relative;
+  width:190px; height:190px;
+  display:flex; align-items:center; justify-content:center;
+}
+.pboom-cloud {
+  position:absolute; left:50%; top:50%;
+  width:190px; height:190px;
+  transform:translate(-50%,-50%);
+  z-index:3;
+  filter:drop-shadow(0 0 24px rgba(255,84,40,.65));
+  animation:pboomCloudBoil 1.8s ease-in-out infinite;
+}
+.pboom-puff {
+  position:absolute;
+  width:var(--d); height:var(--d);
+  left:50%; top:50%;
+  border-radius:50%;
+  margin:calc(var(--d) / -2) 0 0 calc(var(--d) / -2);
+  transform:translate(var(--x), var(--y));
+  background:radial-gradient(circle at 38% 32%,
+    #ffe7a6 0%, #ffb43c 30%, #ff6a1a 58%, #d61c10 86%);
+  animation:pboomPuffBoil var(--t,2s) ease-in-out infinite alternate;
+}
+.pboom-puff.smoke {
+  background:radial-gradient(circle at 40% 34%,
+    #6b3320 0%, #4a2014 55%, #2a0f08 88%);
+  opacity:.92;
+}
+.pboom-fireball {
+  position:relative; z-index:4;
+  width:88px; height:88px;
+  border-radius:50%;
+  background:radial-gradient(circle at 45% 40%,
+    #ffffff 0%, #fff3b0 28%, #ffd23a 50%, #ff7a18 78%, rgba(255,84,40,0) 92%);
+  box-shadow:0 0 32px #ffb43c, 0 0 72px rgba(255,120,30,.8);
+  animation:pboomFireballPulse .9s ease-in-out infinite;
+}
+.pboom-flash {
+  position:absolute; left:50%; top:50%;
+  width:110px; height:110px;
+  border-radius:50%;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(circle, rgba(255,255,255,.9) 0%, rgba(255,210,90,.4) 35%, transparent 70%);
+  z-index:5;
+  animation:pboomFlashOut 1.9s ease-out infinite;
+  opacity:0;
+}
+.pboom-shock {
+  position:absolute; left:50%; top:50%;
+  width:160px; height:160px;
+  border-radius:50%;
+  border:4px solid rgba(255,120,50,.9);
+  transform:translate(-50%,-50%) scale(.4);
+  box-shadow:0 0 22px rgba(255,100,30,.7);
+  opacity:0;
+  animation:pboomShockOut 1.9s cubic-bezier(.2,.6,.4,1) infinite;
+  z-index:2;
+}
+.pboom-shock.b { animation-delay:.95s; }
+.pboom-debris {
+  position:absolute; left:50%; top:50%;
+  width:10px; height:10px;
+  border-radius:50%;
+  background:radial-gradient(circle, #ffe6b0 0%, #ff7a1a 60%, transparent 74%);
+  filter:drop-shadow(0 0 5px #ff8a3a);
+  opacity:0;
+  animation:pboomDebrisFly 1.8s ease-out infinite;
+  z-index:2;
+}
+.pboom-text {
+  position:absolute;
+  left:50%; top:50%;
+  transform:translate(-50%,-50%);
+  z-index:6;
+  font-family:'Russo One',sans-serif;
+  font-size:5.4rem; letter-spacing:.02em; line-height:1;
+  white-space:nowrap;
+  color:#fff;
+  -webkit-text-stroke:2.5px #7a1500;
+  text-shadow:
+    0 0 6px #ff5a18,
+    0 0 16px #ff5a18,
+    0 0 32px rgba(255,84,40,1),
+    0 0 56px rgba(0,0,0,.9),
+    0 5px 0 rgba(80,15,0,.9);
+  animation:pboomPop 1.5s ease-in-out infinite;
+}
+
+.pboom-loser {
+  position:relative; z-index:3;
+  display:flex; flex-direction:column; align-items:center;
+  gap:8px;
+  margin-top:4px;
+}
+.pboom-loser-disc-wrap { position:relative; }
+.pboom-loser-disc {
+  position:relative;
+  width:130px; height:130px;
+  border-radius:50%;
+  border:5px solid #ff4fa2;
+  background:var(--avb, #d62d8a);
+  box-shadow:
+    0 0 0 2px rgba(255,255,255,.18),
+    0 0 26px #ff5470,
+    0 0 60px rgba(255,84,40,.6),
+    inset 0 0 14px rgba(0,0,0,.4);
+  overflow:hidden;
+  animation:pboomLoserShake 1.4s ease-in-out infinite;
+}
+.pboom-loser-disc img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block; }
+.pboom-loser-spud {
+  position:absolute;
+  top:-18px; right:-14px;
+  z-index:4;
+  font-size:2.4rem;
+  transform:rotate(-10deg);
+  filter:
+    drop-shadow(0 0 10px rgba(255,84,40,.95))
+    drop-shadow(0 0 20px rgba(255,100,20,.6))
+    grayscale(.2);
+}
+.pboom-loser-name {
+  font-family:'Russo One',sans-serif;
+  font-size:1.5rem; color:#fff;
+  text-shadow:0 0 12px rgba(255,84,112,.7), 0 2px 4px rgba(0,0,0,.6);
+  letter-spacing:.02em; line-height:1;
+}
+.pboom-loser-delta {
+  font-family:'Russo One',sans-serif;
+  font-size:1.7rem; line-height:1;
+  color:#ff6a86;
+  padding:8px 24px;
+  border-radius:16px;
+  background:rgba(255,84,112,.12);
+  border:2.5px solid #ff5470;
+  box-shadow:
+    0 0 0 1px rgba(255,180,190,.28),
+    0 0 22px rgba(255,84,112,.55),
+    inset 0 0 14px rgba(255,84,112,.14);
+  text-shadow:0 0 14px rgba(255,84,112,.8), 0 2px 0 rgba(0,0,0,.4);
+}
+
+.pboom-done {
+  position:relative; z-index:3;
+  align-self:center;
+  display:inline-flex; align-items:center; gap:10px;
+  padding:8px 22px;
+  border-radius:14px;
+  background:rgba(255,138,58,.10);
+  border:2px solid rgba(255,138,58,.55);
+  box-shadow:0 0 16px rgba(255,138,58,.32);
+  font-family:'Russo One',sans-serif;
+  font-size:.78rem; letter-spacing:.1em;
+  color:#ffc089;
+  text-shadow:0 0 10px #ff8a3a;
+}
+.pboom-done-spud { font-size:1rem; filter:drop-shadow(0 0 6px rgba(255,138,58,.9)); }
+
+/* ════════════════════════════════════════════════════════════
    Inter Steal — Vol réussi (14-inter-steal)
    Identité orange (devil) + duel thief/victim + Mario coin lob
    ════════════════════════════════════════════════════════════ */
