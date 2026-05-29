@@ -472,7 +472,73 @@ function interPatate(room, gs) {
       <div style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px">${loserHtml}</div>
       <div style="font-size:.72rem;color:rgba(255,255,255,.5)">🥔 Manche ${gs.patateManche||0}/4 terminée</div>
     `;
+  } else if (isPass) {
+    // ── Passe : design néon "comète enflammée" entre les 2 joueurs ──
+    const passMatch = msg.match(/(?:✅\s+)?(.+?)\s+passe la patate à\s+(.+?)\s*!?$/);
+    const fromName = passMatch ? passMatch[1] : '';
+    const toName   = passMatch ? passMatch[2] : (gs.patateHolder || '');
+    const avFor = (name) => {
+      const idx = gs.players.indexOf(name);
+      const rp = _rp.find(x => x.name === name);
+      return AVATARS[(rp && rp.avatar !== undefined) ? rp.avatar : (idx % AVATARS.length)] || AVATARS[0];
+    };
+    const fromAv = fromName ? avFor(fromName) : null;
+    const toAv   = toName   ? avFor(toName)   : null;
+    const fromBlock = fromAv ? `
+      <div class="pinte-end from" style="--pc:${fromAv.bg};--avb:${fromAv.bg}">
+        <div class="pinte-disc-wrap">
+          <div class="pinte-end-disc"><img src="${AVATAR_PATH}${fromAv.file}" alt=""></div>
+        </div>
+        <div class="pinte-end-name">${fromName}</div>
+        <div class="pinte-end-tag">passe</div>
+      </div>` : '';
+    const toBlock = toAv ? `
+      <div class="pinte-end to" style="--pc:${toAv.bg};--avb:${toAv.bg}">
+        <div class="pinte-disc-wrap">
+          <div class="pinte-end-disc"><img src="${AVATAR_PATH}${toAv.file}" alt=""></div>
+          <div class="pinte-impact"></div>
+        </div>
+        <div class="pinte-end-name">${toName}</div>
+        <div class="pinte-end-tag">reçoit</div>
+      </div>` : '';
+
+    content = `
+      <div class="pinte-wrap">
+        <div class="pinte-chip"><span class="pinte-chip-spud">🥔</span>PATATE CHAUDE</div>
+        <div class="pinte-scene">
+          <div class="pinte-rays"></div>
+          <div class="pinte-kicker">MANCHE ${(gs.patateManche||0)+1} / 4</div>
+          <div class="pinte-pass-row">
+            ${fromBlock}
+            <div class="pinte-path">
+              <svg class="pinte-path-arc" viewBox="0 0 300 180">
+                <path class="pinte-comet-glow" pathLength="100" d="M 20 130 Q 150 -30, 280 130"/>
+                <path class="pinte-comet-core" pathLength="100" d="M 20 130 Q 150 -30, 280 130"/>
+              </svg>
+              <div class="pinte-fly-spud">
+                <span class="pinte-flame-aura outer"></span>
+                <span class="pinte-flame-aura"></span>
+                <span class="pinte-spud">🥔</span>
+              </div>
+              <span class="pinte-ember" style="left:232px;top:108px;animation-delay:0s"></span>
+              <span class="pinte-ember" style="left:252px;top:124px;animation-delay:.5s"></span>
+              <span class="pinte-ember" style="left:212px;top:116px;animation-delay:.9s"></span>
+              <span class="pinte-ember" style="left:262px;top:102px;animation-delay:1.3s"></span>
+            </div>
+            ${toBlock}
+          </div>
+          <div class="pinte-headline">
+            <span class="pinte-from-n">${fromName}</span> passe la patate à <span class="pinte-to-n">${toName}</span>
+          </div>
+          <div class="pinte-sub">
+            <span class="pinte-sub-spud">🥔</span>
+            ${(toName||'').toUpperCase()} A LA PATATE
+          </div>
+        </div>
+      </div>
+    `;
   } else {
+    // ── Raté : le porteur garde la patate ──
     const holderName = gs.patateHolder || '';
     let holderHtml = '';
     if (holderName) {
@@ -484,7 +550,7 @@ function interPatate(room, gs) {
     }
     content = `
       <div style="font-size:5rem;animation:floatY 1.5s ease-in-out infinite">🥔</div>
-      <div style="font-size:1.4rem;font-weight:800;text-align:center;color:${isPass?'#86efac':'#fca5a5'};animation:sUp .3s ease both">${isPass?'🎉':'😬'} ${msg}</div>
+      <div style="font-size:1.4rem;font-weight:800;text-align:center;color:#fca5a5;animation:sUp .3s ease both">😬 ${msg}</div>
       <div style="text-align:center;display:flex;flex-direction:column;align-items:center;gap:8px">${holderHtml}</div>
       <div style="font-size:.72rem;color:rgba(255,255,255,.5)">🥔 Manche ${(gs.patateManche||0)+1}/4</div>
     `;
