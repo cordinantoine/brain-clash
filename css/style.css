@@ -1878,3 +1878,262 @@ input::placeholder { color:rgba(255,255,255,.3) }
   line-height:1.3;
   color:#fff;
 }
+
+/* ════════════════════════════════════════════
+   Steal · "Personne n'a trouvé" — design néon rouge/violet
+   ════════════════════════════════════════════ */
+@keyframes sinteMissPulse {
+  0%,100% { transform:scale(1); box-shadow:0 0 0 3px rgba(255,255,255,.16), 0 0 24px #ff5470, 0 0 50px rgba(255,84,112,.5); }
+  50%     { transform:scale(1.04); box-shadow:0 0 0 3px rgba(255,255,255,.22), 0 0 36px #ff5470, 0 0 80px rgba(255,84,112,.7); }
+}
+@keyframes sinteRaysSpin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+
+.sinte-wrap {
+  position:relative;
+  width:100%; height:100%;
+  display:flex; flex-direction:column;
+  gap:14px;
+  z-index:1;
+}
+.sinte-chip {
+  align-self:center;
+  display:inline-flex; align-items:center; gap:10px;
+  padding:7px 16px;
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(185,109,255,.28) 0%, transparent 80%),
+    linear-gradient(180deg, rgba(185,109,255,.14) 0%, rgba(185,109,255,.02) 100%);
+  border:2px solid #b96dff;
+  box-shadow:0 0 0 1px rgba(220,180,255,.4), 0 0 14px rgba(185,109,255,.5), inset 0 0 14px rgba(80,30,140,.3);
+  font-family:'Russo One',sans-serif;
+  font-size:.7rem; letter-spacing:.18em;
+  color:#fff;
+  text-shadow:0 0 8px #b96dff, 0 0 14px #9a4cff;
+}
+.sinte-chip-bell {
+  width:22px; height:22px;
+  border-radius:7px;
+  background:radial-gradient(circle at 35% 30%, #fff 0%, #c89bff 50%, #7c2dd6 100%);
+  border:2px solid #fff;
+  box-shadow:0 0 8px #b96dff;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.65rem;
+}
+
+.sinte-headline {
+  position:relative;
+  padding:12px 18px;
+  border-radius:18px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(185,109,255,.22) 0%, transparent 75%),
+    linear-gradient(180deg, #160a2e 0%, #0c0418 100%);
+  border:2px solid #b96dff;
+  box-shadow:0 0 0 1px rgba(220,180,255,.3), 0 0 16px rgba(185,109,255,.45), inset 0 0 22px rgba(80,30,140,.25);
+  display:flex; align-items:center; gap:14px;
+  animation:sUp .35s ease both;
+}
+.sinte-headline-emblem {
+  width:52px; height:52px; flex-shrink:0;
+  border-radius:13px;
+  border:2.5px solid #fff;
+  background:radial-gradient(circle at 35% 30%, #fff 0%, #c89bff 48%, #7c2dd6 100%);
+  box-shadow:0 0 12px #b96dff, 0 0 24px rgba(185,109,255,.5);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.5rem;
+}
+.sinte-headline-body { flex:1; min-width:0 }
+.sinte-headline-kicker {
+  font-family:'Russo One',sans-serif;
+  font-size:.6rem; letter-spacing:.25em;
+  color:#c89bff;
+  text-shadow:0 0 8px #b96dff;
+  margin-bottom:3px;
+}
+.sinte-headline-text {
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:700;
+  font-size:1.05rem; line-height:1.15;
+  color:#fff;
+  text-shadow:0 0 10px rgba(185,109,255,.5), 0 2px 0 rgba(0,0,0,.4);
+}
+
+.sinte-miss {
+  flex:1; min-height:0;
+  position:relative;
+  border-radius:22px;
+  padding:20px 22px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:12px;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(255,84,112,.20) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 100%, rgba(185,109,255,.12) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(26,8,24,.6) 0%, rgba(10,4,20,.72) 100%);
+  border:2px solid rgba(255,84,112,.5);
+  box-shadow:0 0 0 1px rgba(255,255,255,.06), 0 0 22px rgba(255,84,112,.32), inset 0 0 30px rgba(0,0,0,.4);
+  overflow:hidden;
+  animation:fadeIn .4s ease both;
+}
+.sinte-rays {
+  position:absolute; inset:0;
+  pointer-events:none;
+  background:
+    conic-gradient(from 0deg at 50% 45%,
+      transparent 0deg,
+      rgba(255,84,112,.08) 5deg,
+      transparent 10deg,
+      transparent 28deg,
+      rgba(255,84,112,.07) 33deg,
+      transparent 38deg,
+      transparent 60deg,
+      rgba(185,109,255,.07) 65deg,
+      transparent 70deg);
+  mask:radial-gradient(circle at 50% 45%, #000 0%, transparent 70%);
+  -webkit-mask:radial-gradient(circle at 50% 45%, #000 0%, transparent 70%);
+  animation:sinteRaysSpin 22s linear infinite;
+  opacity:.7;
+}
+.sinte-icon {
+  position:relative; z-index:2;
+  width:112px; height:112px;
+  border-radius:50%;
+  border:5px solid #ff5470;
+  background:radial-gradient(circle at 35% 30%, #fff 0%, #ff5470 55%, #7a0822 100%);
+  box-shadow:0 0 0 3px rgba(255,255,255,.16), 0 0 24px #ff5470, 0 0 50px rgba(255,84,112,.5);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Russo One',sans-serif;
+  font-size:4rem; color:#fff;
+  text-shadow:0 4px 0 rgba(0,0,0,.4);
+  animation:sinteMissPulse 2.2s ease-in-out infinite;
+}
+.sinte-title {
+  position:relative; z-index:2;
+  font-family:'Russo One',sans-serif;
+  font-size:2rem; letter-spacing:.04em;
+  color:#fff; text-align:center; line-height:1;
+  text-shadow:0 0 14px #ff5470, 0 0 26px rgba(255,84,112,.6), 0 3px 0 rgba(0,0,0,.4);
+}
+.sinte-sub {
+  position:relative; z-index:2;
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:600;
+  font-size:.9rem;
+  color:rgba(255,255,255,.7);
+  text-align:center;
+  margin-top:-2px;
+}
+.sinte-answer {
+  position:relative; z-index:2;
+  margin-top:4px;
+  display:inline-flex; align-items:center; gap:16px;
+  padding:11px 22px;
+  border-radius:16px;
+  background:rgba(34,197,94,.12);
+  border:2.5px solid #4aff7a;
+  box-shadow:0 0 0 1px rgba(180,255,200,.3), 0 0 20px rgba(74,255,122,.5), inset 0 0 14px rgba(74,255,122,.12);
+}
+.sinte-answer-label {
+  font-family:'Russo One',sans-serif;
+  font-size:.68rem; letter-spacing:.18em;
+  color:rgba(74,255,122,.92);
+  text-shadow:0 0 8px rgba(74,255,122,.5);
+  white-space:nowrap;
+}
+.sinte-answer-divider {
+  width:2px; height:26px;
+  background:rgba(74,255,122,.5);
+  box-shadow:0 0 8px rgba(74,255,122,.5);
+  border-radius:2px;
+}
+.sinte-answer-value {
+  font-family:'Russo One',sans-serif;
+  font-size:1.4rem; letter-spacing:.01em;
+  color:#4aff7a;
+  text-shadow:0 0 12px #4aff7a, 0 0 22px rgba(74,255,122,.5);
+  line-height:1;
+}
+
+.sinte-stealers {
+  position:relative; z-index:2;
+  margin-top:4px;
+  display:flex; align-items:center; gap:16px;
+  flex-wrap:wrap; justify-content:center;
+}
+.sinte-stealers-lbl {
+  font-family:'Russo One',sans-serif;
+  font-size:.62rem; letter-spacing:.18em;
+  color:rgba(255,180,190,.85);
+  text-shadow:0 0 8px rgba(255,84,112,.5);
+}
+.sinte-stealer {
+  position:relative;
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  animation:popIn .4s ease both;
+}
+.sinte-stealer-av {
+  position:relative;
+  width:52px; height:52px;
+  border-radius:50%;
+  border:2.5px solid var(--pc,#ff5470);
+  box-shadow:0 0 10px var(--pc,#ff5470), inset 0 0 8px rgba(0,0,0,.4);
+  overflow:hidden;
+  filter:saturate(.55) brightness(.78);
+}
+.sinte-stealer-av img { width:100%; height:100%; object-fit:cover; object-position:center top; display:block }
+.sinte-stealer-x {
+  position:absolute;
+  top:-4px; right:-4px;
+  width:22px; height:22px;
+  border-radius:50%;
+  background:#ff5470;
+  border:2px solid #fff;
+  box-shadow:0 0 8px rgba(255,84,112,.7);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Russo One',sans-serif;
+  font-size:.7rem; color:#fff;
+  line-height:1;
+}
+.sinte-stealer-name {
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:700;
+  font-size:.72rem;
+  color:rgba(255,255,255,.85);
+  text-shadow:0 2px 2px rgba(0,0,0,.6);
+}
+
+.sinte-funfact {
+  position:relative; z-index:2;
+  margin-top:4px;
+  padding:9px 14px;
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse at 0% 50%, rgba(255,222,58,.18) 0%, transparent 50%),
+    rgba(10,5,30,.6);
+  border:2px solid rgba(255,222,58,.5);
+  box-shadow:0 0 12px rgba(255,222,58,.25), inset 0 0 10px rgba(255,222,58,.08);
+  display:flex; align-items:center; gap:12px;
+  max-width:92%;
+}
+.sinte-funfact-icon {
+  width:30px; height:30px; flex-shrink:0;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #fff 0%, #ffde3a 55%, #8a6800 100%);
+  border:2px solid #fff;
+  box-shadow:0 0 10px #ffde3a;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.9rem;
+}
+.sinte-funfact-body { flex:1; min-width:0 }
+.sinte-funfact-kicker {
+  font-family:'Russo One',sans-serif;
+  font-size:.52rem; letter-spacing:.28em;
+  color:#ffde3a;
+  text-shadow:0 0 8px #ffde3a;
+  margin-bottom:1px;
+}
+.sinte-funfact-text {
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:500;
+  font-size:.78rem; line-height:1.25;
+  color:#fff;
+}

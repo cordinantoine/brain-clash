@@ -242,10 +242,75 @@ function interSteal(room, gs) {
       ${q?`<div style="padding:8px 16px;border-radius:10px;background:rgba(255,255,255,.08);font-size:.82rem;text-align:center">Bonne réponse : <strong style="color:#86efac">${q.a[q.c]}</strong></div>`:''}
     `;
   } else {
+    // ── Personne n'a trouvé (ou timeout) — design néon rouge/violet ──
+    const ans = gs.answers || {};
+    const isTimeout = /Temps écoulé/i.test(msg);
+    const tried = gs.players
+      .map((p, i) => ({ p, i }))
+      .filter(({ p }) => ans[p] !== undefined && (!q || ans[p].ansIdx !== q.c));
+
+    const stealersHtml = tried.length ? `
+      <div class="sinte-stealers">
+        <span class="sinte-stealers-lbl">${tried.length > 1 ? 'ONT TENTÉ LE VOL' : 'A TENTÉ LE VOL'}</span>
+        ${tried.map(({ p, i }, k) => {
+          const rp = _rp.find(x => x.name === p);
+          const av = AVATARS[(rp && rp.avatar !== undefined) ? rp.avatar : (i % AVATARS.length)] || AVATARS[0];
+          return `<div class="sinte-stealer" style="--pc:${av.bg};animation-delay:${k*.08}s">
+            <div class="sinte-stealer-av">
+              <img src="${AVATAR_PATH}${av.file}" alt="">
+              <span class="sinte-stealer-x">✗</span>
+            </div>
+            <div class="sinte-stealer-name">${p}</div>
+          </div>`;
+        }).join('')}
+      </div>
+    ` : '';
+
+    const headlineHtml = q?.q ? `
+      <div class="sinte-headline">
+        <div class="sinte-headline-emblem">⚡</div>
+        <div class="sinte-headline-body">
+          <div class="sinte-headline-kicker">VOL RATÉ · LA QUESTION</div>
+          <div class="sinte-headline-text">${q.q}</div>
+        </div>
+      </div>
+    ` : '';
+
+    const answerHtml = q ? `
+      <div class="sinte-answer">
+        <span class="sinte-answer-label">BONNE RÉPONSE</span>
+        <span class="sinte-answer-divider"></span>
+        <span class="sinte-answer-value">${q.a[q.c]}</span>
+      </div>
+    ` : '';
+
+    const funfactHtml = q?.f ? `
+      <div class="sinte-funfact">
+        <div class="sinte-funfact-icon">💡</div>
+        <div class="sinte-funfact-body">
+          <div class="sinte-funfact-kicker">LE SAVIEZ-VOUS ?</div>
+          <div class="sinte-funfact-text">${q.f}</div>
+        </div>
+      </div>
+    ` : '';
+
+    const title = isTimeout ? 'TEMPS ÉCOULÉ' : "PERSONNE N'A TROUVÉ !";
+    const sub = isTimeout ? 'Aucun joueur n\'a tenté à temps' : 'Aucun point volé sur cette question';
+
     content = `
-      <div style="font-size:3.5rem;animation:floatY 2s ease-in-out infinite">❌</div>
-      <div style="font-size:1.5rem;font-weight:800;text-align:center;color:#fca5a5">Personne n'a trouvé !</div>
-      ${q?`<div style="padding:10px 18px;border-radius:12px;background:rgba(255,255,255,.07);font-size:.88rem;text-align:center">Bonne réponse : <strong style="color:#86efac">${q.a[q.c]}</strong></div>`:''}
+      <div class="sinte-wrap">
+        <div class="sinte-chip"><span class="sinte-chip-bell">⚡</span>VOL DE POINTS</div>
+        ${headlineHtml}
+        <div class="sinte-miss">
+          <div class="sinte-rays"></div>
+          <div class="sinte-icon">✗</div>
+          <div class="sinte-title">${title}</div>
+          <div class="sinte-sub">${sub}</div>
+          ${answerHtml}
+          ${stealersHtml}
+          ${funfactHtml}
+        </div>
+      </div>
     `;
   }
   _interLayout(room, gs, content);
