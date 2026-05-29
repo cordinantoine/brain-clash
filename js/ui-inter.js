@@ -175,10 +175,64 @@ function interBuzzer(room, gs) {
       ${q?`<div style="padding:10px 18px;border-radius:12px;background:rgba(255,255,255,.07);font-size:.82rem;color:rgba(255,255,255,.65);text-align:center">Bonne réponse : <strong style="color:#86efac">${q.a[q.c]}</strong>${q.f?` — 💡 ${q.f}`:''}</div>`:''}
     `;
   } else {
+    // ── Temps écoulé — design néon ambre / panneau rose-rouge ──
+    const headlineHtml = q?.q ? `
+      <div class="binte-headline">
+        <div class="binte-headline-emblem">⏱️</div>
+        <div class="binte-headline-body">
+          <div class="binte-headline-kicker">TEMPS ÉCOULÉ · LA QUESTION</div>
+          <div class="binte-headline-text">${q.q}</div>
+        </div>
+      </div>
+    ` : '';
+
+    const answerHtml = q ? `
+      <div class="binte-answer">
+        <span class="binte-answer-label">BONNE RÉPONSE</span>
+        <span class="binte-answer-divider"></span>
+        <span class="binte-answer-value">${q.a[q.c]}</span>
+      </div>
+    ` : '';
+
+    const funfactHtml = q?.f ? `
+      <div class="binte-funfact">
+        <div class="binte-funfact-icon">💡</div>
+        <div class="binte-funfact-body">
+          <div class="binte-funfact-kicker">LE SAVIEZ-VOUS ?</div>
+          <div class="binte-funfact-text">${q.f}</div>
+        </div>
+      </div>
+    ` : '';
+
+    // 12 ticks autour du cadran
+    const cx = 50, cy = 50, r = 38;
+    let dotsHtml = '';
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * Math.PI * 2 - Math.PI / 2;
+      const left = cx + Math.cos(a) * r;
+      const top  = 14 + cy + Math.sin(a) * r; // +14 décalage du body
+      dotsHtml += `<span class="binte-clock-dot" style="left:calc(${left}% - 2.5px);top:${top}px"></span>`;
+    }
+
     content = `
-      <div style="font-size:5rem;animation:floatY 2s ease-in-out infinite">⏱️</div>
-      <div style="font-size:2rem;font-weight:800;color:#fca5a5;text-align:center">Temps écoulé !</div>
-      ${q?`<div style="padding:10px 18px;border-radius:12px;background:rgba(255,255,255,.07);font-size:.88rem;text-align:center">Bonne réponse : <strong style="color:#86efac">${q.a[q.c]}</strong></div>`:''}
+      <div class="binte-wrap">
+        <div class="binte-chip"><span class="binte-chip-bell">🔔</span>MANCHE BUZZER</div>
+        ${headlineHtml}
+        <div class="binte-miss">
+          <div class="binte-rays"></div>
+          <div class="binte-clock">
+            <div class="binte-clock-btn"></div>
+            <div class="binte-clock-body"></div>
+            ${dotsHtml}
+            <div class="binte-clock-hand"></div>
+            <div class="binte-clock-hub"></div>
+          </div>
+          <div class="binte-title">TEMPS ÉCOULÉ !</div>
+          <div class="binte-sub">Personne n'a buzzé à temps</div>
+          ${answerHtml}
+          ${funfactHtml}
+        </div>
+      </div>
     `;
   }
   _interLayout(room, gs, content);

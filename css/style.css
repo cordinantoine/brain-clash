@@ -2137,3 +2137,270 @@ input::placeholder { color:rgba(255,255,255,.3) }
   font-size:.78rem; line-height:1.25;
   color:#fff;
 }
+
+/* ════════════════════════════════════════════════════════════
+   Inter Buzzer — Timeout (12b-inter-buzzer-timeout)
+   Identité ambre (manche BUZZER) + panneau central rose/rouge
+   ════════════════════════════════════════════════════════════ */
+@keyframes binteMissPulse {
+  0%,100% { transform:scale(1); box-shadow:0 0 0 3px rgba(255,255,255,.16), 0 0 24px #ff5470, 0 0 50px rgba(255,84,112,.5); }
+  50%     { transform:scale(1.04); box-shadow:0 0 0 3px rgba(255,255,255,.22), 0 0 36px #ff5470, 0 0 80px rgba(255,84,112,.7); }
+}
+@keyframes binteRaysSpin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+@keyframes binteClockShake {
+  0%, 88%, 100% { transform:rotate(0) }
+  90% { transform:rotate(-9deg) }
+  93% { transform:rotate(9deg) }
+  96% { transform:rotate(-6deg) }
+}
+@keyframes binteHandSpin {
+  0%   { transform:translateX(-50%) rotate(60deg); }
+  100% { transform:translateX(-50%) rotate(420deg); }
+}
+
+.binte-wrap {
+  position:relative;
+  width:100%; height:100%;
+  display:flex; flex-direction:column;
+  gap:14px;
+  z-index:1;
+}
+.binte-chip {
+  align-self:center;
+  display:inline-flex; align-items:center; gap:10px;
+  padding:7px 16px;
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,180,60,.32) 0%, transparent 80%),
+    linear-gradient(180deg, rgba(255,180,60,.14) 0%, rgba(255,180,60,.02) 100%);
+  border:2px solid #ffb43c;
+  box-shadow:0 0 0 1px rgba(255,220,150,.45), 0 0 14px rgba(255,180,60,.55), inset 0 0 14px rgba(140,80,10,.3);
+  font-family:'Russo One',sans-serif;
+  font-size:.7rem; letter-spacing:.18em;
+  color:#fff;
+  text-shadow:0 0 8px #ffb43c, 0 0 14px #ff8a1a;
+}
+.binte-chip-bell {
+  width:22px; height:22px;
+  border-radius:7px;
+  background:radial-gradient(circle at 35% 30%, #fff 0%, #ffd47a 50%, #d68a1a 100%);
+  border:2px solid #fff;
+  box-shadow:0 0 8px #ffb43c;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.65rem;
+}
+
+.binte-headline {
+  position:relative;
+  padding:12px 18px;
+  border-radius:18px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,180,60,.28) 0%, transparent 75%),
+    linear-gradient(180deg, #1f1408 0%, #140c04 100%);
+  border:2px solid #ffb43c;
+  box-shadow:0 0 0 1px rgba(255,220,150,.35), 0 0 16px rgba(255,180,60,.5), inset 0 0 22px rgba(140,80,10,.25);
+  display:flex; align-items:center; gap:14px;
+  animation:sUp .35s ease both;
+}
+.binte-headline-emblem {
+  width:52px; height:52px; flex-shrink:0;
+  border-radius:13px;
+  border:2.5px solid #fff;
+  background:radial-gradient(circle at 35% 30%, #fff 0%, #ffd47a 48%, #d68a1a 100%);
+  box-shadow:0 0 12px #ffb43c, 0 0 24px rgba(255,180,60,.5);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.5rem;
+}
+.binte-headline-body { flex:1; min-width:0 }
+.binte-headline-kicker {
+  font-family:'Russo One',sans-serif;
+  font-size:.6rem; letter-spacing:.25em;
+  color:#ffd47a;
+  text-shadow:0 0 8px #ffb43c;
+  margin-bottom:3px;
+}
+.binte-headline-text {
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:700;
+  font-size:1.05rem; line-height:1.15;
+  color:#fff;
+  text-shadow:0 0 10px rgba(255,180,60,.5), 0 2px 0 rgba(0,0,0,.4);
+}
+
+.binte-miss {
+  flex:1; min-height:0;
+  position:relative;
+  border-radius:22px;
+  padding:20px 22px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:12px;
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(255,84,112,.20) 0%, transparent 60%),
+    radial-gradient(ellipse at 50% 100%, rgba(255,180,60,.12) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(26,8,16,.6) 0%, rgba(10,4,12,.72) 100%);
+  border:2px solid rgba(255,84,112,.5);
+  box-shadow:0 0 0 1px rgba(255,255,255,.06), 0 0 22px rgba(255,84,112,.32), inset 0 0 30px rgba(0,0,0,.4);
+  overflow:hidden;
+  animation:fadeIn .4s ease both;
+}
+.binte-rays {
+  position:absolute; inset:0;
+  pointer-events:none;
+  background:
+    conic-gradient(from 0deg at 50% 42%,
+      transparent 0deg,
+      rgba(255,84,112,.08) 5deg,
+      transparent 10deg,
+      transparent 28deg,
+      rgba(255,180,60,.07) 33deg,
+      transparent 38deg,
+      transparent 60deg,
+      rgba(255,84,112,.07) 65deg,
+      transparent 70deg);
+  mask:radial-gradient(circle at 50% 42%, #000 0%, transparent 70%);
+  -webkit-mask:radial-gradient(circle at 50% 42%, #000 0%, transparent 70%);
+  animation:binteRaysSpin 22s linear infinite;
+  opacity:.7;
+}
+
+/* Chronomètre stylisé */
+.binte-clock {
+  position:relative; z-index:2;
+  width:120px; height:120px;
+  display:flex; align-items:center; justify-content:center;
+  animation:binteClockShake 2.2s ease-in-out infinite;
+}
+.binte-clock-btn {
+  position:absolute; left:50%; top:0;
+  transform:translateX(-50%);
+  width:18px; height:14px;
+  background:#1a1030;
+  border-radius:5px 5px 3px 3px;
+  box-shadow:0 0 10px rgba(255,84,112,.5);
+  z-index:1;
+}
+.binte-clock-body {
+  position:absolute; left:50%; top:14px;
+  transform:translateX(-50%);
+  width:100px; height:100px;
+  border-radius:50%;
+  background:radial-gradient(circle at 38% 30%, #fff 0%, #f2f4ff 45%, #c8cce0 100%);
+  border:5px solid #1a1030;
+  box-shadow:
+    0 0 0 3px rgba(255,84,112,.35),
+    0 0 24px rgba(255,84,112,.6),
+    0 0 50px rgba(255,84,112,.4),
+    inset 0 -6px 14px rgba(0,0,0,.12);
+}
+.binte-clock-dot {
+  position:absolute;
+  width:5px; height:5px;
+  border-radius:50%;
+  background:rgba(40,30,60,.55);
+  z-index:2;
+}
+.binte-clock-hand {
+  position:absolute; z-index:3;
+  left:50%; top:64px;
+  width:4px; height:40px;
+  background:#ff2d55;
+  border-radius:3px;
+  transform-origin:50% 0;
+  transform:translateX(-50%) rotate(118deg);
+  box-shadow:0 0 8px rgba(255,45,85,.8);
+  animation:binteHandSpin 2.6s cubic-bezier(.6,0,.4,1) infinite;
+}
+.binte-clock-hub {
+  position:absolute; z-index:4;
+  left:50%; top:62px;
+  transform:translateX(-50%);
+  width:11px; height:11px;
+  border-radius:50%;
+  background:#1a1030;
+  border:2px solid #ff2d55;
+}
+
+.binte-title {
+  position:relative; z-index:2;
+  font-family:'Russo One',sans-serif;
+  font-size:2.4rem; letter-spacing:.04em;
+  color:#fff; text-align:center; line-height:1;
+  text-shadow:0 0 14px #ff5470, 0 0 26px rgba(255,84,112,.6), 0 3px 0 rgba(0,0,0,.4);
+}
+.binte-sub {
+  position:relative; z-index:2;
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:600;
+  font-size:.95rem;
+  color:rgba(255,255,255,.72);
+  text-align:center;
+  margin-top:-2px;
+}
+.binte-answer {
+  position:relative; z-index:2;
+  margin-top:4px;
+  display:inline-flex; align-items:center; gap:16px;
+  padding:11px 22px;
+  border-radius:16px;
+  background:rgba(34,197,94,.12);
+  border:2.5px solid #4aff7a;
+  box-shadow:0 0 0 1px rgba(180,255,200,.3), 0 0 20px rgba(74,255,122,.5), inset 0 0 14px rgba(74,255,122,.12);
+}
+.binte-answer-label {
+  font-family:'Russo One',sans-serif;
+  font-size:.68rem; letter-spacing:.18em;
+  color:rgba(74,255,122,.92);
+  text-shadow:0 0 8px rgba(74,255,122,.5);
+  white-space:nowrap;
+}
+.binte-answer-divider {
+  width:2px; height:26px;
+  background:rgba(74,255,122,.5);
+  box-shadow:0 0 8px rgba(74,255,122,.5);
+  border-radius:2px;
+}
+.binte-answer-value {
+  font-family:'Russo One',sans-serif;
+  font-size:1.4rem; letter-spacing:.01em;
+  color:#4aff7a;
+  text-shadow:0 0 12px #4aff7a, 0 0 22px rgba(74,255,122,.5);
+  line-height:1;
+}
+
+.binte-funfact {
+  position:relative; z-index:2;
+  margin-top:4px;
+  padding:9px 14px;
+  border-radius:14px;
+  background:
+    radial-gradient(ellipse at 0% 50%, rgba(255,222,58,.18) 0%, transparent 50%),
+    rgba(10,5,30,.6);
+  border:2px solid rgba(255,222,58,.5);
+  box-shadow:0 0 12px rgba(255,222,58,.25), inset 0 0 10px rgba(255,222,58,.08);
+  display:flex; align-items:center; gap:12px;
+  max-width:92%;
+}
+.binte-funfact-icon {
+  width:30px; height:30px; flex-shrink:0;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #fff 0%, #ffde3a 55%, #8a6800 100%);
+  border:2px solid #fff;
+  box-shadow:0 0 10px #ffde3a;
+  display:flex; align-items:center; justify-content:center;
+  font-size:.9rem;
+}
+.binte-funfact-body { flex:1; min-width:0 }
+.binte-funfact-kicker {
+  font-family:'Russo One',sans-serif;
+  font-size:.52rem; letter-spacing:.28em;
+  color:#ffde3a;
+  text-shadow:0 0 8px #ffde3a;
+  margin-bottom:1px;
+}
+.binte-funfact-text {
+  font-family:'Fredoka','Poppins',sans-serif;
+  font-weight:500;
+  font-size:.78rem; line-height:1.25;
+  color:#fff;
+}
