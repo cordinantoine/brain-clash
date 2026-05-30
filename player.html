@@ -186,6 +186,25 @@
     .result-pts{font-family:'Bebas Neue',sans-serif;font-size:3rem;line-height:1}
     .result-pts.good{color:#4ade80}
     .result-pts.bad{color:#f87171}
+    /* ── Écran 3d Résultat MAUVAIS — style néon ── */
+    .rb-body{width:100%;flex:1;min-height:0;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;padding:18px 22px 22px;text-align:center}
+    .rb-hero{position:relative;width:170px;height:170px;display:flex;align-items:center;justify-content:center;margin-bottom:2px}
+    .rb-rings{position:absolute;inset:0;pointer-events:none}
+    .rb-ring{position:absolute;inset:22px;border-radius:50%;border:2px solid #ff5470;opacity:0;animation:rbPing 2.7s ease-out infinite}
+    @keyframes rbPing{0%{transform:scale(.6);opacity:.65}100%{transform:scale(1.7);opacity:0}}
+    .rb-cross{position:relative;z-index:2;width:132px;height:132px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 36% 30%,#ff8da0 0%,#ff5470 42%,#8a0a22 100%);border:6px solid #fff;box-shadow:0 0 0 2px rgba(255,84,112,.5),0 0 28px #ff5470,0 0 62px rgba(255,84,112,.6),inset 0 -6px 16px rgba(0,0,0,.35);animation:rbShake 2.6s ease-in-out infinite}
+    .rb-cross svg{filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+    @keyframes rbShake{0%,86%,100%{transform:rotate(0) scale(1)}89%{transform:rotate(-5deg) scale(1.02)}93%{transform:rotate(5deg) scale(1.02)}97%{transform:rotate(-3deg) scale(1)}}
+    .rb-verdict{font-family:'Russo One',sans-serif;font-size:30px;letter-spacing:.02em;line-height:1.05;color:#fff;text-shadow:0 0 14px #ff5470,0 0 30px rgba(255,84,112,.65),0 3px 0 #2a0510;text-wrap:balance}
+    .rb-points{display:inline-flex;align-items:baseline;gap:7px;font-family:'Russo One',sans-serif;margin-top:-8px}
+    .rb-points-val{font-size:28px;line-height:1;color:#ff7d92;text-shadow:0 0 12px rgba(255,84,112,.7)}
+    .rb-points-lbl{font-family:'Fredoka',sans-serif;font-weight:600;font-size:14px;color:rgba(255,255,255,.5);letter-spacing:.02em}
+    .rb-answer{margin-top:4px;width:100%;max-width:300px;padding:14px 18px;border-radius:20px;background:radial-gradient(ellipse at 50% 0%,rgba(74,255,122,.18) 0%,transparent 75%),rgba(8,26,16,.6);border:2.5px solid #4aff7a;box-shadow:0 0 18px rgba(74,255,122,.45),0 0 36px rgba(74,255,122,.2),inset 0 0 18px rgba(74,255,122,.1)}
+    .rb-answer-lbl{font-family:'Russo One',sans-serif;font-size:12px;letter-spacing:.26em;color:#4aff7a;text-shadow:0 0 8px rgba(74,255,122,.6);margin-bottom:8px}
+    .rb-answer-val{display:flex;align-items:center;justify-content:center;gap:10px;font-family:'Russo One',sans-serif;font-size:24px;letter-spacing:.02em;line-height:1.1;color:#fff;text-shadow:0 0 12px rgba(74,255,122,.65),0 2px 4px rgba(0,0,0,.5);text-wrap:balance}
+    .rb-answer-check{flex-shrink:0;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:16px;background:radial-gradient(circle at 36% 30%,#fff 0%,#4aff7a 55%,#0a6e2a 100%);border:2px solid #fff;box-shadow:0 0 12px #4aff7a;color:#063;text-shadow:none}
+    .rb-next{margin-top:4px;display:flex;align-items:center;justify-content:center;gap:9px;padding:11px 18px;border-radius:14px;background:rgba(75,224,255,.08);border:1.5px solid rgba(75,224,255,.5);box-shadow:0 0 14px rgba(75,224,255,.3),inset 0 0 10px rgba(75,224,255,.12);font-family:'Russo One',sans-serif;font-size:12px;letter-spacing:.18em;color:#4be0ff;text-shadow:0 0 8px #4be0ff;animation:pulseFade 2s ease-in-out infinite}
+    .rb-next .dot-pulse{width:8px;height:8px;border-radius:50%;background:#4be0ff;box-shadow:0 0 10px #4be0ff;animation:dotPulse 1.2s ease-in-out infinite}
     /* ── Écran 3i Choisir une cible (Carabine / Steal) — cockpit néon ── */
     #state-pick-target{flex:1;min-height:0;display:flex;flex-direction:column;padding:0;gap:0;overflow:hidden}
     .ph-shoot-title{display:flex;align-items:center;justify-content:center;gap:12px;font-family:'Russo One',sans-serif;font-size:1.4rem;letter-spacing:.06em;color:#fff;text-shadow:0 0 12px #ff8a3a,0 0 22px #ff3a3a,0 3px 0 #1a0301;margin:2px 0 4px;text-wrap:balance}
@@ -462,6 +481,37 @@
       <div class="result-icon" id="result-icon"></div>
       <div class="result-pts" id="result-pts"></div>
       <p class="result-msg" id="result-msg"></p>
+      <div class="rb-body" id="rb-body" style="display:none">
+        <div class="rb-hero">
+          <div class="rb-rings">
+            <span class="rb-ring"></span>
+            <span class="rb-ring" style="animation-delay:.9s"></span>
+            <span class="rb-ring" style="animation-delay:1.8s"></span>
+          </div>
+          <div class="rb-cross">
+            <svg viewBox="0 0 100 100" width="84" height="84" aria-hidden="true">
+              <line x1="28" y1="28" x2="72" y2="72" stroke="#fff" stroke-width="11" stroke-linecap="round"/>
+              <line x1="72" y1="28" x2="28" y2="72" stroke="#fff" stroke-width="11" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="rb-verdict">MAUVAISE RÉPONSE</div>
+        <div class="rb-points" id="rb-points-row" style="display:none">
+          <span class="rb-points-val" id="rb-points-val"></span>
+          <span class="rb-points-lbl">points</span>
+        </div>
+        <div class="rb-answer">
+          <div class="rb-answer-lbl">BONNE RÉPONSE</div>
+          <div class="rb-answer-val">
+            <span class="rb-answer-check">✓</span>
+            <span id="rb-correct"></span>
+          </div>
+        </div>
+        <div class="rb-next">
+          <span class="dot-pulse"></span>
+          QUESTION SUIVANTE
+        </div>
+      </div>
     </div>
     <div id="state-scoreboard" style="display:none">
       <div class="ph-scoreboard solo">
@@ -1360,6 +1410,36 @@ function renderResult(gs, q) {
   const icon = G('result-icon');
   const pts = G('result-pts');
   const msg = G('result-msg');
+  const rbBody = G('rb-body');
+  const isBad = myAns !== undefined && !isCorrect;
+  // Mauvaise réponse : design néon dédié
+  if (isBad && q) {
+    icon.style.display = 'none';
+    pts.style.display = 'none';
+    msg.style.display = 'none';
+    if (rbBody) {
+      rbBody.style.display = '';
+      const correctEl = G('rb-correct');
+      if (correctEl) correctEl.textContent = q.a[q.c] || '';
+      const ptsRow = G('rb-points-row');
+      const ptsVal = G('rb-points-val');
+      const lostPts = (gs.result?.pts || 0);
+      if (ptsRow && ptsVal) {
+        if (lostPts < 0) {
+          ptsVal.textContent = `${lostPts}`;
+          ptsRow.style.display = '';
+        } else {
+          ptsRow.style.display = 'none';
+        }
+      }
+    }
+    return;
+  }
+  // Autres cas : ancien rendu simple
+  if (rbBody) rbBody.style.display = 'none';
+  icon.style.display = '';
+  pts.style.display = '';
+  msg.style.display = '';
   if (myAns === undefined) {
     icon.className = 'result-icon bad'; icon.textContent = '⏱️';
     pts.className = 'result-pts bad'; pts.textContent = '';
