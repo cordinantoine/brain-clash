@@ -97,12 +97,12 @@
     /* Bandeau "réponse envoyée" */
     .answer-sent{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);padding:10px 22px;border-radius:999px;background:rgba(10,40,20,.85);border:2px solid #4aff7a;box-shadow:0 0 18px rgba(74,255,122,.6),inset 0 0 14px rgba(74,255,122,.2);font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:.08em;color:#4aff7a;text-shadow:0 0 8px #4aff7a;white-space:nowrap;z-index:30;animation:fadeIn .3s ease}
     @keyframes fadeIn{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
-    #state-buzzed-out{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
-    .buzzed-out-icon{width:90px;height:90px;border-radius:50%;background:#7f1d1d;border:3px solid #ef4444;display:flex;align-items:center;justify-content:center;font-size:2.8rem;color:#ef4444;animation:buzzOutAppear .5s cubic-bezier(.36,.07,.19,.97) both}
-    @keyframes buzzOutAppear{0%{transform:scale(0.3) rotate(-10deg);opacity:0}60%{transform:scale(1.15) rotate(3deg)}100%{transform:scale(1) rotate(0);opacity:1}}
-    .buzzed-out-title{font-size:1.1rem;font-weight:700;color:#f87171;animation:shakeText .4s ease .3s both}
-    @keyframes shakeText{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-    .buzzed-out-sub{font-size:.8rem;color:#4a5a7a;text-align:center}
+    /* ── Écran 3e Buzz raté — style néon ── */
+    #state-buzzed-out{flex:1;min-height:0;display:flex;flex-direction:column;padding:0}
+    #state-buzzed-out .rb-body{gap:30px}
+    #state-buzzed-out .rb-verdict{font-size:38px}
+    .rb-wait{margin-top:2px;display:flex;align-items:center;justify-content:center;gap:11px;padding:14px 24px;border-radius:16px;background:rgba(75,224,255,.07);border:1.5px solid rgba(75,224,255,.45);box-shadow:0 0 14px rgba(75,224,255,.25),inset 0 0 10px rgba(75,224,255,.1);font-family:'Fredoka',sans-serif;font-weight:600;font-size:17px;color:rgba(255,255,255,.75);animation:pulseFade 2.2s ease-in-out infinite;text-wrap:balance;max-width:300px}
+    .rb-wait .dot-pulse{width:9px;height:9px;border-radius:50%;flex-shrink:0;background:#4be0ff;box-shadow:0 0 10px #4be0ff;animation:dotPulse 1.2s ease-in-out infinite}
     @keyframes patBounce{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-18px) rotate(5deg)}}
     @keyframes patFlame{0%,100%{text-shadow:0 0 20px #f97316,0 -8px 30px #ef4444}50%{text-shadow:0 0 35px #fb923c,0 -14px 45px #ef4444}}
     @keyframes patExplode{0%{transform:scale(.3);opacity:0}30%{transform:scale(1.4);opacity:1}100%{transform:scale(2);opacity:0}}
@@ -611,9 +611,26 @@
       </div>
     </div>
     <div id="state-buzzed-out" style="display:none">
-      <div class="buzzed-out-icon">✗</div>
-      <p class="buzzed-out-title">Mauvaise réponse !</p>
-      <p class="buzzed-out-sub">Attendez la prochaine question…</p>
+      <div class="rb-body">
+        <div class="rb-hero">
+          <div class="rb-rings">
+            <span class="rb-ring"></span>
+            <span class="rb-ring" style="animation-delay:.9s"></span>
+            <span class="rb-ring" style="animation-delay:1.8s"></span>
+          </div>
+          <div class="rb-cross">
+            <svg viewBox="0 0 100 100" width="84" height="84" aria-hidden="true">
+              <line x1="28" y1="28" x2="72" y2="72" stroke="#fff" stroke-width="11" stroke-linecap="round"/>
+              <line x1="72" y1="28" x2="28" y2="72" stroke="#fff" stroke-width="11" stroke-linecap="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="rb-verdict">MAUVAISE RÉPONSE&nbsp;!</div>
+        <div class="rb-wait">
+          <span class="dot-pulse"></span>
+          Attends la prochaine question…
+        </div>
+      </div>
     </div>
     <div id="state-final" style="display:none">
       <div class="final-trophy">🏆</div>
