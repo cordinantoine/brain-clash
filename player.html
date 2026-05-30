@@ -215,6 +215,15 @@
     .rb-winner{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka',sans-serif;font-weight:500;font-size:14px;color:rgba(255,255,255,.7);line-height:1.35;max-width:280px;text-wrap:balance}
     .rb-winner b{font-weight:700;color:#fff}
     .rb-winner-zap{font-size:16px;filter:drop-shadow(0 0 6px #ffb13a)}
+    /* ── Écran 3d Résultat TEMPS ÉCOULÉ — style néon ── */
+    .rb-body.timeout .rb-ring{border-color:#ffb13a}
+    .rb-body.timeout .rb-verdict{text-shadow:0 0 14px #ffb13a,0 0 30px rgba(255,177,58,.65),0 3px 0 #2a1805}
+    .rb-clock{position:relative;z-index:2;width:132px;height:132px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 36% 30%,#ffe0a0 0%,#ffb13a 42%,#8a4a08 100%);border:6px solid #fff;box-shadow:0 0 0 2px rgba(255,177,58,.5),0 0 28px #ffb13a,0 0 62px rgba(255,177,58,.6),inset 0 -6px 16px rgba(0,0,0,.35);animation:rbTick 2.6s ease-in-out infinite}
+    .rb-clock svg{filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+    .rb-clock-hand{transform-origin:50px 52px;animation:rbSweep 2.4s cubic-bezier(.5,0,.5,1) infinite}
+    @keyframes rbSweep{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+    @keyframes rbTick{0%,84%,100%{transform:scale(1)}90%{transform:scale(1.06)}95%{transform:scale(.98)}}
+    .rb-sub{font-family:'Fredoka',sans-serif;font-weight:500;font-size:14px;color:rgba(255,255,255,.6);line-height:1.35;max-width:260px;margin-top:-10px;text-wrap:balance}
     /* ── Écran 3i Choisir une cible (Carabine / Steal) — cockpit néon ── */
     #state-pick-target{flex:1;min-height:0;display:flex;flex-direction:column;padding:0;gap:0;overflow:hidden}
     .ph-shoot-title{display:flex;align-items:center;justify-content:center;gap:12px;font-family:'Russo One',sans-serif;font-size:1.4rem;letter-spacing:.06em;color:#fff;text-shadow:0 0 12px #ff8a3a,0 0 22px #ff3a3a,0 3px 0 #1a0301;margin:2px 0 4px;text-wrap:balance}
@@ -550,6 +559,39 @@
         <div class="rb-winner" id="rb-good-winner" style="display:none">
           <span class="rb-winner-zap">⚡</span>
           <span id="rb-good-winner-text"></span>
+        </div>
+        <div class="rb-next">
+          <span class="dot-pulse"></span>
+          QUESTION SUIVANTE
+        </div>
+      </div>
+      <div class="rb-body timeout" id="rb-body-timeout" style="display:none">
+        <div class="rb-hero">
+          <div class="rb-rings">
+            <span class="rb-ring"></span>
+            <span class="rb-ring" style="animation-delay:.9s"></span>
+            <span class="rb-ring" style="animation-delay:1.8s"></span>
+          </div>
+          <div class="rb-clock">
+            <svg viewBox="0 0 100 100" width="86" height="86" aria-hidden="true">
+              <rect x="42" y="6" width="16" height="9" rx="2.5" fill="#fff"/>
+              <rect x="46" y="13" width="8" height="7" rx="2" fill="#fff"/>
+              <circle cx="50" cy="56" r="32" fill="none" stroke="#fff" stroke-width="7"/>
+              <g class="rb-clock-hand">
+                <line x1="50" y1="52" x2="50" y2="32" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+              </g>
+              <circle cx="50" cy="52" r="5" fill="#fff"/>
+            </svg>
+          </div>
+        </div>
+        <div class="rb-verdict">TEMPS ÉCOULÉ&nbsp;!</div>
+        <div class="rb-sub" id="rb-timeout-sub">Personne n'a buzzé à temps — aucun point cette manche.</div>
+        <div class="rb-answer" id="rb-timeout-answer-row">
+          <div class="rb-answer-lbl">BONNE RÉPONSE</div>
+          <div class="rb-answer-val">
+            <span class="rb-answer-check">✓</span>
+            <span id="rb-timeout-correct"></span>
+          </div>
         </div>
         <div class="rb-next">
           <span class="dot-pulse"></span>
@@ -1456,13 +1498,36 @@ function renderResult(gs, q) {
   const msg = G('result-msg');
   const rbBody = G('rb-body');
   const rbGood = G('rb-body-good');
+  const rbTimeout = G('rb-body-timeout');
   const isBad = myAns !== undefined && !isCorrect;
+  const isTimeout = myAns === undefined;
+  // Temps écoulé : design néon dédié
+  if (isTimeout) {
+    icon.style.display = 'none';
+    pts.style.display = 'none';
+    msg.style.display = 'none';
+    if (rbBody) rbBody.style.display = 'none';
+    if (rbGood) rbGood.style.display = 'none';
+    if (rbTimeout) {
+      rbTimeout.style.display = '';
+      const correctEl = G('rb-timeout-correct');
+      const answerRow = G('rb-timeout-answer-row');
+      if (correctEl && q && q.a && typeof q.c === 'number') {
+        correctEl.textContent = q.a[q.c] || '';
+        if (answerRow) answerRow.style.display = '';
+      } else if (answerRow) {
+        answerRow.style.display = 'none';
+      }
+    }
+    return;
+  }
   // Bonne réponse : design néon dédié
   if (isCorrect && q) {
     icon.style.display = 'none';
     pts.style.display = 'none';
     msg.style.display = 'none';
     if (rbBody) rbBody.style.display = 'none';
+    if (rbTimeout) rbTimeout.style.display = 'none';
     if (rbGood) {
       rbGood.style.display = '';
       const ansEl = G('rb-good-answer');
@@ -1499,6 +1564,7 @@ function renderResult(gs, q) {
     pts.style.display = 'none';
     msg.style.display = 'none';
     if (rbGood) rbGood.style.display = 'none';
+    if (rbTimeout) rbTimeout.style.display = 'none';
     if (rbBody) {
       rbBody.style.display = '';
       const correctEl = G('rb-correct');
@@ -1520,18 +1586,13 @@ function renderResult(gs, q) {
   // Autres cas : ancien rendu simple
   if (rbBody) rbBody.style.display = 'none';
   if (rbGood) rbGood.style.display = 'none';
+  if (rbTimeout) rbTimeout.style.display = 'none';
   icon.style.display = '';
   pts.style.display = '';
   msg.style.display = '';
-  if (myAns === undefined) {
-    icon.className = 'result-icon bad'; icon.textContent = '⏱️';
-    pts.className = 'result-pts bad'; pts.textContent = '';
-    msg.textContent = 'Temps écoulé !';
-  } else {
-    icon.className = 'result-icon bad'; icon.textContent = '✗';
-    pts.className = 'result-pts bad'; pts.textContent = gs.result?.pts < 0 ? gs.result.pts : '';
-    msg.textContent = q ? `Bonne réponse : ${q.a[q.c]}` : '';
-  }
+  icon.className = 'result-icon bad'; icon.textContent = '✗';
+  pts.className = 'result-pts bad'; pts.textContent = gs.result?.pts < 0 ? gs.result.pts : '';
+  msg.textContent = q ? `Bonne réponse : ${q.a[q.c]}` : '';
 }
 
 // ── Inter QCM : design "médaille néon" (écran 3h) ──
