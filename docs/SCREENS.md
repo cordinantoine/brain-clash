@@ -10,7 +10,7 @@ npm install           # première fois seulement (puppeteer-core)
 node shot.js          # serveur "Brain Clash (Player)" doit tourner sur :8081
 ```
 
-Les 30 PNG dans `docs/screens/` sont écrasés à chaque exécution.
+Les 33 PNG dans `docs/screens/` sont écrasés à chaque exécution.
 
 Légende :
 - ✅ refondu (cockpit néon)
@@ -67,8 +67,14 @@ Le `state-waiting` sert pour de nombreux moments de pause. Chaque variante a son
 **PRÊT** — avant chaque round, bouton READY.
 ![](screens/03c-attente-pret.png)
 
-**Picker (toi tu choisis)** — mode "le dernier choisit", c'est ton tour de choisir thème + difficulté.
+**Picker (toi tu choisis) — étape 2 (difficulté)** — mode "le dernier choisit", après avoir choisi un thème.
 ![](screens/03c-attente-picker.png)
+
+**Picker (toi tu choisis) — étape 1 (thème)** — grille des thèmes proposés.
+![](screens/03c-attente-picker-themes.png)
+
+**Picker — un autre joueur choisit** — vue non-picker, en attente que l'autre choisisse.
+![](screens/03c-attente-picker-autre.png)
 
 **Décompte** — 3 → 2 → 1 → GO.
 ![](screens/03c-attente-decompte.png)
@@ -87,6 +93,9 @@ Le `state-waiting` sert pour de nombreux moments de pause. Chaque variante a son
 
 **Patate — non porteur** — quelqu'un d'autre a la patate.
 ![](screens/03c-attente-patate-autre.png)
+
+**Patate — BOOM** — explosion en fin de manche, vue par tous les joueurs.
+![](screens/03c-attente-patate-boom.png)
 
 ### 3d. Résultat 🕗
 

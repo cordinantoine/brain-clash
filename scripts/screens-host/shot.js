@@ -132,6 +132,21 @@ const SCENES = [
     drawQ_host(__baseRoom({theme:'culture'}), __baseGs({}));
   })()` },
 
+  { file:'09b-question-chrono.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQ_host(__baseRoom({rounds:['chrono','qcm','buzzer','steal','patate','carton'],theme:'culture'}), __baseGs({answers:{Antoine:{ansIdx:0,time:1}}}));
+  })()` },
+
+  { file:'09c-question-carton.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQ_host(__baseRoom({rounds:['carton','qcm','buzzer','chrono','steal','patate'],theme:'culture'}), __baseGs({balloons:[3,1,0], roundElim:['Max']}));
+  })()` },
+
+  { file:'09d-question-patate.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQ_host(__baseRoom({rounds:['patate','qcm','buzzer','chrono','steal','carton'],theme:'culture'}), __baseGs({patateHolder:'Léa', patateManche:1}));
+  })()` },
+
   { file:'10-question-revelation.png', setup:`(() => {
     __setBaseGlobals();
     drawQ_host(__baseRoom({theme:'culture'}), __baseGs({revealed:true, answers:{Antoine:{ansIdx:0,time:1}}, result:{msg:'Antoine répond bien !',pts:100,scorer:'Antoine'}, scores:[440,220,180]}));

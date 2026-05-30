@@ -122,6 +122,24 @@ const SCENES = [
     G('hdr-timer').textContent='—';
     const room = __baseRoom({rounds:['qcm'], mode:'last_picks', pickerDone:false, picker:{name:'Toi'}, pickerThemes:[
       {slug:'cinema',name:'Cinéma'},{slug:'sport',name:'Sport'},{slug:'histoire_moderne',name:'Histoire'},{slug:'science_technologie',name:'Sciences'}
+    ], pickerSelectedTheme:'cinema', pickerSelectedDifficulty:'Intermédiaire'});
+    renderState(room, __baseGs({phase:'roundIntro'}));
+  })()` },
+
+  { file:'03c-attente-picker-themes.png', setup:`(() => {
+    __init('qcm');
+    G('hdr-timer').textContent='—';
+    const room = __baseRoom({rounds:['qcm'], mode:'last_picks', pickerDone:false, picker:{name:'Toi'}, pickerThemes:[
+      {slug:'cinema',name:'Cinéma'},{slug:'sport',name:'Sport'},{slug:'histoire_moderne',name:'Histoire'},{slug:'science_technologie',name:'Sciences'}
+    ]});
+    renderState(room, __baseGs({phase:'roundIntro'}));
+  })()` },
+
+  { file:'03c-attente-picker-autre.png', setup:`(() => {
+    __init('qcm');
+    G('hdr-timer').textContent='—';
+    const room = __baseRoom({rounds:['qcm'], mode:'last_picks', pickerDone:false, picker:{name:'Antoine'}, pickerThemes:[
+      {slug:'cinema',name:'Cinéma'},{slug:'sport',name:'Sport'},{slug:'histoire_moderne',name:'Histoire'},{slug:'science_technologie',name:'Sciences'}
     ], pickerSelectedTheme:'cinema'});
     renderState(room, __baseGs({phase:'roundIntro'}));
   })()` },
@@ -160,6 +178,12 @@ const SCENES = [
     __init('patate');
     G('hdr-timer').textContent='🥔';
     renderState(__baseRoom({rounds:['patate']}), __baseGs({patateHolder:'Antoine', patateManche:2}));
+  })()` },
+
+  { file:'03c-attente-patate-boom.png', setup:`(() => {
+    __init('patate');
+    G('hdr-timer').textContent='—';
+    renderState(__baseRoom({rounds:['patate']}), __baseGs({patateExplosion:true, patateHolder:'Antoine', revealed:true, result:{msg:'💥 BOOM ! Antoine a la patate',pts:-200,scorer:'Antoine'}}));
   })()` },
 
   // ── 3d Résultat ──

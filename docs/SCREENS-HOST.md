@@ -10,7 +10,7 @@ npm install           # première fois seulement (puppeteer-core)
 node shot.js          # serveur "Brain Clash (Host)" doit tourner sur :8080
 ```
 
-Les 30 PNG dans `docs/screens-host/` sont écrasés à chaque exécution.
+Les 33 PNG dans `docs/screens-host/` sont écrasés à chaque exécution.
 
 Légende :
 - ✅ refondu (cockpit néon)
@@ -96,9 +96,19 @@ Le joueur en dernière position choisit thème + difficulté sur son téléphone
 
 ## 9. Question ✅
 
-Plateau TV en cours de question : carte question, 4 réponses A/B/C/D, sidebar classement, timer, barre élim (si carton/patate).
+Plateau TV en cours de question : carte question, 4 réponses A/B/C/D, sidebar classement, timer, barre élim (si carton/patate). 4 variantes par type de round.
 
+**9a. QCM / Buzzer / Steal** — version standard avec timer.
 ![](screens-host/09-question.png)
+
+**9b. Chrono** — version standard (timer affiché tant que non révélé).
+![](screens-host/09b-question-chrono.png)
+
+**9c. Tir à la Carabine (carton)** — barre `elimbar` au-dessus avec ballons 🎈 par joueur et 💀 pour les éliminés.
+![](screens-host/09c-question-carton.png)
+
+**9d. Patate Chaude** — barre `elimbar` indiquant le porteur 🥔, header "MANCHE N/4", pas de timer.
+![](screens-host/09d-question-patate.png)
 
 ---
 
