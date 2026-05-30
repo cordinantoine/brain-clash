@@ -205,6 +205,16 @@
     .rb-answer-check{flex-shrink:0;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:16px;background:radial-gradient(circle at 36% 30%,#fff 0%,#4aff7a 55%,#0a6e2a 100%);border:2px solid #fff;box-shadow:0 0 12px #4aff7a;color:#063;text-shadow:none}
     .rb-next{margin-top:4px;display:flex;align-items:center;justify-content:center;gap:9px;padding:11px 18px;border-radius:14px;background:rgba(75,224,255,.08);border:1.5px solid rgba(75,224,255,.5);box-shadow:0 0 14px rgba(75,224,255,.3),inset 0 0 10px rgba(75,224,255,.12);font-family:'Russo One',sans-serif;font-size:12px;letter-spacing:.18em;color:#4be0ff;text-shadow:0 0 8px #4be0ff;animation:pulseFade 2s ease-in-out infinite}
     .rb-next .dot-pulse{width:8px;height:8px;border-radius:50%;background:#4be0ff;box-shadow:0 0 10px #4be0ff;animation:dotPulse 1.2s ease-in-out infinite}
+    /* ── Écran 3d Résultat BON — style néon ── */
+    .rb-body.good .rb-ring{border-color:#4aff7a}
+    .rb-body.good .rb-verdict{text-shadow:0 0 14px #4aff7a,0 0 30px rgba(74,255,122,.65),0 3px 0 #05291a}
+    .rb-body.good .rb-points-val{color:#7dffa0;text-shadow:0 0 12px rgba(74,255,122,.7)}
+    .rb-check{position:relative;z-index:2;width:132px;height:132px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 36% 30%,#b8ffc8 0%,#4aff7a 42%,#0a6e2a 100%);border:6px solid #fff;box-shadow:0 0 0 2px rgba(74,255,122,.5),0 0 28px #4aff7a,0 0 62px rgba(74,255,122,.6),inset 0 -6px 16px rgba(0,0,0,.35);animation:rbPop 2.6s ease-in-out infinite}
+    .rb-check svg{filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+    @keyframes rbPop{0%,84%,100%{transform:scale(1)}90%{transform:scale(1.08)}95%{transform:scale(.98)}}
+    .rb-winner{display:inline-flex;align-items:center;gap:8px;font-family:'Fredoka',sans-serif;font-weight:500;font-size:14px;color:rgba(255,255,255,.7);line-height:1.35;max-width:280px;text-wrap:balance}
+    .rb-winner b{font-weight:700;color:#fff}
+    .rb-winner-zap{font-size:16px;filter:drop-shadow(0 0 6px #ffb13a)}
     /* ── Écran 3i Choisir une cible (Carabine / Steal) — cockpit néon ── */
     #state-pick-target{flex:1;min-height:0;display:flex;flex-direction:column;padding:0;gap:0;overflow:hidden}
     .ph-shoot-title{display:flex;align-items:center;justify-content:center;gap:12px;font-family:'Russo One',sans-serif;font-size:1.4rem;letter-spacing:.06em;color:#fff;text-shadow:0 0 12px #ff8a3a,0 0 22px #ff3a3a,0 3px 0 #1a0301;margin:2px 0 4px;text-wrap:balance}
@@ -506,6 +516,40 @@
             <span class="rb-answer-check">✓</span>
             <span id="rb-correct"></span>
           </div>
+        </div>
+        <div class="rb-next">
+          <span class="dot-pulse"></span>
+          QUESTION SUIVANTE
+        </div>
+      </div>
+      <div class="rb-body good" id="rb-body-good" style="display:none">
+        <div class="rb-hero">
+          <div class="rb-rings">
+            <span class="rb-ring"></span>
+            <span class="rb-ring" style="animation-delay:.9s"></span>
+            <span class="rb-ring" style="animation-delay:1.8s"></span>
+          </div>
+          <div class="rb-check">
+            <svg viewBox="0 0 100 100" width="84" height="84" aria-hidden="true">
+              <path d="M24 52 L43 71 L78 30" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+        <div class="rb-verdict">BONNE RÉPONSE</div>
+        <div class="rb-points" id="rb-good-points-row" style="display:none">
+          <span class="rb-points-val" id="rb-good-points-val"></span>
+          <span class="rb-points-lbl" id="rb-good-points-lbl">points</span>
+        </div>
+        <div class="rb-answer">
+          <div class="rb-answer-lbl">TA RÉPONSE</div>
+          <div class="rb-answer-val">
+            <span class="rb-answer-check">✓</span>
+            <span id="rb-good-answer"></span>
+          </div>
+        </div>
+        <div class="rb-winner" id="rb-good-winner" style="display:none">
+          <span class="rb-winner-zap">⚡</span>
+          <span id="rb-good-winner-text"></span>
         </div>
         <div class="rb-next">
           <span class="dot-pulse"></span>
@@ -1411,12 +1455,50 @@ function renderResult(gs, q) {
   const pts = G('result-pts');
   const msg = G('result-msg');
   const rbBody = G('rb-body');
+  const rbGood = G('rb-body-good');
   const isBad = myAns !== undefined && !isCorrect;
+  // Bonne réponse : design néon dédié
+  if (isCorrect && q) {
+    icon.style.display = 'none';
+    pts.style.display = 'none';
+    msg.style.display = 'none';
+    if (rbBody) rbBody.style.display = 'none';
+    if (rbGood) {
+      rbGood.style.display = '';
+      const ansEl = G('rb-good-answer');
+      if (ansEl) ansEl.textContent = q.a[myAns.ansIdx] || '';
+      const ptsRow = G('rb-good-points-row');
+      const ptsVal = G('rb-good-points-val');
+      const ptsLbl = G('rb-good-points-lbl');
+      const gainPts = (gs.result?.pts || 0);
+      if (ptsRow && ptsVal) {
+        if (gainPts > 0) {
+          ptsVal.textContent = `+${gainPts}`;
+          if (ptsLbl) ptsLbl.textContent = gainPts > 1 ? 'points' : 'point';
+          ptsRow.style.display = '';
+        } else {
+          ptsRow.style.display = 'none';
+        }
+      }
+      const winRow = G('rb-good-winner');
+      const winTxt = G('rb-good-winner-text');
+      if (winRow && winTxt) {
+        if (gainPts > 0) {
+          winTxt.innerHTML = `Le plus rapide à buzzer&nbsp;: <b>+${gainPts} points</b> pour toi&nbsp;!`;
+          winRow.style.display = '';
+        } else {
+          winRow.style.display = 'none';
+        }
+      }
+    }
+    return;
+  }
   // Mauvaise réponse : design néon dédié
   if (isBad && q) {
     icon.style.display = 'none';
     pts.style.display = 'none';
     msg.style.display = 'none';
+    if (rbGood) rbGood.style.display = 'none';
     if (rbBody) {
       rbBody.style.display = '';
       const correctEl = G('rb-correct');
@@ -1437,6 +1519,7 @@ function renderResult(gs, q) {
   }
   // Autres cas : ancien rendu simple
   if (rbBody) rbBody.style.display = 'none';
+  if (rbGood) rbGood.style.display = 'none';
   icon.style.display = '';
   pts.style.display = '';
   msg.style.display = '';
@@ -1444,10 +1527,6 @@ function renderResult(gs, q) {
     icon.className = 'result-icon bad'; icon.textContent = '⏱️';
     pts.className = 'result-pts bad'; pts.textContent = '';
     msg.textContent = 'Temps écoulé !';
-  } else if (isCorrect) {
-    icon.className = 'result-icon good'; icon.textContent = '✓';
-    pts.className = 'result-pts good'; pts.textContent = '+' + (gs.result?.pts || 0);
-    msg.textContent = gs.result?.msg || 'Bonne réponse !';
   } else {
     icon.className = 'result-icon bad'; icon.textContent = '✗';
     pts.className = 'result-pts bad'; pts.textContent = gs.result?.pts < 0 ? gs.result.pts : '';
