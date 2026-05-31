@@ -1784,25 +1784,7 @@ function renderInterQCM(room, gs) {
     ? 'BONNE RÉPONSE'
     : (noAnswer ? 'PAS DE RÉPONSE' : 'MAUVAISE RÉPONSE');
 
-  let winnerLine;
-  if (isCorrect) {
-    winnerLine = `<b>Toi</b>, bonne réponse&nbsp;: <b>+${myGain} pts</b>&nbsp;!`;
-  } else if (noAnswer) {
-    winnerLine = `Pas de réponse… la bonne réponse était <b>${corrAns}</b>`;
-  } else {
-    winnerLine = `Dommage… la bonne réponse était <b>${corrAns}</b>`;
-  }
-
   const av = AVATARS[MY_AVATAR] || AVATARS[0];
-
-  const factHtml = q?.f ? `
-    <div class="rb-fact">
-      <div class="rb-fact-icon">💡</div>
-      <div class="rb-fact-body">
-        <div class="rb-fact-kicker">LE SAVIEZ-VOUS ?</div>
-        <div class="rb-fact-text">${q.f}</div>
-      </div>
-    </div>` : '';
 
   const answerHtml = q ? `
     <div class="rb-answer">
@@ -1836,13 +1818,6 @@ function renderInterQCM(room, gs) {
       </div>
 
       ${answerHtml}
-
-      <div class="rb-winner">
-        <span class="rb-winner-zap">${isCorrect ? '🎉' : '🙈'}</span>
-        <span>${winnerLine}</span>
-      </div>
-
-      ${factHtml}
 
       <div class="rb-next">
         <span class="dot-pulse"></span>
