@@ -224,6 +224,19 @@
     @keyframes rbSweep{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
     @keyframes rbTick{0%,84%,100%{transform:scale(1)}90%{transform:scale(1.06)}95%{transform:scale(.98)}}
     .rb-sub{font-family:'Fredoka',sans-serif;font-weight:500;font-size:14px;color:rgba(255,255,255,.6);line-height:1.35;max-width:260px;margin-top:-10px;text-wrap:balance}
+    /* ── Écran 3h "Inter Buzzer" — Avatar gagnant néon vert ── */
+    .waiting-text:has(.rib-wrap){width:100%;height:100%;display:flex;flex-direction:column;align-self:stretch;text-align:left;color:inherit;font-size:inherit;margin:0;flex:1;min-height:0}
+    .rib-wrap{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:14px 18px 18px;text-align:center}
+    .rb-check.av-disc{overflow:visible}
+    .rb-check-av{width:112px;height:112px;border-radius:50%;overflow:hidden;border:3px solid rgba(255,255,255,.55);box-shadow:inset 0 0 14px rgba(0,0,0,.4)}
+    .rb-check-av img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+    .rb-buzz{position:absolute;left:-10px;top:-6px;z-index:4;display:inline-flex;align-items:center;gap:5px;font-family:'Russo One',sans-serif;font-size:14px;letter-spacing:.02em;padding:6px 11px;border-radius:999px;background:linear-gradient(180deg,#ffd47a 0%,#d68a1a 100%);color:#3a2400;border:2.5px solid #fff;box-shadow:0 0 0 1.5px #ffb43c,0 0 16px rgba(255,180,60,.6);transform:rotate(-8deg)}
+    .rb-checkbadge{position:absolute;right:-4px;bottom:4px;z-index:4;width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;background:radial-gradient(circle at 36% 30%,#fff 0%,#4aff7a 55%,#0a6e2a 100%);border:3px solid #fff;box-shadow:0 0 14px #4aff7a;color:#063}
+    .rb-fact{margin-top:2px;width:100%;max-width:300px;display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:16px;text-align:left;background:radial-gradient(ellipse at 0% 50%,rgba(255,222,58,.16) 0%,transparent 55%),rgba(10,5,30,.6);border:2px solid rgba(255,222,58,.55);box-shadow:0 0 14px rgba(255,222,58,.3),inset 0 0 14px rgba(255,222,58,.08)}
+    .rb-fact-icon{width:34px;height:34px;flex-shrink:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,#ffde3a 55%,#8a6800 100%);border:2px solid #fff;box-shadow:0 0 12px #ffde3a;display:flex;align-items:center;justify-content:center;font-size:17px}
+    .rb-fact-body{flex:1;min-width:0}
+    .rb-fact-kicker{font-family:'Russo One',sans-serif;font-size:9px;letter-spacing:.26em;color:#ffde3a;text-shadow:0 0 8px rgba(255,222,58,.6);margin-bottom:3px}
+    .rb-fact-text{font-family:'Fredoka',sans-serif;font-weight:500;font-size:13px;line-height:1.3;color:rgba(255,255,255,.86);text-wrap:pretty}
     /* ── Écran 3i Choisir une cible (Carabine / Steal) — cockpit néon ── */
     #state-pick-target{flex:1;min-height:0;display:flex;flex-direction:column;padding:0;gap:0;overflow:hidden}
     .ph-shoot-title{display:flex;align-items:center;justify-content:center;gap:12px;font-family:'Russo One',sans-serif;font-size:1.4rem;letter-spacing:.06em;color:#fff;text-shadow:0 0 12px #ff8a3a,0 0 22px #ff3a3a,0 3px 0 #1a0301;margin:2px 0 4px;text-wrap:balance}
@@ -1743,11 +1756,102 @@ function renderInterQCM(room, gs) {
   `;
 }
 
+// ── Inter Buzzer : design "avatar gagnant néon vert" (écran 3h) ──
+function renderInterBuzzer(room, gs) {
+  const q = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
+  const scorer = gs.result?.scorer;
+  // Pas de vainqueur → fallback timeout (générique)
+  if (!scorer || !q) return false;
+
+  showState('state-waiting');
+  const el = G('waiting-text');
+  if (!el) return true;
+
+  const players = toArr(gs.players);
+  const idx = players.indexOf(scorer);
+  const avIdx = PLAYER_AVATARS[idx] ?? 0;
+  const av = AVATARS[avIdx] || AVATARS[0];
+  const pts = gs.result?.pts || 0;
+  const isMe = scorer === ME;
+
+  // Temps de buzz : si dispo dans answers[scorer].time relatif à qStartTs
+  let buzzTimeHtml = '';
+  const ans = (gs.answers||{})[scorer];
+  if (ans && ans.time && gs.qStartTs) {
+    const dt = (ans.time - gs.qStartTs) / 1000;
+    if (dt > 0 && dt < 60) {
+      buzzTimeHtml = `<span class="rb-buzz">⚡ ${dt.toFixed(1).replace('.',',')} s</span>`;
+    }
+  }
+
+  const winnerLine = isMe
+    ? `<b>Toi</b>, le plus rapide à buzzer&nbsp;: <b>+${pts} pts</b>&nbsp;!`
+    : `<b>${scorer}</b> a buzzé en premier&nbsp;: <b>+${pts} pts</b>`;
+
+  const factHtml = q.f ? `
+    <div class="rb-fact">
+      <div class="rb-fact-icon">💡</div>
+      <div class="rb-fact-body">
+        <div class="rb-fact-kicker">LE SAVIEZ-VOUS ?</div>
+        <div class="rb-fact-text">${q.f}</div>
+      </div>
+    </div>` : '';
+
+  el.innerHTML = `
+    <div class="rib-wrap">
+      <div class="rb-hero">
+        <div class="rb-rings">
+          <span class="rb-ring"></span>
+          <span class="rb-ring" style="animation-delay:.9s"></span>
+          <span class="rb-ring" style="animation-delay:1.8s"></span>
+        </div>
+        <div class="rb-check av-disc">
+          ${buzzTimeHtml}
+          <div class="rb-check-av">
+            <img src="js/assets/avatars/${av.file}" alt="">
+          </div>
+          <span class="rb-checkbadge">✓</span>
+        </div>
+      </div>
+
+      <div class="rb-verdict" style="text-shadow:0 0 14px #4aff7a,0 0 30px rgba(74,255,122,.65),0 3px 0 #05291a">BONNE RÉPONSE</div>
+      <div class="rb-points">
+        <span class="rb-points-val" style="color:#7dffa0;text-shadow:0 0 12px rgba(74,255,122,.7)">+${pts}</span>
+        <span class="rb-points-lbl">${pts > 1 ? 'points' : 'point'}</span>
+      </div>
+
+      <div class="rb-answer">
+        <div class="rb-answer-lbl">LA RÉPONSE</div>
+        <div class="rb-answer-val">
+          <span class="rb-answer-check">✓</span>
+          ${q.a[q.c]}
+        </div>
+      </div>
+
+      <div class="rb-winner">
+        <span class="rb-winner-zap">⚡</span>
+        <span>${winnerLine}</span>
+      </div>
+
+      ${factHtml}
+
+      <div class="rb-next">
+        <span class="dot-pulse"></span>
+        QUESTION SUIVANTE
+      </div>
+    </div>
+  `;
+  return true;
+}
+
 function renderInterResult(room, gs) {
   const rType = room.rounds[gs.roundIdx] || '';
 
   // ── QCM : design "médaille néon" dédié ──
   if (rType === 'qcm') { renderInterQCM(room, gs); return; }
+
+  // ── Buzzer : design "avatar gagnant néon vert" dédié ──
+  if (rType === 'buzzer' && renderInterBuzzer(room, gs)) return;
 
   showState('state-waiting');
   const el = G('waiting-text');
