@@ -279,6 +279,34 @@
     .cr-last-txt{color:#ffd28a;font-weight:700}
     .cr-dead-txt{color:#ff9fb0;font-weight:700}
     .cr-wrap .rb-next{margin-top:auto}
+    /* ── Écran 3h "Inter Chrono" — Contre la montre (cyan néon) ── */
+    .waiting-text:has(.chr-wrap){width:100%;height:100%;display:flex;flex-direction:column;align-self:stretch;text-align:left;color:inherit;font-size:inherit;margin:0;flex:1;min-height:0}
+    .chr-wrap{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:14px;padding:14px 18px 18px;text-align:center}
+    .chr-wrap .rb-hero{width:150px;height:150px;margin-bottom:0}
+    .chr-wrap .rb-ring{inset:18px;border-color:#4be0ff}
+    .chr-ring-good{border-color:#4be0ff !important}
+    .chr-ring-miss{border-color:#ff4f6a !important}
+    .chr-ring-timeout{border-color:#ffb13a !important}
+    .chr-disc{position:relative;z-index:2;width:118px;height:118px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:6px solid #fff;animation:rbPop 2.6s ease-in-out infinite}
+    .chr-disc svg{filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+    .chr-disc-good{background:radial-gradient(circle at 36% 30%,#d6f6ff 0%,#4be0ff 44%,#0a6e9e 100%);box-shadow:0 0 0 2px rgba(75,224,255,.5),0 0 28px #4be0ff,0 0 62px rgba(75,224,255,.55),inset 0 -6px 16px rgba(0,0,0,.35)}
+    .chr-disc-miss{background:radial-gradient(circle at 36% 30%,#ffb0c0 0%,#ff4f6a 44%,#8a0a22 100%);box-shadow:0 0 0 2px rgba(255,79,106,.5),0 0 28px #ff4f6a,0 0 62px rgba(255,79,106,.5),inset 0 -6px 16px rgba(0,0,0,.35)}
+    .chr-disc-timeout{background:radial-gradient(circle at 36% 30%,#ffe3a8 0%,#ffb13a 44%,#8a5a00 100%);box-shadow:0 0 0 2px rgba(255,177,58,.5),0 0 28px #ffb13a,0 0 62px rgba(255,177,58,.5),inset 0 -6px 16px rgba(0,0,0,.35)}
+    .chr-verdict-good{text-shadow:0 0 14px #4be0ff,0 0 30px rgba(75,224,255,.65),0 3px 0 #052636}
+    .chr-verdict-miss{text-shadow:0 0 14px #ff4f6a,0 0 30px rgba(255,79,106,.6),0 3px 0 #3a0512}
+    .chr-verdict-timeout{text-shadow:0 0 14px #ffb13a,0 0 30px rgba(255,177,58,.6),0 3px 0 #3a2605}
+    .chr-wrap .rb-sub{font-family:'Fredoka',sans-serif;font-weight:500;font-size:14px;line-height:1.35;color:rgba(255,255,255,.82);max-width:290px;text-wrap:balance;margin-top:-4px}
+    .chr-wrap .rb-sub b{color:#fff;font-weight:700}
+    .chr-pop{filter:drop-shadow(0 0 6px #4be0ff)}
+    .chr-points{display:inline-flex;align-items:baseline;gap:6px;padding:8px 22px;border-radius:16px;background:rgba(6,16,28,.5);border:2.5px solid var(--cpt,#4be0ff);box-shadow:0 0 16px color-mix(in srgb,var(--cpt,#4be0ff) 55%,transparent),inset 0 0 14px rgba(0,0,0,.4)}
+    .chr-points-good{--cpt:#4be0ff}
+    .chr-points-miss{--cpt:#ff4f6a}
+    .chr-points-timeout{--cpt:#ffb13a}
+    .chr-points-plus{font-family:'Russo One',sans-serif;font-size:34px;line-height:1;color:#fff;text-shadow:0 0 14px var(--cpt,#4be0ff),0 2px 4px rgba(0,0,0,.5)}
+    .chr-points-unit{font-family:'Russo One',sans-serif;font-size:13px;letter-spacing:.14em;color:var(--cpt,#4be0ff);text-shadow:0 0 8px color-mix(in srgb,var(--cpt,#4be0ff) 60%,transparent)}
+    .chr-points-zero{font-family:'Russo One',sans-serif;font-size:22px;letter-spacing:.06em;color:rgba(255,255,255,.55)}
+    .chr-answer-letter{flex-shrink:0;min-width:30px;height:30px;padding:0 4px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-family:'Russo One',sans-serif;font-size:17px;color:#052a14;background:radial-gradient(circle at 36% 30%,#d6ffe2 0%,#4aff7a 60%,#1ba94a 100%);border:2px solid #fff;box-shadow:0 0 10px #4aff7a;text-shadow:none}
+    .chr-wrap .rb-next{margin-top:auto}
     /* ── Écran 3i Choisir une cible (Carabine / Steal) — cockpit néon ── */
     #state-pick-target{flex:1;min-height:0;display:flex;flex-direction:column;padding:0;gap:0;overflow:hidden}
     .ph-shoot-title{display:flex;align-items:center;justify-content:center;gap:12px;font-family:'Russo One',sans-serif;font-size:1.4rem;letter-spacing:.06em;color:#fff;text-shadow:0 0 12px #ff8a3a,0 0 22px #ff3a3a,0 3px 0 #1a0301;margin:2px 0 4px;text-wrap:balance}
@@ -1389,7 +1417,7 @@ function renderState(room, gs) {
 
   // Chrono: show ranking after reveal
   if (gs.revealed && gs.result && rType === 'chrono' && gs.chronoRanking) {
-    renderChronoRanking(gs);
+    renderInterChrono(room, gs);
     return;
   }
 
@@ -1989,6 +2017,101 @@ function renderInterCarton(room, gs) {
     </div>`;
 }
 
+// ── Inter Chrono (Contre la montre) : stopwatch + verdict + points (écran 3h) ──
+function renderInterChrono(room, gs) {
+  showState('state-waiting');
+  const el = G('waiting-text');
+  if (!el) return;
+
+  const q = (gs.rQs||{})[gs.roundIdx]?.[gs.qIdx];
+  const myAns = (gs.answers||{})[ME];
+  const ranking = toArr(gs.chronoRanking || []);
+
+  // Mon statut : ok / wrong / timeout
+  let myStatus = 'timeout';
+  if (myAns !== undefined) {
+    myStatus = (q && myAns.ansIdx === q.c) ? 'ok' : 'wrong';
+  }
+
+  // Mes points (depuis le ranking)
+  const myRankEntry = ranking.find(e => e.name === ME);
+  const myGain = myRankEntry?.pts || 0;
+
+  // Mon temps de réponse
+  let myTimeStr = '—';
+  const tStart = gs.timerStart || gs.qStartTs;
+  if (myAns && myAns.time && tStart) {
+    const dt = (myAns.time - tStart) / 1000;
+    if (dt > 0 && dt < 60) myTimeStr = dt.toFixed(1).replace('.', ',') + ' s';
+  }
+
+  // Mon rang parmi les joueurs corrects
+  let myRankCorrect = 0;
+  if (myStatus === 'ok') {
+    const corr = ranking.filter(e => e.correct);
+    myRankCorrect = corr.findIndex(e => e.name === ME) + 1;
+  }
+
+  const tone = myStatus === 'ok' ? 'good' : (myStatus === 'wrong' ? 'miss' : 'timeout');
+  const verdict = myStatus === 'ok' ? 'BONNE RÉPONSE&nbsp;!'
+                : myStatus === 'wrong' ? 'MAUVAISE RÉPONSE'
+                : 'TEMPS ÉCOULÉ';
+
+  let subHtml = "Tu n'as pas répondu à temps — aucun point cette manche.";
+  if (myStatus === 'ok') {
+    const sfx = myRankCorrect === 1 ? 'ʳᵉ' : 'ᵉ';
+    subHtml = `<b>${myRankCorrect}${sfx}</b> plus rapide — répondu en <b>${myTimeStr}</b> <span class="chr-pop">⚡</span>`;
+  } else if (myStatus === 'wrong') {
+    subHtml = `Pas de points cette manche — il fallait être <b>juste</b> ET rapide.`;
+  }
+
+  const labels = ['A','B','C','D'];
+  const answerHtml = q ? `
+    <div class="rb-answer">
+      <div class="rb-answer-lbl">BONNE RÉPONSE</div>
+      <div class="rb-answer-val">
+        <span class="chr-answer-letter">${labels[q.c]}</span>
+        <span>${q.a[q.c]}</span>
+        <span class="rb-answer-check">✓</span>
+      </div>
+    </div>` : '';
+
+  const pointsHtml = myGain > 0
+    ? `<span class="chr-points-plus">+${myGain}</span><span class="chr-points-unit">PTS</span>`
+    : `<span class="chr-points-zero">+0 PT</span>`;
+
+  el.innerHTML = `
+    <div class="chr-wrap">
+      <div class="rb-hero">
+        <div class="rb-rings">
+          <span class="rb-ring chr-ring-${tone}"></span>
+          <span class="rb-ring chr-ring-${tone}" style="animation-delay:.9s"></span>
+          <span class="rb-ring chr-ring-${tone}" style="animation-delay:1.8s"></span>
+        </div>
+        <div class="chr-disc chr-disc-${tone}">
+          <svg viewBox="0 0 100 100" width="74" height="74" aria-hidden="true">
+            <rect x="42" y="6" width="16" height="9" rx="2.5" fill="#fff"/>
+            <rect x="46" y="13" width="8" height="7" rx="2" fill="#fff"/>
+            <circle cx="50" cy="56" r="32" fill="none" stroke="#fff" stroke-width="7"/>
+            <g class="rb-clock-hand">
+              <line x1="50" y1="52" x2="50" y2="30" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+            </g>
+            <circle cx="50" cy="52" r="5" fill="#fff"/>
+          </svg>
+        </div>
+      </div>
+      <div class="rb-verdict chr-verdict-${tone}">${verdict}</div>
+      <div class="rb-sub">${subHtml}</div>
+      <div class="chr-points chr-points-${tone}">${pointsHtml}</div>
+      ${answerHtml}
+      <div class="rb-next">
+        <span class="dot-pulse"></span>
+        QUESTION SUIVANTE
+      </div>
+    </div>
+  `;
+}
+
 function renderInterResult(room, gs) {
   const rType = room.rounds[gs.roundIdx] || '';
 
@@ -2000,6 +2123,9 @@ function renderInterResult(room, gs) {
 
   // ── Carton (Tir à la carabine) : design "verdict + survie ballons" dédié ──
   if (rType === 'carton') { renderInterCarton(room, gs); return; }
+
+  // ── Chrono (Contre la montre) : design "stopwatch néon" dédié ──
+  if (rType === 'chrono') { renderInterChrono(room, gs); return; }
 
   showState('state-waiting');
   const el = G('waiting-text');
