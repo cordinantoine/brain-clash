@@ -283,9 +283,13 @@
     /* ── Écran Scores (3f) — cockpit néon ── */
     /* Mode "solo" : on masque le header + bandeau d'avatars pour un classement immersif */
     #screen-game.sb-mode .game-header,
-    #screen-game.sb-mode .scores-strip{display:none}
-    #screen-game.sb-mode .game-body{background:radial-gradient(ellipse at 50% 0%,#1c0a3a 0%,#0a0418 55%,#050010 100%)}
-    #screen-game.sb-mode .game-body::before{opacity:.5}
+    #screen-game.sb-mode .scores-strip,
+    #screen-game.fn-mode .game-header,
+    #screen-game.fn-mode .scores-strip{display:none}
+    #screen-game.sb-mode .game-body,
+    #screen-game.fn-mode .game-body{background:radial-gradient(ellipse at 50% 0%,#1c0a3a 0%,#0a0418 55%,#050010 100%)}
+    #screen-game.sb-mode .game-body::before,
+    #screen-game.fn-mode .game-body::before{opacity:.5}
     #state-scoreboard{flex:1;min-height:0;display:flex;flex-direction:column;overflow-y:auto;position:relative;z-index:2}
     .ph-scoreboard{flex:1;min-height:0;display:flex;flex-direction:column;padding:4px 14px 22px;gap:14px}
     .ph-scoreboard.solo{padding-top:28px;justify-content:flex-start}
@@ -317,10 +321,48 @@
     .ph-scoreboard-next .dot-pulse{width:8px;height:8px;border-radius:50%;background:#4be0ff;box-shadow:0 0 10px #4be0ff;animation:dotPulse 1.2s ease-in-out infinite}
     @keyframes pulseFade{0%,100%{opacity:.55}50%{opacity:1}}
     @keyframes dotPulse{0%,100%{transform:scale(.7);opacity:.6}50%{transform:scale(1.2);opacity:1}}
-    #state-final{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
-    .final-trophy{font-size:4rem}
-    .final-winner{font-size:1rem;font-weight:700;text-align:center}
-    .final-winner span{color:var(--accent)}
+    /* ── Final screen — style néon ── */
+    #state-final{flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;position:relative;z-index:2;padding:0}
+    .fn-twink{position:absolute;color:#fff;opacity:.35;pointer-events:none;text-shadow:0 0 6px #fff,0 0 14px #a6f;animation:fnTwink 3.4s ease-in-out infinite;z-index:1}
+    @keyframes fnTwink{0%,100%{opacity:.25;transform:scale(1)}50%{opacity:.85;transform:scale(1.3)}}
+    .fn-scores{position:relative;z-index:4;margin:18px 12px 0;display:flex;gap:8px;justify-content:stretch}
+    .pscore{flex:1 1 0;min-width:0;position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;padding:10px 4px 8px;border-radius:14px;background:rgba(10,5,30,.55);border:2px solid var(--pc,#b96dff);box-shadow:0 0 10px var(--pc,#b96dff),inset 0 0 14px rgba(0,0,0,.4)}
+    .pscore-rank{position:absolute;top:-11px;left:50%;transform:translateX(-50%);font-size:19px;line-height:1;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6))}
+    .pscore-av{width:36px;height:36px;border-radius:50%;background:var(--avb,#2a2238);border:2px solid #fff;box-shadow:0 0 8px var(--pc,#b96dff);overflow:hidden}
+    .pscore-av img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+    .pscore-name{font-family:'Fredoka',sans-serif;font-weight:700;font-size:11px;color:var(--pc,#b96dff);text-shadow:0 0 6px rgba(0,0,0,.7);line-height:1;margin-top:4px;width:100%;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .pscore-val{font-family:'Russo One',sans-serif;font-size:18px;color:#fff;text-shadow:0 0 8px var(--pc,#b96dff);line-height:1;margin-top:2px}
+    .pscore.me{background:rgba(185,109,255,.12);box-shadow:0 0 14px var(--pc,#b96dff),0 0 28px color-mix(in srgb,var(--pc,#b96dff) 50%,transparent),inset 0 0 14px rgba(0,0,0,.4)}
+    .fn-body{flex:1;min-height:0;position:relative;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:14px 24px 30px;text-align:center}
+    .fn-confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+    .fn-confetti span{position:absolute;top:-24px;animation-name:fnConfettiFall;animation-timing-function:linear;animation-iteration-count:infinite}
+    @keyframes fnConfettiFall{0%{transform:translateY(-30px) rotate(0deg);opacity:0}8%{opacity:1}100%{transform:translateY(620px) rotate(calc(var(--rot) * 4));opacity:.9}}
+    .fn-hero{position:relative;width:190px;height:190px;display:flex;align-items:center;justify-content:center;z-index:2;--gc:#ffd23a}
+    .fn-hero.gold{--gc:#ffd23a}
+    .fn-hero.silver{--gc:#cfe0ff}
+    .fn-hero.bronze{--gc:#ff9d5c}
+    .fn-rays{position:absolute;inset:-22px;background:conic-gradient(from 0deg,transparent 0deg,transparent 9deg,color-mix(in srgb,var(--gc) 55%,transparent) 11deg,transparent 21deg,transparent 39deg,color-mix(in srgb,var(--gc) 55%,transparent) 41deg,transparent 51deg,transparent 69deg,color-mix(in srgb,var(--gc) 55%,transparent) 71deg,transparent 81deg,transparent 99deg,color-mix(in srgb,var(--gc) 55%,transparent) 101deg,transparent 111deg,transparent 129deg,color-mix(in srgb,var(--gc) 55%,transparent) 131deg,transparent 141deg,transparent 159deg,color-mix(in srgb,var(--gc) 55%,transparent) 161deg,transparent 171deg,transparent 189deg,color-mix(in srgb,var(--gc) 55%,transparent) 191deg,transparent 201deg,transparent 219deg,color-mix(in srgb,var(--gc) 55%,transparent) 221deg,transparent 231deg,transparent 249deg,color-mix(in srgb,var(--gc) 55%,transparent) 251deg,transparent 261deg,transparent 279deg,color-mix(in srgb,var(--gc) 55%,transparent) 281deg,transparent 291deg,transparent 309deg,color-mix(in srgb,var(--gc) 55%,transparent) 311deg,transparent 321deg,transparent 339deg,color-mix(in srgb,var(--gc) 55%,transparent) 341deg,transparent 351deg);border-radius:50%;mask:radial-gradient(circle,transparent 78px,#000 92px,#000 116px,transparent 126px);-webkit-mask:radial-gradient(circle,transparent 78px,#000 92px,#000 116px,transparent 126px);animation:fnRaysSpin 14s linear infinite;pointer-events:none}
+    @keyframes fnRaysSpin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    .fn-trophy{position:relative;width:138px;height:138px;border-radius:50%;border:6px solid #fff;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 35% 28%,#fffefb 0%,color-mix(in srgb,var(--gc) 78%,#fff) 42%,color-mix(in srgb,var(--gc) 90%,#000 30%) 100%);box-shadow:0 0 0 2px color-mix(in srgb,var(--gc) 55%,transparent),0 0 30px var(--gc),0 0 66px color-mix(in srgb,var(--gc) 60%,transparent),inset 0 -6px 16px rgba(0,0,0,.28);animation:fnTrophyPop 2.4s ease-in-out infinite}
+    @keyframes fnTrophyPop{0%,100%{transform:scale(1) rotate(0deg);filter:brightness(1.02)}50%{transform:scale(1.05) rotate(-1.5deg);filter:brightness(1.16)}}
+    .fn-trophy-glyph{font-size:74px;line-height:1;filter:drop-shadow(0 3px 3px rgba(0,0,0,.4));animation:fnGlyphBob 2.4s ease-in-out infinite}
+    @keyframes fnGlyphBob{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-4px) rotate(3deg)}}
+    .fn-title{font-family:'Russo One',sans-serif;font-size:40px;letter-spacing:.04em;line-height:1;color:#fff;z-index:2;text-wrap:balance}
+    .fn-title.gold{text-shadow:0 0 16px #ffd23a,0 0 34px rgba(255,210,58,.6),0 3px 0 #5a3a00}
+    .fn-title.silver{text-shadow:0 0 16px #cfe0ff,0 0 34px rgba(207,224,255,.55),0 3px 0 #2a3550}
+    .fn-title.bronze{text-shadow:0 0 16px #ff9d5c,0 0 34px rgba(255,157,92,.5),0 3px 0 #4a2308}
+    .fn-msg{display:flex;align-items:center;justify-content:center;gap:11px;font-family:'Fredoka',sans-serif;font-weight:600;font-size:22px;color:rgba(255,255,255,.92);line-height:1.22;z-index:2;text-wrap:balance;padding:0 6px}
+    .fn-msg b{font-family:'Russo One',sans-serif;font-weight:400;color:#d7a4ff;text-shadow:0 0 10px rgba(185,109,255,.7);letter-spacing:.01em}
+    .fn-place{font-family:'Russo One',sans-serif;font-size:12px;letter-spacing:.22em;padding:6px 16px;border-radius:999px;z-index:2}
+    .fn-place.gold{color:#ffd23a;background:rgba(255,210,58,.10);border:1.5px solid rgba(255,210,58,.6);box-shadow:0 0 14px rgba(255,210,58,.4);text-shadow:0 0 8px rgba(255,210,58,.7)}
+    .fn-place.silver{color:#cfe0ff;background:rgba(207,224,255,.08);border:1.5px solid rgba(207,224,255,.5);box-shadow:0 0 14px rgba(207,224,255,.3);text-shadow:0 0 8px rgba(207,224,255,.6)}
+    .fn-place.bronze{color:#ff9d5c;background:rgba(255,157,92,.08);border:1.5px solid rgba(255,157,92,.5);box-shadow:0 0 14px rgba(255,157,92,.3);text-shadow:0 0 8px rgba(255,157,92,.6)}
+    .fn-btn{margin-top:8px;width:100%;max-width:300px;padding:17px 20px;border-radius:18px;cursor:pointer;font-family:'Russo One',sans-serif;font-size:19px;letter-spacing:.04em;color:#fff;z-index:2;background:linear-gradient(160deg,#c98bff 0%,#9a4fee 55%,#7a2fd6 100%);border:2.5px solid #e3c8ff;box-shadow:0 0 0 1.5px rgba(255,255,255,.18),0 0 22px rgba(154,79,238,.7),0 0 44px rgba(154,79,238,.4),0 8px 22px rgba(0,0,0,.5),inset 0 2px 0 rgba(255,255,255,.4),inset 0 -6px 14px rgba(60,15,120,.5);text-shadow:0 2px 0 rgba(60,15,120,.6);transition:transform .12s ease,filter .12s ease}
+    .fn-btn:hover{filter:brightness(1.1);transform:translateY(-2px)}
+    .fn-btn:active{transform:translateY(1px) scale(.99);filter:brightness(.96)}
+    .pc-purple{--pc:#b96dff;--avb:#7c2dd6}
+    .pc-blue{--pc:#3ea7ff;--avb:#2a6cdc}
+    .pc-pink{--pc:#ff4fa2;--avb:#d62d8a}
     .pc0{background:#ef4444}.pc1{background:#3b82f6}.pc2{background:#22c55e}.pc3{background:#f59e0b}
     .pc4{background:#a855f7}.pc5{background:#ec4899}.pc6{background:#14b8a6}.pc7{background:#f97316}
 
@@ -633,9 +675,21 @@
       </div>
     </div>
     <div id="state-final" style="display:none">
-      <div class="final-trophy">🏆</div>
-      <p class="final-winner" id="final-winner-text">—</p>
-      <button class="btn-primary" onclick="goHome()" style="max-width:220px;margin-top:8px">Retour à l'accueil</button>
+      <div id="fn-twinks"></div>
+      <div class="fn-scores" id="fn-scores"></div>
+      <div class="fn-body">
+        <div class="fn-confetti" id="fn-confetti"></div>
+        <div class="fn-hero" id="fn-hero">
+          <div class="fn-rays"></div>
+          <div class="fn-trophy">
+            <span class="fn-trophy-glyph" id="fn-trophy-glyph">🏆</span>
+          </div>
+        </div>
+        <div class="fn-title" id="fn-title">VICTOIRE !</div>
+        <div class="fn-msg" id="fn-msg">—</div>
+        <div class="fn-place" id="fn-place">—</div>
+        <button class="fn-btn" onclick="goHome()">Retour à l'accueil</button>
+      </div>
     </div>
   </div>
 </div>
@@ -795,7 +849,10 @@ function showState(id) {
     .forEach(s => G(s).style.display = 'none');
   G(id).style.display = 'flex';
   const sg = G('screen-game');
-  if (sg) sg.classList.toggle('sb-mode', id === 'state-scoreboard');
+  if (sg) {
+    sg.classList.toggle('sb-mode', id === 'state-scoreboard');
+    sg.classList.toggle('fn-mode', id === 'state-final');
+  }
 }
 
 function setAccent(theme) {
@@ -1811,12 +1868,89 @@ function renderScoreboard(room, gs) {
 function renderFinal(gs) {
   showState('state-final');
   const players = toArr(gs.players);
-  const ranked = players.map((p,i) => ({name:p, score:gs.scores[i]||0})).sort((a,b) => b.score-a.score);
-  const winner = ranked[0];
-  const isMe = winner?.name === ME;
-  G('final-winner-text').innerHTML = isMe
-    ? `🎉 Tu as gagné avec <span>${winner.score} pts</span> !`
-    : `<span>${winner?.name}</span> remporte la partie !`;
+  const ranked = players
+    .map((p, i) => ({ name: p, score: gs.scores[i] || 0, avIdx: PLAYER_AVATARS[i] ?? 0 }))
+    .sort((a, b) => b.score - a.score);
+
+  // Twinkles décoratifs
+  const twinks = G('fn-twinks');
+  if (twinks && !twinks.dataset.built) {
+    let html = '';
+    for (let i = 0; i < 16; i++) {
+      const left = Math.random() * 100, top = Math.random() * 100;
+      const size = 8 + Math.random() * 10;
+      const delay = (Math.random() * 3).toFixed(2);
+      const glyph = Math.random() > .5 ? '✦' : '·';
+      html += `<span class="fn-twink" style="left:${left}%;top:${top}%;font-size:${size}px;animation-delay:${delay}s">${glyph}</span>`;
+    }
+    twinks.innerHTML = html;
+    twinks.dataset.built = '1';
+  }
+
+  // Podium scores strip (top 3 ou moins)
+  const colors = ['pc-purple', 'pc-blue', 'pc-pink'];
+  const medals = ['🥇', '🥈', '🥉'];
+  G('fn-scores').innerHTML = ranked.slice(0, 3).map((p, i) => {
+    const av = AVATARS[p.avIdx] || AVATARS[0];
+    const isMe = p.name === ME;
+    const cls = colors[i] || 'pc-purple';
+    const styleOverride = `--pc:${av.bg};--avb:${av.bg}`;
+    return `
+      <div class="pscore ${cls} ${isMe ? 'me' : ''}" style="${styleOverride}">
+        <div class="pscore-rank">${medals[i]}</div>
+        <div class="pscore-av"><img src="js/assets/avatars/${av.file}" alt=""></div>
+        <div class="pscore-name">${isMe ? 'Toi' : p.name}</div>
+        <div class="pscore-val">${p.score}</div>
+      </div>
+    `;
+  }).join('');
+
+  // Hero + verdict (selon ma place)
+  const myIdx = ranked.findIndex(p => p.name === ME);
+  const myRank = myIdx >= 0 ? myIdx + 1 : ranked.length + 1;
+  const myScore = myIdx >= 0 ? ranked[myIdx].score : 0;
+  const total = ranked.length;
+
+  const PLACE = {
+    1: { cls: 'gold',   glyph: '🏆', title: 'VICTOIRE !',  msg: s => `Tu as gagné avec <b>${s} points</b> !`,        place: `1ʳᵉ place sur ${total}` },
+    2: { cls: 'silver', glyph: '🥈', title: 'BIEN JOUÉ !', msg: s => `2ᵉ place avec <b>${s} points</b> !`,           place: `2ᵉ place sur ${total}` },
+    3: { cls: 'bronze', glyph: '🥉', title: 'PAS MAL !',   msg: s => `3ᵉ place avec <b>${s} points</b> !`,           place: `3ᵉ place sur ${total}` },
+  };
+  const cfg = PLACE[myRank] || { cls: 'bronze', glyph: '🎯', title: 'FIN DE PARTIE', msg: s => `Tu termines avec <b>${s} points</b>`, place: `${myRank}ᵉ place sur ${total}` };
+
+  const hero = G('fn-hero');
+  hero.className = `fn-hero ${cfg.cls}`;
+  G('fn-trophy-glyph').textContent = cfg.glyph;
+  const title = G('fn-title');
+  title.className = `fn-title ${cfg.cls}`;
+  title.textContent = cfg.title;
+  G('fn-msg').innerHTML = `<span>${cfg.msg(myScore)}</span>`;
+  const placeEl = G('fn-place');
+  placeEl.className = `fn-place ${cfg.cls}`;
+  placeEl.textContent = cfg.place;
+
+  // Confettis (uniquement si on est sur le podium)
+  const confettiEl = G('fn-confetti');
+  if (myRank <= 3 && !confettiEl.dataset.built) {
+    const palette = ['#ffd23a','#b96dff','#3ea7ff','#ff4fa2','#4aff7a'];
+    let html = '';
+    for (let i = 0; i < 26; i++) {
+      const left = Math.random() * 100;
+      const delay = (Math.random() * 2.4).toFixed(2);
+      const dur = (2.6 + Math.random() * 1.8).toFixed(2);
+      const size = 6 + Math.random() * 7;
+      const rot = Math.random() * 360;
+      const color = palette[i % palette.length];
+      const round = Math.random() > .6;
+      const h = round ? size : size * 1.6;
+      html += `<span style="left:${left}%;width:${size}px;height:${h}px;background:${color};border-radius:${round ? '50%' : '2px'};animation-delay:${delay}s;animation-duration:${dur}s;--rot:${rot}deg;box-shadow:0 0 8px ${color}"></span>`;
+    }
+    confettiEl.innerHTML = html;
+    confettiEl.dataset.built = '1';
+  } else if (myRank > 3) {
+    confettiEl.innerHTML = '';
+    delete confettiEl.dataset.built;
+  }
 }
 
 let pickSelected = null;
