@@ -307,6 +307,47 @@
     .chr-points-zero{font-family:'Russo One',sans-serif;font-size:22px;letter-spacing:.06em;color:rgba(255,255,255,.55)}
     .chr-answer-letter{flex-shrink:0;min-width:30px;height:30px;padding:0 4px;border-radius:9px;display:inline-flex;align-items:center;justify-content:center;font-family:'Russo One',sans-serif;font-size:17px;color:#052a14;background:radial-gradient(circle at 36% 30%,#d6ffe2 0%,#4aff7a 60%,#1ba94a 100%);border:2px solid #fff;box-shadow:0 0 10px #4aff7a;text-shadow:none}
     .chr-wrap .rb-next{margin-top:auto}
+    /* ── Écran 3h "Inter Patate" — Patate chaude (orange néon) ── */
+    .waiting-text:has(.ptw-wrap){width:100%;height:100%;display:flex;flex-direction:column;align-self:stretch;text-align:left;color:inherit;font-size:inherit;margin:0;flex:1;min-height:0}
+    .ptw-wrap{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:14px 18px 18px;text-align:center}
+    .ptw-hero{position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .ptw-aura{position:absolute;inset:4px;border-radius:50%;pointer-events:none;z-index:0;background:radial-gradient(circle,rgba(255,138,58,.5) 0%,rgba(255,84,40,.16) 46%,transparent 72%);filter:blur(10px);animation:ptwAura 1.5s ease-in-out infinite}
+    @keyframes ptwAura{0%,100%{opacity:.65;transform:scale(.98)}50%{opacity:1;transform:scale(1.06)}}
+    .ptw-dial{position:absolute;inset:0;width:100%;height:100%;z-index:2;transform:rotate(-90deg);overflow:visible}
+    .ptw-track{fill:none;stroke:rgba(255,138,58,.16);stroke-width:7}
+    .ptw-ticks line{stroke:rgba(255,180,90,.4);stroke-width:3;stroke-linecap:round}
+    .ptw-prog{fill:none;stroke:url(#ptwGrad);stroke-width:7;stroke-linecap:round;filter:drop-shadow(0 0 5px #ff8a3a);animation:ptwBurn 7s linear infinite}
+    @keyframes ptwBurn{0%{stroke-dashoffset:0}100%{stroke-dashoffset:var(--circ)}}
+    .ptw-orbit{position:absolute;inset:0;z-index:3;pointer-events:none;animation:ptwOrbit 7s linear infinite}
+    @keyframes ptwOrbit{to{transform:rotate(-360deg)}}
+    .ptw-spark{position:absolute;left:50%;top:1px;width:18px;height:18px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle at 45% 40%,#fff 0%,#ffe27a 32%,#ff9a1a 64%,rgba(255,84,40,0) 86%);box-shadow:0 0 14px #ffd23a,0 0 28px rgba(255,138,58,.9);animation:ptwSparkPulse .3s ease-in-out infinite alternate}
+    @keyframes ptwSparkPulse{from{transform:translateX(-50%) scale(.85)}to{transform:translateX(-50%) scale(1.18)}}
+    .ptw-core{position:relative;z-index:2;width:116px;height:116px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 38%,#3a1c0a 0%,#220f04 55%,#140a03 100%);box-shadow:inset 0 0 26px rgba(0,0,0,.8),inset 0 3px 10px rgba(255,180,90,.18),0 0 0 2px rgba(255,138,58,.28)}
+    .ptw-core::before{content:'';position:absolute;inset:8px;border-radius:50%;background:radial-gradient(circle at 50% 60%,rgba(255,138,58,.55) 0%,rgba(255,84,40,.12) 50%,transparent 74%);animation:ptwCoreBeat 1.5s ease-in-out infinite;pointer-events:none}
+    @keyframes ptwCoreBeat{0%,100%{opacity:.55;transform:scale(.92)}50%{opacity:1;transform:scale(1.05)}}
+    .ptw-spud{position:relative;z-index:2;font-size:58px;line-height:1;filter:drop-shadow(0 3px 4px rgba(0,0,0,.7)) drop-shadow(0 0 12px rgba(255,138,58,.6));animation:ptwSpud 1.5s ease-in-out infinite}
+    @keyframes ptwSpud{0%,100%{transform:rotate(-5deg) scale(1)}50%{transform:rotate(5deg) scale(1.07)}}
+    .ptw-block{display:flex;flex-direction:column;align-items:center;gap:10px}
+    .ptw-result-lbl{font-family:'Russo One',sans-serif;font-size:11px;letter-spacing:.3em;color:rgba(255,255,255,.5)}
+    .ptw-status{display:inline-flex;align-items:center;gap:10px;padding:9px 20px;border-radius:16px;background:rgba(20,12,6,.6);border:2px solid rgba(255,138,58,.4);box-shadow:inset 0 0 14px rgba(0,0,0,.4);font-family:'Fredoka',sans-serif;font-weight:600;font-size:17px;color:rgba(255,255,255,.82);white-space:nowrap}
+    .ptw-dots{display:inline-flex;gap:5px}
+    .ptw-dots span{width:7px;height:7px;border-radius:50%;background:#ff8a3a;box-shadow:0 0 8px #ff8a3a;animation:ptwDot 1.3s ease-in-out infinite}
+    .ptw-dots span:nth-child(2){animation-delay:.2s}
+    .ptw-dots span:nth-child(3){animation-delay:.4s}
+    @keyframes ptwDot{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+    .ptw-holder{display:inline-flex;align-items:center;gap:12px;padding:10px 18px 10px 11px;border-radius:18px;background:radial-gradient(ellipse at 50% 0%,rgba(255,138,58,.22) 0%,transparent 78%),rgba(28,14,6,.62);border:2.5px solid #ff8a3a;box-shadow:0 0 18px rgba(255,138,58,.45),inset 0 0 16px rgba(255,138,58,.1);max-width:280px}
+    .ptw-holder.me{border-color:#ffd23a;box-shadow:0 0 22px rgba(255,180,60,.6),inset 0 0 16px rgba(255,138,58,.14)}
+    .ptw-holder-av{flex-shrink:0;width:40px;height:40px;border-radius:50%;background:var(--avb,#d1551e);border:2.5px solid #fff;box-shadow:0 0 10px #ff8a3a;overflow:hidden}
+    .ptw-holder-av img{width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
+    .ptw-holder-txt{font-family:'Russo One',sans-serif;font-size:18px;line-height:1.05;color:#fff;text-shadow:0 0 12px rgba(255,138,58,.7),0 2px 4px rgba(0,0,0,.5);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+    .ptw-holder-txt b{color:#ffb43c}
+    .ptw-manche{display:inline-flex;align-items:center;gap:12px;font-family:'Russo One',sans-serif;font-size:12px;letter-spacing:.16em;color:rgba(255,255,255,.7)}
+    .ptw-manche-dots{display:inline-flex;gap:6px}
+    .ptw-manche-dots i{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.16);border:1.5px solid rgba(255,255,255,.25)}
+    .ptw-manche-dots i.on{background:#ff8a3a;border-color:#ffb43c;box-shadow:0 0 8px #ff8a3a}
+    .ptw-manche-dots i.cur{background:#ffd23a;border-color:#fff;box-shadow:0 0 12px #ffd23a;animation:ptwDot 1.3s ease-in-out infinite}
+    .ptw-next{display:flex;align-items:center;justify-content:center;gap:9px;font-family:'Russo One',sans-serif;font-size:11px;letter-spacing:.14em;color:#ffb86a;text-shadow:0 0 8px rgba(255,138,58,.7);animation:pulseFade 2s ease-in-out infinite;text-align:center;margin-top:auto}
+    .ptw-next .dot-pulse{width:8px;height:8px;border-radius:50%;background:#ff8a3a;box-shadow:0 0 10px #ff8a3a;animation:dotPulse 1.2s ease-in-out infinite;flex-shrink:0}
     /* ── Écran 3i Choisir une cible (Carabine / Steal) — cockpit néon ── */
     #state-pick-target{flex:1;min-height:0;display:flex;flex-direction:column;padding:0;gap:0;overflow:hidden}
     .ph-shoot-title{display:flex;align-items:center;justify-content:center;gap:12px;font-family:'Russo One',sans-serif;font-size:1.4rem;letter-spacing:.06em;color:#fff;text-shadow:0 0 12px #ff8a3a,0 0 22px #ff3a3a,0 3px 0 #1a0301;margin:2px 0 4px;text-wrap:balance}
@@ -2112,6 +2153,88 @@ function renderInterChrono(room, gs) {
   `;
 }
 
+// ── Écran 3h "Inter Patate" — Patate chaude (orange néon) ──
+function renderInterPatate(room, gs) {
+  showState('state-waiting');
+  const el = G('waiting-text');
+  if (!el) return;
+
+  // Si BOOM (explosion), on ne touche pas — laisser le rendu BOOM existant gérer
+  if (gs.patateExplosion || (gs.result?.msg||'').includes('BOOM')) return false;
+
+  const players = toArr(gs.players);
+  const holder = gs.patateHolder;
+  if (!holder) return false;
+  const isMe = holder === ME;
+  const hIdx = players.indexOf(holder);
+  const avIdx = PLAYER_AVATARS[hIdx] ?? 0;
+  const av = AVATARS[avIdx] || AVATARS[0];
+
+  // Manche progression (1..4 par défaut)
+  const total = 4;
+  const cur = Math.min(Math.max((gs.patateManche|0) + 1, 1), total);
+  const dotsHtml = Array.from({length: total}, (_, i) => {
+    const n = i + 1;
+    const cls = n === cur ? 'cur' : (n < cur ? 'on' : '');
+    return `<i class="${cls}"></i>`;
+  }).join('');
+
+  // Cadran : circonférence pour animation stroke-dasharray
+  const R = 88;
+  const CIRC = 2 * Math.PI * R;
+  const TICKS = Array.from({length: 12}, (_, i) => {
+    const a = (i / 12) * Math.PI * 2;
+    const cos = Math.cos(a), sin = Math.sin(a);
+    return `<line x1="${(100+98*cos).toFixed(1)}" y1="${(100+98*sin).toFixed(1)}" x2="${(100+90*cos).toFixed(1)}" y2="${(100+90*sin).toFixed(1)}"/>`;
+  }).join('');
+
+  const holderTxt = isMe
+    ? `🥔 Tu as la <b>patate</b> !`
+    : `🥔 <b>${holder}</b> a la patate`;
+
+  el.innerHTML = `
+    <div class="ptw-wrap">
+      <div class="ptw-hero">
+        <div class="ptw-aura"></div>
+        <svg class="ptw-dial" viewBox="0 0 200 200" aria-hidden="true">
+          <defs>
+            <linearGradient id="ptwGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ffe27a"/>
+              <stop offset="55%" stop-color="#ff9a1a"/>
+              <stop offset="100%" stop-color="#ff4f1a"/>
+            </linearGradient>
+          </defs>
+          <circle class="ptw-track" cx="100" cy="100" r="${R}"/>
+          <g class="ptw-ticks">${TICKS}</g>
+          <circle class="ptw-prog" cx="100" cy="100" r="${R}" stroke-dasharray="${CIRC}" style="--circ:${CIRC}"/>
+        </svg>
+        <div class="ptw-orbit"><span class="ptw-spark"></span></div>
+        <div class="ptw-core"><span class="ptw-spud">🥔</span></div>
+      </div>
+      <div class="ptw-block">
+        <div class="ptw-result-lbl">RÉSULTAT</div>
+        <div class="ptw-status">
+          En attente
+          <span class="ptw-dots"><span></span><span></span><span></span></span>
+        </div>
+      </div>
+      <div class="ptw-holder ${isMe ? 'me' : ''}" style="--avb:${av.bg}">
+        <div class="ptw-holder-av"><img src="js/assets/avatars/${av.file}" alt=""></div>
+        <div class="ptw-holder-txt">${holderTxt}</div>
+      </div>
+      <div class="ptw-manche">
+        MANCHE ${cur}/${total}
+        <span class="ptw-manche-dots">${dotsHtml}</span>
+      </div>
+      <div class="ptw-next">
+        <span class="dot-pulse"></span>
+        PROCHAINE QUESTION DANS QUELQUES SECONDES…
+      </div>
+    </div>
+  `;
+  return true;
+}
+
 function renderInterResult(room, gs) {
   const rType = room.rounds[gs.roundIdx] || '';
 
@@ -2126,6 +2249,9 @@ function renderInterResult(room, gs) {
 
   // ── Chrono (Contre la montre) : design "stopwatch néon" dédié ──
   if (rType === 'chrono') { renderInterChrono(room, gs); return; }
+
+  // ── Patate chaude : design "détonateur néon orange" dédié ──
+  if (rType === 'patate' && renderInterPatate(room, gs)) return;
 
   showState('state-waiting');
   const el = G('waiting-text');
