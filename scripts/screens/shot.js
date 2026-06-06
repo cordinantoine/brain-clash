@@ -239,6 +239,18 @@ const SCENES = [
     renderState(__baseRoom({rounds:['buzzer']}), __baseGs({phase:'questionResult', answers:{Toi:{ansIdx:0,time:1}}, result:{msg:'Bonne réponse !',pts:300,scorer:'Toi'}}));
   })()` },
 
+  { file:'03h-inter-buzzer-rate.png', setup:`(() => {
+    __init('buzzer');
+    G('hdr-timer').textContent='—';
+    renderState(__baseRoom({rounds:['buzzer']}), __baseGs({phase:'questionResult', buzzed:'Toi', buzzedOut:['Toi'], answers:{Toi:{ansIdx:3,time:1}}, result:{msg:'Mauvaise réponse',pts:-15,scorer:null}}));
+  })()` },
+
+  { file:'03h-inter-buzzer-timeout.png', setup:`(() => {
+    __init('buzzer');
+    G('hdr-timer').textContent='—';
+    renderState(__baseRoom({rounds:['buzzer']}), __baseGs({phase:'questionResult', answers:{}, result:{msg:'Temps écoulé',pts:0,scorer:null}}));
+  })()` },
+
   { file:'03h-inter-chrono.png', setup:`(() => {
     __init('chrono');
     G('hdr-timer').textContent='—';

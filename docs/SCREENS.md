@@ -10,7 +10,7 @@ npm install           # première fois seulement (puppeteer-core)
 node shot.js          # serveur "Brain Clash (Player)" doit tourner sur :8081
 ```
 
-Les 33 PNG dans `docs/screens/` sont écrasés à chaque exécution.
+Les 35 PNG dans `docs/screens/` sont écrasés à chaque exécution.
 
 Légende :
 - ✅ refondu (cockpit néon)
@@ -135,8 +135,14 @@ Affiché 4,5 s entre chaque question. Une variante par type de round.
 **QCM ✅** — médaille néon ✓/✗ personnalisée : bonne/mauvaise réponse, gain, série de bonnes réponses (🔥 SÉRIE × N), carte "bonne réponse était", décompte SVG 4,5 s.
 ![](screens/03h-inter-qcm.png)
 
-**Buzzer 🕗**
+**Buzzer — vainqueur 🕗** — un joueur a buzzé en premier et donné la bonne réponse.
 ![](screens/03h-inter-buzzer.png)
+
+**Buzzer — buzz raté (toi)** — tu as buzzé puis donné la mauvaise réponse : panneau `RÉSULTAT` + `-X pts ❌` + rappel de la bonne réponse. C'est aussi la vue affichée si tu n'as pas buzzé pendant que quelqu'un d'autre l'a fait sans trouver.
+![](screens/03h-inter-buzzer-rate.png)
+
+**Buzzer — personne n'a buzzé** — temps écoulé sans aucun buzz : panneau `RÉSULTAT` + `⏱️ Temps écoulé` + bonne réponse révélée.
+![](screens/03h-inter-buzzer-timeout.png)
 
 **Chrono 🕗**
 ![](screens/03h-inter-chrono.png)
