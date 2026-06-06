@@ -10,7 +10,7 @@ npm install           # première fois seulement (puppeteer-core)
 node shot.js          # serveur "Brain Clash (Host)" doit tourner sur :8080
 ```
 
-Les 33 PNG dans `docs/screens-host/` sont écrasés à chaque exécution.
+Les 34 PNG dans `docs/screens-host/` sont écrasés à chaque exécution.
 
 Légende :
 - ✅ refondu (cockpit néon)
@@ -187,6 +187,9 @@ Voleur et victime côte à côte avec avatars, points volés (+X / -X), bonne r�
 
 **15b. Passe** — un joueur passe la patate à un autre.
 ![](screens-host/15b-inter-patate-passe.png)
+
+**15c. Raté (porteur garde)** — le porteur a mal répondu mais pas de BOOM : grosse 🥔 + message "X répond mal" + avatar porteur conservé.
+![](screens-host/15c-inter-patate-rate.png)
 
 ---
 

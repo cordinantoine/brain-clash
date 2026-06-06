@@ -217,6 +217,11 @@ const SCENES = [
     drawQuestionResult(__baseRoom({rounds:['patate'],theme:'culture'}), __baseGs({phase:'questionResult', patateManche:1, patateHolder:'Max', result:{msg:'Antoine passe la patate à Max',pts:0,scorer:'Antoine'}, scores:[340,220,180]}));
   })()` },
 
+  { file:'15c-inter-patate-rate.png', setup:`(() => {
+    __setBaseGlobals();
+    drawQuestionResult(__baseRoom({rounds:['patate'],theme:'culture'}), __baseGs({phase:'questionResult', patateManche:2, patateHolder:'Antoine', result:{msg:'Antoine répond mal — la patate reste',pts:0,scorer:null}, scores:[340,220,180]}));
+  })()` },
+
   { file:'16-inter-carton.png', setup:`(() => {
     __setBaseGlobals();
     drawQuestionResult(__baseRoom({rounds:['carton'],theme:'culture'}), __baseGs({phase:'questionResult', balloons:[3,2,1], result:{msg:'🎯 Antoine crève un ballon de Léa !',pts:0,scorer:'Antoine'}}));

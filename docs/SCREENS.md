@@ -10,7 +10,7 @@ npm install           # première fois seulement (puppeteer-core)
 node shot.js          # serveur "Brain Clash (Player)" doit tourner sur :8081
 ```
 
-Les 35 PNG dans `docs/screens/` sont écrasés à chaque exécution.
+Les 44 PNG dans `docs/screens/` sont écrasés à chaque exécution.
 
 Légende :
 - ✅ refondu (cockpit néon)
@@ -144,17 +144,47 @@ Affiché 4,5 s entre chaque question. Une variante par type de round.
 **Buzzer — personne n'a buzzé** — temps écoulé sans aucun buzz : panneau `RÉSULTAT` + `⏱️ Temps écoulé` + bonne réponse révélée.
 ![](screens/03h-inter-buzzer-timeout.png)
 
-**Chrono 🕗**
+**Chrono — temps écoulé 🕗** — tu n'as pas répondu à temps.
 ![](screens/03h-inter-chrono.png)
 
-**Steal 🕗**
+**Chrono — bonne réponse** — verdict vert, médaille de rapidité, points gagnés.
+![](screens/03h-inter-chrono-bon.png)
+
+**Chrono — mauvaise réponse** — verdict rouge, pas de points cette manche.
+![](screens/03h-inter-chrono-mauvais.png)
+
+**Steal — trop tard 🕗** — vol mené par un autre joueur (tu n'étais ni voleur ni victime).
 ![](screens/03h-inter-steal.png)
 
-**Patate 🕗** (explosion)
+**Steal — tu voles** — duel néon orange, +X pts arrachés à la victime.
+![](screens/03h-inter-steal-voleur.png)
+
+**Steal — tu te fais voler** — duel néon, −X pts envolés.
+![](screens/03h-inter-steal-victime.png)
+
+**Steal — personne n'a volé** — aucune réponse correcte, pas de vol.
+![](screens/03h-inter-steal-personne.png)
+
+**Patate — BOOM 🕗** (explosion de fin de manche)
 ![](screens/03h-inter-patate.png)
 
-**Carton 🕗** — chip résultat personnel (score, ballons restants), bonne réponse révélée.
+**Patate — attente (autre porteur)** — entre 2 questions, vue du panneau "🥔 X a la patate / RÉSULTAT En attente…".
+![](screens/03h-inter-patate-attente.png)
+
+**Patate — attente (tu as la patate)** — même panneau avec bordure néon orange sur ton avatar.
+![](screens/03h-inter-patate-moi.png)
+
+**Carton — temps écoulé 🕗** (tu n'as pas répondu)
 ![](screens/03h-inter-carton.png)
+
+**Carton — tir réussi** — bonne réponse, tu crèves le ballon de la cible que tu as choisie.
+![](screens/03h-inter-carton-tir-reussi.png)
+
+**Carton — auto-tir** — tu te tires dans le pied (mauvaise réponse en tant que tireur).
+![](screens/03h-inter-carton-auto-tir.png)
+
+**Carton — tir manqué** — mauvaise réponse mais c'est un autre joueur qui perd un ballon.
+![](screens/03h-inter-carton-mauvais.png)
 
 ### 3i. Choisir une cible ✅
 

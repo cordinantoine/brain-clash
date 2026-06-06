@@ -257,10 +257,42 @@ const SCENES = [
     renderState(__baseRoom({rounds:['chrono']}), __baseGs({phase:'questionResult', chronoRanking:[{name:'Antoine',pts:200,correct:true},{name:'Toi',pts:100,correct:true},{name:'Léa',pts:0,correct:false}]}));
   })()` },
 
+  { file:'03h-inter-chrono-bon.png', setup:`(() => {
+    __init('chrono');
+    G('hdr-timer').textContent='—';
+    const now = Date.now();
+    renderState(__baseRoom({rounds:['chrono']}), __baseGs({phase:'questionResult', timerStart:now-2400, qStartTs:now-2400, answers:{Toi:{ansIdx:0,time:now}}, chronoRanking:[{name:'Toi',pts:200,correct:true},{name:'Antoine',pts:100,correct:true},{name:'Léa',pts:0,correct:false}]}));
+  })()` },
+
+  { file:'03h-inter-chrono-mauvais.png', setup:`(() => {
+    __init('chrono');
+    G('hdr-timer').textContent='—';
+    const now = Date.now();
+    renderState(__baseRoom({rounds:['chrono']}), __baseGs({phase:'questionResult', timerStart:now-5000, qStartTs:now-5000, answers:{Toi:{ansIdx:2,time:now}}, chronoRanking:[{name:'Antoine',pts:200,correct:true},{name:'Toi',pts:0,correct:false},{name:'Léa',pts:0,correct:false}]}));
+  })()` },
+
   { file:'03h-inter-steal.png', setup:`(() => {
     __init('steal');
     G('hdr-timer').textContent='—';
     renderState(__baseRoom({rounds:['steal']}), __baseGs({phase:'questionResult', result:{msg:'Antoine vole 50 pts à Léa !',pts:50,scorer:'Antoine'}}));
+  })()` },
+
+  { file:'03h-inter-steal-voleur.png', setup:`(() => {
+    __init('steal');
+    G('hdr-timer').textContent='—';
+    renderState(__baseRoom({rounds:['steal']}), __baseGs({phase:'questionResult', result:{msg:'Toi vole 50 pts à Léa !',pts:50,scorer:'Toi'}}));
+  })()` },
+
+  { file:'03h-inter-steal-victime.png', setup:`(() => {
+    __init('steal');
+    G('hdr-timer').textContent='—';
+    renderState(__baseRoom({rounds:['steal']}), __baseGs({phase:'questionResult', result:{msg:'Antoine vole 50 pts à Toi !',pts:50,scorer:'Antoine'}}));
+  })()` },
+
+  { file:'03h-inter-steal-personne.png', setup:`(() => {
+    __init('steal');
+    G('hdr-timer').textContent='—';
+    renderState(__baseRoom({rounds:['steal']}), __baseGs({phase:'questionResult', result:{msg:'Personne n\\'a volé',pts:0,scorer:null}}));
   })()` },
 
   { file:'03h-inter-patate.png', setup:`(() => {
@@ -269,10 +301,40 @@ const SCENES = [
     renderState(__baseRoom({rounds:['patate']}), __baseGs({phase:'questionResult', patateManche:3, patateHolder:'Léa', result:{msg:'💥 BOOM ! Léa a la patate',pts:-200,scorer:'Léa'}}));
   })()` },
 
+  { file:'03h-inter-patate-attente.png', setup:`(() => {
+    __init('patate');
+    G('hdr-timer').textContent='🥔';
+    renderState(__baseRoom({rounds:['patate']}), __baseGs({phase:'questionResult', patateManche:1, patateHolder:'Antoine', result:{msg:'Antoine garde la patate',pts:0,scorer:null}}));
+  })()` },
+
+  { file:'03h-inter-patate-moi.png', setup:`(() => {
+    __init('patate');
+    G('hdr-timer').textContent='🥔';
+    renderState(__baseRoom({rounds:['patate']}), __baseGs({phase:'questionResult', patateManche:1, patateHolder:'Toi', result:{msg:'Toi garde la patate',pts:0,scorer:null}}));
+  })()` },
+
   { file:'03h-inter-carton.png', setup:`(() => {
     __init('carton');
     G('hdr-timer').textContent='—';
     renderState(__baseRoom({rounds:['carton']}), __baseGs({phase:'questionResult', balloons:[3,2,1], result:{msg:'Antoine crève un ballon de Léa !',pts:0,scorer:'Antoine'}}));
+  })()` },
+
+  { file:'03h-inter-carton-tir-reussi.png', setup:`(() => {
+    __init('carton');
+    G('hdr-timer').textContent='—';
+    renderState(__baseRoom({rounds:['carton']}), __baseGs({phase:'questionResult', balloons:[3,3,2], answers:{Toi:{ansIdx:0,time:1}}, result:{msg:'🎯 Toi crève un ballon de Léa !',pts:0,scorer:'Toi'}}));
+  })()` },
+
+  { file:'03h-inter-carton-auto-tir.png', setup:`(() => {
+    __init('carton');
+    G('hdr-timer').textContent='—';
+    renderState(__baseRoom({rounds:['carton']}), __baseGs({phase:'questionResult', balloons:[2,3,3], answers:{Toi:{ansIdx:2,time:1}}, result:{msg:'❌ Toi perd un ballon !',pts:0,scorer:'Toi'}}));
+  })()` },
+
+  { file:'03h-inter-carton-mauvais.png', setup:`(() => {
+    __init('carton');
+    G('hdr-timer').textContent='—';
+    renderState(__baseRoom({rounds:['carton']}), __baseGs({phase:'questionResult', balloons:[3,2,3], answers:{Toi:{ansIdx:1,time:1}}, result:{msg:'❌ Antoine perd un ballon !',pts:0,scorer:'Antoine'}}));
   })()` },
 
   // ── 3i Choisir une cible ──
